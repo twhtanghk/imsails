@@ -4,6 +4,11 @@ module.exports =
 	oauth2:
 		verifyURL:			"https://mob.myvnc.com/org/oauth2/verify/"
 		scope:				[ "https://mob.myvnc.com/org/users", "https://mob.myvnc.com/xmpp" ]
+	xmpp:
+		domain:		'mob.myvnc.com'
+		transports:	['old-websocket']
+		wsURL:		"wss://mob.myvnc.com/xmpp-websocket"
+		muc:		"muc.mob.myvnc.com"
 	models:
 		connection: 'mongo'
 		migrate:	'alter'
@@ -15,3 +20,5 @@ module.exports =
 			user: 'imrw'
 			password: 'pass1234'
 			database: 'im'
+			socketOptions:
+				socketTimeoutMS: 0

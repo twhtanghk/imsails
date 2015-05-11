@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "coffee-script": "^1.9.2",
     "ejs": "~0.8.4",
     "grunt": "0.4.2",
     "grunt-contrib-clean": "~0.5.0",
@@ -27,6 +28,8 @@
     "sails": "~0.11.0",
     "sails-disk": "~0.10.0",
     "sails-mongo": "^0.11.1",
+    "shortid": "^2.2.2",
+    "stanza.io": "^7.2.0",
     "underscore": "^1.8.3"
   },
   "scripts": {

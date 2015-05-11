@@ -47,6 +47,4 @@ passport.use 'bearer', new bearer.Strategy {}, (token, done) ->
 		done(null, false, message: err)
 	verifyToken(token).then fulfill, reject
 	
-module.exports = (req, res, next) ->
-	a = passport.authenticate('bearer', { session: false })
-	a(req, res, next)
+module.exports = passport.authenticate('bearer', { session: false })

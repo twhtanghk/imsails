@@ -1,3 +1,3 @@
 module.exports = 
 	policies:
-		'*':	'passport'
+		'*':	['bearer', 'xmpp']
