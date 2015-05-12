@@ -1,3 +1,3 @@
 module.exports = 
 	blueprints:
-		prefix:		'/im/api'
+		prefix:		'/api'

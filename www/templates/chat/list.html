@@ -1,0 +1,43 @@
+<ion-view>
+	<ion-header-bar class="item-input-inset">
+	    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+        <button class="button button-small button-icon button-clear ion-home" ng-click="controller.home()">
+        </button>
+        <button class="button button-small button-icon button-clear ion-folder overlay" ng-click="controller.md()">
+        	<i class="icon ion-plus"></i>
+        </button>
+        <button class="button button-small button-icon button-clear ion-upload" ng-file-select ng-multiple="true" ng-file-change="controller.upload($files)">
+	    </button>
+	    <label class="item-input-wrapper">
+	        <i class="icon ion-folder placeholder-icon"></i>
+	        <input type="text" ng-model="model.path">
+	    </label>
+	</ion-header-bar>
+	<ion-content>
+		<ion-list class='filelist'>
+			<ion-item class="item-avatar" 
+				ng-repeat="model in $parent.model.models"
+				ng-controller="FileCtrl"
+				ng-class="model.selected ? 'selected' : ''"
+				on-hold="model.toggleSelect()"
+				on-tap="model.open()">
+				<img ng-src="{{model.iconUrl}}" aria-label="{{model.name}}">
+				<h2>
+					<span>{{model.name}}</span>
+					<tag-editor ng-model="model.tags" fetch="https://mob.myvnc.com/file/api/tag" template-url='templates/tag.html' placeholder="Tag (e.g. Team)">
+	  				</tag-editor>
+				</h2>
+				<p>
+					{{model.size}}
+					{{model.mtime.toLocaleString()}}
+					{{model.contentType}}
+				</p>
+				<ion-option-button class="button button-positive icon-left ion-edit" on-tap="$event.stopPropagation(); controller.edit();">Edit</ion-option-button>
+				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="$event.stopPropagation(); $parent.controller.remove(model);">Delete</ion-option-button>
+			</ion-item>
+		</ion-list>
+		<ion-infinite-scroll ng-if="model.state.page < model.state.total_page" on-infinite="controller.loadMore()">
+		</ion-infinite-scroll>
+	</ion-content>
+</ion-view>

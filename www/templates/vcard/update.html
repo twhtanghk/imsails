@@ -1,0 +1,59 @@
+<ion-header-bar class="item-input-inset">
+    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+    </button>
+    <h1 class='title'>{{model.fullname()}}</h1>
+    <a class="button button-clear" ng-click="save()">Save</a>  
+</ion-header-bar>
+<ion-content>
+	<ion-list>
+		<div class="list">
+			<label class="item item-input">
+				<span class="input-label">Photo</span>
+				<div ng-controller="ImgCropCtrl" model="$parent.model.photoUrl" data-tap-disabled="true">
+					<div class="cropArea">
+						<img ng-src="{{$parent.model.photoUrl}}" />
+					</div>
+					<div class="cropArea">
+				    	<img-crop image="model.src" result-image="$parent.model.photoUrl" change-on-fly="true">
+				    	</img-crop>
+				    </div>
+				    <button class="button" ngf-select ngf-multiple='false' ngf-change="select($files)">
+						Load
+					</button>
+				</div>
+			</label>
+			<label class="item item-input">
+				<span class="input-label">Given Name</span>
+				<input type="text" ng-model="model.name.given">
+			</label>
+			<label class="item item-input">
+				<span class="input-label">Middle Name</span>
+				<input type="text" ng-model="model.name.middle">
+			</label>
+			<label class="item item-input">
+				<span class="input-label">Family Name</span>
+				<input type="text" ng-model="model.name.family">
+			</label>
+			<label class="item item-input">
+				<span class="input-label">Organization</span>
+				<input type="text" ng-model="model.organization.name">
+			</label>
+			<label class="item item-input">
+				<span class="input-label">Title</span>
+				<input type="text" ng-model="model.title">
+			</label>
+			<label class="item item-input">
+				<span class="input-label">Email</span>
+				<input type="text" ng-model="model.emails[0].email">
+			</label>
+			<label class="item item-input">
+				<span class="input-label">Address</span>
+				<input type="text" ng-model="model.addresses[0].street">
+			</label>
+			<label class="item item-input">
+				<span class="input-label">Phone</span>
+				<input type="text" ng-model="model.phoneNumbers[0].number">
+			</label>
+		</div>
+	</ion-list>
+</ion-content>

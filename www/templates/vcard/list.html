@@ -1,0 +1,32 @@
+<ion-header-bar class="item-input-inset">
+    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+    </button>
+    <h1 class='title'>VCard</h1>
+    <a class="button button-clear" href="#/vcard/update">Personal Info</a>  
+</ion-header-bar>
+<div class="bar bar-subheader item-input-inset">
+	<label class="item-input-wrapper">
+		<i class="icon ion-search placeholder-icon"></i>
+	    <input type="text" ng-model="searchText">
+	</label>
+</div>
+<ion-content class='has-subheader'>
+	<ion-list>
+		<ion-item class="item-avatar" 
+			ng-repeat="model in collection.models | vcardsFilter:searchText"
+			ng-controller="VCardCtrl"
+			ng-class="model.selected ? 'selected' : ''"
+			href="#/vcard/{{model.jid}}">
+			<img class="photo" ng-src="{{model.photoUrl}}" aria-label="{{model.name}}">
+			<h2>
+				<span>{{model.fullname()}}</span>
+			</h2>
+			<p>
+				{{model.post()}}
+			</p>
+			<ion-option-button class="button button-positive icon-left ion-plus-round" on-tap="addRoster()">Roster</ion-option-button>
+		</ion-item>
+	</ion-list>
+	<ion-infinite-scroll ng-if="collection.state.page < collection.state.total_page" on-infinite="loadMore()">
+	</ion-infinite-scroll>
+</ion-content>

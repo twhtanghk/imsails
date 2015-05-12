@@ -1,0 +1,22 @@
+<ion-header-bar class="item-input-inset">
+    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+    </button>
+    <h1 class='title'>{{model.fullname()}}</h1>  
+</ion-header-bar>
+<ion-content>
+	<img class='photo' ng-src="{{model.photoUrl}}" />
+	<ion-list>
+		<ion-item ng-if="model.post() != ''">
+			{{model.post()}}
+		</ion-item>
+		<ion-item ng-repeat="(key, value) in model.phone()">
+			<a href="tel:{{value}}">{{value}}</a>
+		</ion-item>
+		<ion-item ng-repeat="(key, value) in model.email()">
+			<a href="mailto:{{value}}">{{value}}</a>
+		</ion-item>
+		<ion-item ng-repeat="(key, value) in model.addr()">
+			{{value}}
+		</ion-item>
+	</ion-list>
+</ion-content>

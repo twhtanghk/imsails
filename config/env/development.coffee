@@ -1,4 +1,6 @@
 module.exports =
+	path:			'/im'
+	port:			3000
 	promise:
 		timeout:	10000 # ms
 	oauth2:
@@ -18,7 +20,7 @@ module.exports =
 			host: 'localhost'
 			port: 27017
 			user: 'imrw'
-			password: 'pass1234'
+			password: 'password'
 			database: 'im'
 			socketOptions:
 				socketTimeoutMS: 0
