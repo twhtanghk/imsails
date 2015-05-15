@@ -20,6 +20,7 @@ UserSchema = new mongoose.Schema
 	url:			{ type: String, required: true, index: {unique: true} }
 	username:		{ type: String, required: true }
 	email:			{ type: String }
+	createdAt:		{ type: Date, default: Date.now }
 	
 UserSchema.statics =
 	search_fields: ->
@@ -34,23 +35,8 @@ UserSchema.statics =
 			return user != null
 		p1.then null, (err) ->
 			return false		
-		
-UserSchema.methods =
-	checkPermission: (perm) ->
-		q = @model('Tag').find(name: $in: @tags).exec()
-		q.then (perms) ->
-			_.some perms, (r) ->
-				_.some r.permissions, (p) ->
-					p = new Permission(p)
-					p.implies perm
-	checkPermissions: (perms) ->
-		promises = _.map perms, (p) ->
-			@checkPermission(p)
-		Promise.all(promises).done (permitted) ->
-			_.all permitted
-			
+
 UserSchema.plugin(findOrCreate)
-UserSchema.plugin(taggable)
 UserSchema.plugin(uniqueValidator)
 
 UserSchema.path('url').set (url) ->
@@ -124,13 +110,14 @@ config = (client, roomJid, data, func) ->
 		func(err, res)
 				
 RoomSchema = new mongoose.Schema
+	_id:			{ type: String }
 	jid:			{ type: String, required: true, index: {unique: true} }
 	name:			{ type: String, required: true, index: {unique: true} }
 	privateroom:	{ type: Boolean, default: false }
 	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-	dateCreated:	{ type: Date, default: Date.now }
+	createdAt:		{ type: Date, default: Date.now }
 	updatedBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-	lastUpdated:	{ type: Date, default: Date.now }
+	updatedAt:		{ type: Date, default: Date.now }
 	
 RoomSchema.statics =
 	search_fields: ->
@@ -143,6 +130,9 @@ RoomSchema.statics =
 RoomSchema.plugin(findOrCreate)
 RoomSchema.plugin(taggable)
 RoomSchema.plugin(uniqueValidator)
+RoomSchema.path('jid').set (jid) ->
+	@_id ?= jid
+	return jid
 
 RoomSchema.path('name').set (name) ->
 	@jid ?= "#{name}@#{sails.config.xmpp.muc}"
@@ -150,35 +140,17 @@ RoomSchema.path('name').set (name) ->
 
 RoomSchema.pre 'save', (next) ->
 	@wasNew = @isNew
-	if @isNew
-		@createdBy = @user
-	else
-		@updatedBy = @user
-	next()
-	
-RoomSchema.post 'save', ->
-	fulfill = ->
-		next()
-	reject = (err) ->
-		next(err)
-	
-	@lastUpdated = Date.now()
-		
+	@update $set: updatedAt: Date.now() 
 	if @wasNew
-		XmppService.Room.create(@user, @jid, @privateroom).then fulfill, reject
+		XmppService.Room.create(@user, @jid, @privateroom).then next, next
 	else
 		room =
 			fields:	@fields
 			type:	'submit'
-		XmppService.Room.update(@user, @jid, room).then fulfill, reject	
+		XmppService.Room.update(@user, @jid, room).then next, next	
 				
 RoomSchema.pre 'remove', (next) ->
-	fulfill = ->
-		next()
-	reject = (err) ->
-		next(err)
-		
-	XmppService.Room.del(@user, @jid).then fulfill, reject
+	XmppService.Room.del(@user, @jid).then next, next
 
 Room = mongoose.model 'Room', RoomSchema
 
@@ -187,7 +159,7 @@ BookmarkSchema = new mongoose.Schema
 	name:			{ type: String, required: true }
 	autoJoin:		{ type: Boolean, default: true }
 	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-	dateCreated:	{ type: Date, default: Date.now }
+	createdAt:		{ type: Date, default: Date.now }
 	
 BookmarkSchema.statics =
 	search_fields: ->
@@ -278,6 +250,7 @@ RosterSchema = new mongoose.Schema
 	name:			{ type: String, required: true }
 	groups:			{ type: [ String ] }
 	createdBy:		{ type: String, ref: 'User' }
+	createdAt:		{ type: Date, default: Date.now }
 
 RosterSchema.index { jid: 1, createdBy: 1 }, { unique: true }	
 
@@ -306,7 +279,7 @@ Roster = mongoose.model 'Roster', RosterSchema
 module.exports = 
 	models:
 		user: 		User
-		Room: 		Room
-		Bookmark:	Bookmark
-		Msg:		Msg
 		roster:		Roster
+		room: 		Room
+		bookmark:	Bookmark
+		msg:		Msg
