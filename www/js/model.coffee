@@ -1,6 +1,6 @@
 env = require './env.coffee'
 require 'PageableAR'
-_ = require 'underscore'
+_ = require 'lodash'
 
 iconUrl = (type) ->
 	icon = 
@@ -29,22 +29,11 @@ resource = ($rootScope, pageableAR) ->
 		@me: ->
 			_me ?= new User(username: 'me/')	
 
-	class IMUser extends pageableAR.Collection
-		$idAttribute: 'username'
-		
-		$urlRoot: "#{env.serverUrl()}/api/users"
-	
 	class RosterItem extends pageableAR.Model
-		$idAttribute: 'jid'
+		$idAttribute: '_id'
 		
 		$urlRoot: "#{env.serverUrl()}/api/roster"
 		
-		$isNew: ->
-			not @_id?
-		
-		$url: ->
-			return if @$isNew() then @$urlRoot else super()
-			
 		$parse: (data, opts) ->
 			ret = super(data, opts)
 			ret.photoUrl = if ret.photo? then "data:#{ret.photo?.type};base64,#{ret.photo?.data}" else "img/photo.png"
@@ -53,7 +42,7 @@ resource = ($rootScope, pageableAR) ->
 	class Roster extends pageableAR.PageableCollection
 		_instance = null
 		
-		$idAttribute: 'jid'
+		$idAttribute: '_id'
 	
 		$urlRoot: "#{env.serverUrl()}/api/roster"
 		
@@ -154,7 +143,6 @@ resource = ($rootScope, pageableAR) ->
 		$urlRoot: "#{env.serverUrl()}/api/chat"
 		
 	User:		User
-	IMUser:		IMUser
 	RosterItem:	RosterItem
 	Roster:		Roster
 	VCard:		VCard

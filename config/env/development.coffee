@@ -17,6 +17,7 @@ module.exports =
 	connections:
 		mongo:
 			adapter: 'sails-mongo'
+			driver: 'mongodb'
 			host: 'localhost'
 			port: 27017
 			user: 'imrw'

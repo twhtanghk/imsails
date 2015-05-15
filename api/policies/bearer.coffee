@@ -1,5 +1,6 @@
+# check if oauth2 bearer is available
 fs = require 'fs'
-_ = require 'underscore'
+_ = require 'lodash'
 http = require 'needle'
 passport = require 'passport'
 bearer = require 'passport-http-bearer'
@@ -18,7 +19,6 @@ verifyToken = (token) ->
 			Authorization:	"Bearer #{token}"
 	
 	oauth2 = sails.config.oauth2
-	model = sails.models
 	
 	return new Promise (fulfill, reject) ->
 		http.get oauth2.verifyURL, opts, (err, res, body) ->
@@ -34,7 +34,7 @@ verifyToken = (token) ->
 			# create user
 			# otherwise check if user registered before (defined in model.User or not)
 			user = _.pick body.user, 'url', 'username', 'email'
-			model.users.findOrCreate user, (err, user) ->
+			MongoService.models.user.findOrCreate user, (err, user) ->
 				if err
 					return reject(err)
 				fulfill(user)

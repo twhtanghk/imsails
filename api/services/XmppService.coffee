@@ -1,6 +1,6 @@
-_ = require 'underscore'
+actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
+_ = require 'lodash'
 XMPP = require 'stanza.io'
-logger = sails.log
 Promise = require 'promise'
 
 Bookmark =
@@ -9,7 +9,7 @@ Bookmark =
 		return new Promise (fulfill, reject) ->
 			user.xmpp.getBookmarks (err, res) ->
 				if err
-					reject err 
+					reject new Error err.error.condition 
 				else
 					fulfill if 'conferences' of res.privateStorage.bookmarks then res.privateStorage.bookmarks.conferences else []
 					
@@ -22,7 +22,7 @@ Bookmark =
 		return new Promise (fulfill, reject) ->
 			user.xmpp.removeBookmark jid, (err, res) ->
 				if err
-					reject err 
+					reject new Error err.error.condition 
 				else
 					fulfill 'deleted successfully'
 
@@ -32,7 +32,7 @@ Room =
 		return new Promise (fulfill, reject) ->
 			user.xmpp.getDiscoItems sails.config.xmpp.muc, '', (err, res) ->
 				if err
-					reject err
+					reject new Error err.error.condition
 				else
 					results = if 'items' of res.discoItems then res.discoItems.items else []
 					fulfill
@@ -66,7 +66,7 @@ Room =
 		return new Promise (fulfill, reject) ->
 			user.xmpp.getRoomConfig jid, (err, res) ->
 				if err
-					reject err
+					reject new Error err.error.condition
 				else
 					fulfill res.mucOwner.form
 	
@@ -74,7 +74,7 @@ Room =
 		return new Promise (fulfill, reject) ->
 			user.xmpp.configureRoom jid, data, (err, res) ->
 				if err
-					reject err
+					reject new Error err.error.condition
 				else
 					fulfill res
 
@@ -90,66 +90,50 @@ Room =
 					
 Roster =
 
-	list: (user) ->
-		return new Promise (fulfill, reject) ->
-			user.xmpp.getRoster (err, res) ->
-				if err
-					reject(err)
-				else
-					###					
-					In XMPP standard, if the requested roster version is same as the xmpp server version. 
-					The roster object will not be returned. Thus, the current roster is saved in variables
-					to ensure that the roster object always exist and return even there is no object return 
-					from xmpp server
-					###
-					 
-					if res.roster
-						user.xmpp.roster = res.roster
-					fulfill(if 'items' of user.xmpp.roster then user.xmpp.roster.items else [])
-
 	create: (user, data) ->
-		return new Promise (fulfill, reject) ->
-			user.xmpp.updateRosterItem data, (err, res) ->
-				user.xmpp.subscribe data.jid
+		new Promise (fulfill, reject) ->
+			user.xmpp.updateRosterItem data, (err, ret) ->
+				user.xmpp.subscribe data.jid 
 				if err
-					reject err
+					reject new Error err.error.condition
 				else
-					fulfill res
+					fulfill ret
 	
-	update: (user, jid, data) ->
-		return new Promise (fulfill, reject) ->
-			user.xmpp.updateRosterItem data, (err, res) ->
+	update: (user, data) ->
+		new Promise (fulfill, reject) ->
+			user.xmpp.updateRosterItem data, (err, ret) ->
 				if err
-					reject err
+					reject new Error err.error.condition
 				else
 					fulfill res
 					
-	delete: (user, jid) ->
-		return new Promise (fulfill, reject) ->
+	destroy: (user, jid) ->
+		new Promise (fulfill, reject) ->
 			user.xmpp.unsubscribe(jid)
-			user.xmpp.removeRosterItem jid, (err, res) ->
+			user.xmpp.removeRosterItem jid, (err, ret) ->
 				if err
-					reject err
+					reject new Error err.error.condition
 				else
-					fulfill res
+					fulfill ret
 
-VCard =
+Vcard =
 		
-	read: (user, jid) ->
-		return new Promise (fulfill, reject) ->
+	findOne: (user, jid) ->
+		new Promise (fulfill, reject) ->
 			user.xmpp.getVCard jid, (err, res) ->
 				if err
 					if err.error?.condition == 'item-not-found'
 						fulfill _.extend {}, jid: jid
-					else reject err
+					else 
+						reject new Error err.error.condition
 				else 
 					fulfill _.extend res.vCardTemp, jid: jid
 				
-	update: (user, jid, data) ->
-		return new Promise (fulfill, reject) ->
+	update: (user, data) ->
+		new Promise (fulfill, reject) ->
 			user.xmpp.publishVCard data, (err, res) ->
 				if err
-					reject err
+					reject new Error err.error.condition
 				else
 					fulfill data
 	
@@ -157,4 +141,4 @@ module.exports =
 	Bookmark:	Bookmark
 	Room:		Room
 	Roster:		Roster
-	VCard:		VCard
+	Vcard:		Vcard

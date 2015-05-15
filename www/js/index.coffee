@@ -4,7 +4,7 @@ window.oalert = window.alert
 window.alert = (err) ->
 	window.oalert err.data.error
 window.Promise = require 'promise'
-window._ = require 'underscore'
+window._ = require 'lodash'
 window.$ = require 'jquery'
 window.$.deparam = require 'jquery-deparam'
 if env.isNative()

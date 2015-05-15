@@ -1,3 +1,4 @@
+# create xmpp client i.e. req.user.xmpp = client
 Promise = require 'promise'
 XMPP = require 'stanza.io'
 shortid = require('shortid')

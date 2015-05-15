@@ -2,7 +2,9 @@ module.exports =
 	policies:
 		UsersController:
 			'*':	'bearer'
-		RosterController:
-			'*':	['bearer', 'xmpp']
 		VcardController:
 			'*':	['bearer', 'xmpp']
+		RosterController:
+			'*':	['bearer', 'xmpp']
+			'update':	['bearer', 'xmpp', 'owner']
+			'destroy':	['bearer', 'xmpp', 'owner']
