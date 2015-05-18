@@ -19,20 +19,10 @@ iconUrl = (type) ->
 		
 resource = ($rootScope, pageableAR) ->
 	
-	class User extends pageableAR.Model
-		_me = null
-		
-		$idAttribute: 'username'
-		
-		$urlRoot: "#{env.authUrl}/org/api/users/"
-			
-		@me: ->
-			_me ?= new User(username: 'me/')	
-
 	class RosterItem extends pageableAR.Model
 		$idAttribute: '_id'
 		
-		$urlRoot: "#{env.serverUrl()}/api/roster"
+		$urlRoot: "#{env.server.app.url}/api/roster"
 		
 		$parse: (data, opts) ->
 			ret = super(data, opts)
@@ -44,7 +34,7 @@ resource = ($rootScope, pageableAR) ->
 		
 		$idAttribute: '_id'
 	
-		$urlRoot: "#{env.serverUrl()}/api/roster"
+		$urlRoot: "#{env.server.app.url}/api/roster"
 		
 		model: RosterItem
 
@@ -56,7 +46,7 @@ resource = ($rootScope, pageableAR) ->
 		
 		$idAttribute: 'jid'
 		
-		$urlRoot: "#{env.serverUrl()}/api/vcard"
+		$urlRoot: "#{env.server.app.url}/api/vcard"
 		
 		fullname: ->
 			if @name?
@@ -130,7 +120,7 @@ resource = ($rootScope, pageableAR) ->
 		
 		$idAttribute: 'jid'
 		
-		$urlRoot: "#{env.serverUrl()}/api/vcard"
+		$urlRoot: "#{env.server.app.url}/api/vcard"
 		
 		model: VCard
 	
@@ -140,9 +130,8 @@ resource = ($rootScope, pageableAR) ->
 	class Chat extends pageableAR.PageableCollection
 		$idAttribute: 'jid'
 	
-		$urlRoot: "#{env.serverUrl()}/api/chat"
+		$urlRoot: "#{env.server.app.url}/api/chat"
 		
-	User:		User
 	RosterItem:	RosterItem
 	Roster:		Roster
 	VCard:		VCard
@@ -150,4 +139,5 @@ resource = ($rootScope, pageableAR) ->
 	Chat:		Chat
 
 angular.module('starter.model', ['ionic', 'PageableAR'])
+	.value 'serverType', env.server.app.type
 	.factory 'resource', ['$rootScope', 'pageableAR', resource]

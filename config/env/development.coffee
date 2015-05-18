@@ -16,12 +16,20 @@ module.exports =
 		migrate:	'alter'
 	connections:
 		mongo:
-			adapter: 'sails-mongo'
-			driver: 'mongodb'
-			host: 'localhost'
-			port: 27017
-			user: 'imrw'
-			password: 'password'
-			database: 'im'
+			adapter: 	'sails-mongo'
+			driver:		'mongodb'
+			host:		'localhost'
+			port:		27017
+			user:		'imrw'
+			password:	'password'
+			database:	'im'
 			socketOptions:
 				socketTimeoutMS: 0
+	session:
+		adapter:	'mongo'
+		host: 		'localhost'
+		port: 		27017
+		db:			'im'
+		username:	'imrw'
+		password:	'password'
+			

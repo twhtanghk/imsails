@@ -12,7 +12,7 @@ xmppclient = (user, token) ->
 		user.xmpp = client = XMPP.createClient opts
 		
 		client.on '*', ->
-			sails.log.debug arguments
+			sails.log.verbose arguments
 		
 		client.on 'session:started', ->
 			# keep alive connection
