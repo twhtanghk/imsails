@@ -1,5 +1,7 @@
+path = '/im'
+
 module.exports =
-	path:			'/im'
+	path:			path
 	port:			3000
 	promise:
 		timeout:	10000 # ms
@@ -32,4 +34,5 @@ module.exports =
 		db:			'im'
 		username:	'imrw'
 		password:	'password'
-			
+	sockets:
+		path:	"#{path}/socket.io"			

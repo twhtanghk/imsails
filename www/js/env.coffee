@@ -1,4 +1,5 @@
-env =
+module.exports =
+	path: '/im'		
 	server:
 		app:
 			type:	'io'
@@ -11,14 +12,9 @@ env =
 		/^file/i.test(document.URL)
 	platform: ->
 		if @isNative() then 'mobile' else 'browser'
-	path: 'im'		
 	oauth2: ->
 		authUrl: "#{@server.auth.url}/oauth2/authorize/"
 		opts:
 			response_type:	"token"
 			scope:			"https://mob.myvnc.com/org/users https://mob.myvnc.com/xmpp"
 			client_id:		if @isNative() then 'imappPRD' else 'imDEV'
-
-console.log env
-			
-module.exports = env

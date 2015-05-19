@@ -139,5 +139,5 @@ resource = ($rootScope, pageableAR) ->
 	Chat:		Chat
 
 angular.module('starter.model', ['ionic', 'PageableAR'])
-	.value 'serverType', env.server.app.type
+	.value 'server', env.server.app
 	.factory 'resource', ['$rootScope', 'pageableAR', resource]

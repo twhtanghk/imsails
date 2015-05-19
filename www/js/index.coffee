@@ -9,6 +9,7 @@ window.$ = require 'jquery'
 window.$.deparam = require 'jquery-deparam'
 if env.isNative()
 	window.$.getScript 'cordova.js'
+io.socket.path = "#{env.path}/socket.io"
 	
 require 'ngCordova'
 require 'angular-activerecord'
