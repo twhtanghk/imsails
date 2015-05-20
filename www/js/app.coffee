@@ -69,7 +69,7 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 					
 		$urlRouterProvider.otherwise('/roster')
 	
-	.run ($ionicPlatform, $location, $http, authService) ->
+	.run ($ionicPlatform, $location, $http, $sailsSocket, authService) ->
 		$ionicPlatform.ready ->
 			if (window.cordova && window.cordova.plugins.Keyboard)
 				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true)
@@ -80,4 +80,5 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 		if $location.url().match /access_token/
 				data = $.deparam $location.url().split("/")[1]
 				$http.defaults.headers.common.Authorization = "Bearer #{data.access_token}"
+				$sailsSocket.defaults.headers.common.Authorization = "Bearer #{data.access_token}"
 				authService.loginConfirmed()

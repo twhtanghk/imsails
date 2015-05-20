@@ -1,10 +1,11 @@
 env = require './env.coffee'
 
-AppCtrl = ($rootScope, $scope, $http, platform, authService) ->	
+AppCtrl = ($rootScope, $scope, $http, $sailsSocket, platform, authService) ->	
 	# set authorization header once mobile authentication completed
 	fulfill = (data) ->
 		if data?
 			$http.defaults.headers.common.Authorization = "Bearer #{data.access_token}"
+			$sailsSocket.defaults.headers.common.Authorization = "Bearer #{data.access_token}"
 			authService.loginConfirmed()
 	
 	$scope.$on 'event:auth-forbidden', ->
@@ -94,7 +95,7 @@ RosterFilter = ->
 angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-interceptor', 'starter.model', 'platform', 'PageableAR'])
 	.filter 'vcardsFilter', VCardsFilter
 	.filter 'rosterFilter', RosterFilter
-	.controller 'AppCtrl', ['$rootScope', '$scope', '$http', 'platform', 'authService', AppCtrl]
+	.controller 'AppCtrl', ['$rootScope', '$scope', '$http', '$sailsSocket', 'platform', 'authService', AppCtrl]
 	.controller 'MenuCtrl', ['$scope', MenuCtrl]
 	.controller 'RosterItemCtrl', ['$rootScope', '$scope', '$ionicModal', RosterItemCtrl]
 	.controller 'RosterCtrl', ['$scope', 'collection', RosterCtrl]

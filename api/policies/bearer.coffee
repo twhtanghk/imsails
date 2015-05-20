@@ -47,4 +47,8 @@ passport.use 'bearer', new bearer.Strategy {}, (token, done) ->
 		done(null, false, message: err)
 	verifyToken(token).then fulfill, reject
 	
-module.exports = passport.authenticate('bearer', { session: false })
+module.exports = (req, res, next) ->
+	if req.isSocket
+		req = _.extend req, _.pick(require('http').IncomingMessage.prototype, 'login', 'logIn', 'logout', 'logOut', 'isAuthenticated', 'isUnauthenticated')
+	middleware = passport.authenticate('bearer', { session: false })
+	middleware(req, res, next)

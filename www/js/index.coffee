@@ -1,5 +1,7 @@
 env = require './env.coffee'
 
+io.socket.path = "#{env.path}/socket.io"
+
 window.oalert = window.alert
 window.alert = (err) ->
 	window.oalert err.data.error
@@ -9,7 +11,6 @@ window.$ = require 'jquery'
 window.$.deparam = require 'jquery-deparam'
 if env.isNative()
 	window.$.getScript 'cordova.js'
-io.socket.path = "#{env.path}/socket.io"
 	
 require 'ngCordova'
 require 'angular-activerecord'
