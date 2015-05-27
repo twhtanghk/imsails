@@ -1,22 +1,55 @@
 <ion-header-bar class="item-input-inset">
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
-    <h1 class='title'>{{model.fullname()}}</h1>  
+    <h1 class='title'>
+    	<img class="photo" ng-src="{{model.photoUrl}}" aria-label="{{model.name}}">
+    	<span>{{model.fullname}}</span>
+    </h1>  
 </ion-header-bar>
 <ion-content>
-	<img class='photo' ng-src="{{model.photoUrl}}" />
+	<div class="row">
+		<div class="col col-33">
+			<img class="center" ng-src="{{model.photoUrl}}">
+		</div>
+		<div class="col col-center">
+			<div style="font-weight: bold; font-size: large; margin: 1em">
+				{{model.fullname}}
+			</div>
+			<div style="font-weight: bold; font-size: large; margin: 1em" ng-if="model.post != ''">
+				{{model.post}}
+			</div>
+		</div>
+	</div>
 	<ion-list>
-		<ion-item ng-if="model.post() != ''">
-			{{model.post()}}
+		<ion-item class="item-divider">
+			Phone
 		</ion-item>
-		<ion-item ng-repeat="(key, value) in model.phone()">
-			<a href="tel:{{value}}">{{value}}</a>
+		<a class="item item-icon-right" href="tel:{{item.value}}" ng-repeat="item in model.phone">
+			<h2>{{item.value}}</h2>
+			<p>{{item.type}}</p>
+			<i class="icon ion-ios-telephone-outline"></i>
+		</a>
+		
+		<ion-item class="item-divider">
+			Email
 		</ion-item>
-		<ion-item ng-repeat="(key, value) in model.email()">
-			<a href="mailto:{{value}}">{{value}}</a>
+		<a class="item item-icon-right" href="mailto:{{model.email}}">
+			<h2>{{model.email}}</h2>
+			<p>Email</p> 
+			<i class="icon ion-ios-email-outline"></i>
+		</a>
+		<a class="item item-icon-right" href="mailto:{{item.value}}" ng-repeat="item in model.otherEmail">
+			<h2>{{item.value}}</h2>
+			<p>{{item.type}}</p>
+			<i class="icon ion-ios-email-outline"></i>
+		</a>
+		
+		<ion-item class="item-divider">
+			Address
 		</ion-item>
-		<ion-item ng-repeat="(key, value) in model.addr()">
-			{{value}}
+		<ion-item ng-repeat="item in model.address">
+			<h2>{{item.value}}</h2>
+			<p>{{item.type}}</p>
 		</ion-item>
 	</ion-list>
 </ion-content>

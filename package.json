@@ -66,5 +66,14 @@
     "url": "git://github.com/twhtang/imsails.git"
   },
   "author": "twhtang",
-  "license": ""
+  "license": "",
+  "cordovaPlugins": [
+    "org.apache.cordova.device",
+    "org.apache.cordova.console",
+    "com.ionic.keyboard",
+    "org.apache.cordova.camera"
+  ],
+  "cordovaPlatforms": [
+    "android"
+  ]
 }

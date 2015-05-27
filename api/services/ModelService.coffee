@@ -10,9 +10,6 @@ handler = (res) ->
 		res.serverError JSON.stringify(err, ["message", "arguments", "type", "name"])
 	[fulfill, reject]
 	
-notImplemented = (req, res) ->
-	res.serverError 'not implemeneted'
-	
 actionUtil = _.extend actionUtil,
 	_parseModel:	actionUtil.parseModel
 	
@@ -25,11 +22,11 @@ actionUtil = _.extend actionUtil,
 		if !model
 			throw new Error(util.format('No "model" specified in route options.'))
 			
-		Model = MongoService.models[model]
-		if !Model
+		domain = MongoService.models[model]
+		if !domain
 			throw new Error(util.format('Invalid route option, "model".\nI don\'t know about any models named: `%s`',model))
 		
-		return Model
+		return domain
 		
 	parseValues: (req) ->
 		_.omit @_parseValues(req), 'id', '_id', '__v', 'createdBy', 'createdAt', 'dateCreated', 'updatedBy', 'updatedAt', 'lastUpdated'	
@@ -55,7 +52,7 @@ Model =
 			
 	# change to blueprint find action
 	#   return { count: count of models, results: array of models filtered with the input criteria and condition } instead of models only 
-	find: (req, res, cond = {}, model = actionUtil.parseModel(req)) ->
+	find: (req, res, cond = actionUtil.parseCriteria(req), model = actionUtil.parseModel(req)) ->
 		new Promise (fulfill, reject) ->
 			count = new Promise (fulfill, reject) ->
 				model.count()
@@ -67,7 +64,7 @@ Model =
 							fulfill data
 			query = new Promise (fulfill, reject) ->
 				model.find()
-					.where( actionUtil.parseCriteria(req) )
+					.where( cond )
 					.limit( actionUtil.parseLimit(req) )
 					.skip( actionUtil.parseSkip(req) )
 					.sort( actionUtil.parseSort(req) )
@@ -82,24 +79,41 @@ Model =
 						count:		data[0]
 						results:	data[1]
 				.catch reject
-				
+	
+	# findOne by pk
+	findOne: (req, res, cond = _id: actionUtil.requirePk(req)) ->
+		domain = actionUtil.parseModel(req)
+		new Promise (fulfill, reject) ->
+			domain.findOne()
+				.where( cond )
+				.exec (err, data) ->
+					if err
+						reject err
+					else
+						if data
+							fulfill data
+						else
+							res.notFound()
+		
 	# change to blueprint update action
 	#   model.updatedBy = req.user
 	#	filtered by input.id == model.id and input.__v == model.__v
-	update: (req, res, cond = {}, model = actionUtil.parseModel(req)) ->
+	update: (req, res, cond = _id: ModelService.actionUtil.requirePk(req), model = actionUtil.parseModel(req)) ->
 		new Promise (fulfill, reject) ->
 			values = _.extend actionUtil.parseValues(req), updatedBy: req.user
-			cond = actionUtil.parseCriteria(req)
 			
 			model.findOneAndUpdate cond, values, (err, matchingRecord) ->
 				if err
 					reject err
 				else
-					fulfill matchingRecord
+					if matchingRecord
+						fulfill 'successfully updated'
+					else
+						reject 'not found'
 	
-	destroy: (req, res, cond = {}, model = actionUtil.parseModel(req)) ->
+	destroy: (req, res, cond = actionUtil.parseCriteria(req), model = actionUtil.parseModel(req)) ->
 		new Promise (fulfill, reject) ->
-			model.findOneAndRemove actionUtil.parseCriteria(req), (err, data) ->
+			model.findOneAndRemove cond, (err, data) ->
 				if err
 					reject err
 				else
@@ -195,38 +209,27 @@ Room =
 
 User =
 	find: (req, res) ->
-		Model.find req, res, {}, MongoService.models.user
-
-Vcard =
-	find: (req, res) ->
-		new Promise (fulfill, reject) ->
-			User.find req, res
-				.then (ret) ->
-					p = Promise.all _.map ret.results, (item) ->
-						XmppService.Vcard.findOne req.user, "#{item.username}@#{sails.config.xmpp.domain}"
-					p
-						.then (vcards) ->
-							ret.results = vcards
-							fulfill ret
-						.catch reject
-				.catch reject
+		Model.find req, res
+	
+	findOne: (req, res) ->
+		pk = if actionUtil.requirePk(req) == 'me' then req.user.id else actionUtil.requirePk(req)
+		Model.findOne req, res, _id: pk
 		
 	update: (req, res) ->
-		data = actionUtil.parseValues req
-		XmppService.update req.user, data
-	
+		Model.update req, res
+		
 Roster =
-
 	find: (req, res) ->
 		new Promise (fulfill, reject) ->
 			Model.find(req, res, createdBy: req.user)
 				.then (ret) ->
 					p = Promise.all _.map ret.results, (roster) ->
-						XmppService.Vcard.findOne req.user, roster.jid
+						MongoService.models.user.findOne jid: roster.jid
+							.exec()
 					p
 						.then (vcards) ->
 							ret.results = _.map ret.results, (item, index) ->
-								_.extend item.toJSON(), photo: vcards[index].photo
+								_.extend item.toJSON(), photoUrl: vcards[index].photoUrl
 							fulfill ret
 						.catch reject
 				.catch reject 
@@ -239,13 +242,25 @@ Roster =
 					
 	destroy: (req, res) ->
 		Model.destroy(req, res)
-		 
+		
+Msg = 
+	find: (req, res) ->
+		from = "#{req.user.username}@#{sails.config.xmpp.domain}"
+		to = req.query.to
+		Model.find req, res,
+			$or: [
+				{from: from, to: to}, 
+				{to: from, from: to}
+			]
+			
+	create: (req, res) ->
+		Model.create(req, res)			 
+		 	
 module.exports = 
 	handler:		handler
-	notImplemented:	notImplemented
 	actionUtil:		actionUtil
 	User:			User
-	Vcard:			Vcard
 	Roster:			Roster
+	Msg:			Msg
 	Bookmark:		Bookmark
 	Room:			Room

@@ -26,7 +26,7 @@ resource = ($rootScope, pageableAR) ->
 		
 		$parse: (data, opts) ->
 			ret = super(data, opts)
-			ret.photoUrl = if ret.photo? then "data:#{ret.photo?.type};base64,#{ret.photo?.data}" else "img/photo.png"
+			ret.photoUrl ?= "img/photo.png"
 			return ret
 			
 	class Roster extends pageableAR.PageableCollection
@@ -41,102 +41,46 @@ resource = ($rootScope, pageableAR) ->
 		@instance: ->
 			_instance ?= new Roster()
 		
-	class VCard extends pageableAR.Model
+	class User extends pageableAR.Model
 		_me = null
 		
-		$idAttribute: 'jid'
+		$idAttribute: '_id'
 		
-		$urlRoot: "#{env.server.app.url}/api/vcard"
+		$urlRoot: "#{env.server.app.url}/api/user"
 		
-		fullname: ->
-			if @name?
-				"#{@name?.given || ''} #{@name?.middle || ''} #{@name?.family || ''}"
-			else
-				@jid
-			
-		post: ->
-			if @organization?.name? or @title?
-				"#{@organization?.name || ''}/#{@title || ''}"
-			else
-				""
-			
-		# return type of data in emails, addresses, phoneNumbers
-		# e.g. ['work', 'home']
-		type: ->
-			ret = []
-			data = _.union @emails, @addresses, @phoneNumbers
-			_.each data, (entry) ->
-				key = _.findKey entry, (value, key) ->
-					value == true
-				ret.push key
-			return _.uniq ret
-			
-		phone: ->
-			ret = {}
-			_.map @phoneNumbers, (entry) ->
-				key = _.findKey entry, (value, key) ->
-					value == true
-				ret[key] = entry.number
-			return ret
-				
-		email: ->
-			ret = {}
-			_.map @emails, (entry) ->
-				key = _.findKey entry, (value, key) ->
-					value == true
-				ret[key] = entry.email
-			return ret
-		
-		addr: ->
-			ret = {}
-			_.map @addresses, (entry) ->
-				key = _.findKey entry, (value, key) ->
-					value == true
-				ret[key] = entry.street
-			return ret
-	
-		$parse: (data, opts) ->
-			ret = super(data, opts)
-			ret.photoUrl = if ret.photo? then "data:#{ret.photo?.type};base64,#{ret.photo?.data}" else "img/photo.png"
-			return ret
-			
-		$save: (model, opts = {}) ->
-			_.extend @, _.pick(model, 'photoUrl')
-			pattern = /data:(.*)(?:;base64),(.*)/
-			result = pattern.exec @photoUrl
-			@photo =
-				type:	result[1]
-				data:	result[2]
-			super(model, opts)
-			
 		@me: ->
-			_me ?= new VCard jid: 'me'
+			_me ?= new User _id: 'me'
 			
-		toggleSelect: (@selected = not @selected) ->
-			$rootScope.$broadcast 'vcard:selected', @
-			
-	class VCards extends pageableAR.PageableCollection
+	class Users extends pageableAR.PageableCollection
 		_instance = null
 		
-		$idAttribute: 'jid'
+		$idAttribute: '_id'
 		
-		$urlRoot: "#{env.server.app.url}/api/vcard"
+		$urlRoot: "#{env.server.app.url}/api/user"
 		
-		model: VCard
+		model: User
 	
 		@instance: ->
-			_instance ?= new VCards()
+			_instance ?= new Users()
 			
-	class Chat extends pageableAR.PageableCollection
-		$idAttribute: 'jid'
-	
-		$urlRoot: "#{env.server.app.url}/api/chat"
+	class Msg extends pageableAR.Model
+		$idAttribute: '_id'
 		
+		$urlRoot: "#{env.server.app.url}/api/msg"
+		
+	class Msgs extends pageableAR.PageableCollection
+		$idAttribute: '_id'
+		
+		$urlRoot: "#{env.server.app.url}/api/msg"
+		
+		model: Msg
+		
+	User:		User
+	Users:		Users
 	RosterItem:	RosterItem
 	Roster:		Roster
-	VCard:		VCard
-	VCards:		VCards
-	Chat:		Chat
+	Msg:		Msg
+	Msgs:		Msgs
 
 angular.module('starter.model', ['ionic', 'PageableAR'])
 	.value 'server', env.server.app

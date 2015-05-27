@@ -3,8 +3,6 @@ module.exports =
 		[fulfill, reject] = ModelService.handler(res)
 		ModelService.Roster.find(req, res).then fulfill, reject
 	
-	findOne:	ModelService.notImplemented
-	
 	create:		(req, res) ->
 		[fulfill, reject] = ModelService.handler(res)
 		ModelService.Roster.create(req, res).then fulfill, reject
@@ -16,9 +14,3 @@ module.exports =
 	destroy:	(req, res) ->
 		[fulfill, reject] = ModelService.handler(res)
 		ModelService.Roster.destroy(req, res).then fulfill, reject
-	
-	populate:	ModelService.notImplemented
-	
-	add:		ModelService.notImplemented
-	
-	remove:		ModelService.notImplemented

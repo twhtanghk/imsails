@@ -5,7 +5,9 @@ module.exports = (req, res, next) ->
 	
 	Model = ModelService.actionUtil.parseModel(req)
 	pk = ModelService.actionUtil.requirePk(req)
-	cond = _.extend ModelService.actionUtil.parseCriteria(req), createdBy: req.user
+	cond = 
+		_id:		pk
+		createdBy:	req.user
 	
 	Model.findOne()
 		.where( cond )

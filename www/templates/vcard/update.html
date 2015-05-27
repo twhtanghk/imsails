@@ -1,59 +1,78 @@
 <ion-header-bar class="item-input-inset">
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
-    <h1 class='title'>{{model.fullname()}}</h1>
+    <h1 class='title'>
+    	<img class="photo" ng-src="{{model.photoUrl}}" aria-label="{{model.name}}">
+    	<span>{{model.fullname}}</span>
+    </h1>
     <a class="button button-clear" ng-click="save()">Save</a>  
 </ion-header-bar>
 <ion-content>
-	<ion-list>
-		<div class="list">
+	<div class="row">
+		<div class="col col-33">
+			<img class="center" ng-src="{{model.photoUrl}}" style="cursor: pointer"
+				ngf-select ngf-multiple='false' ngf-change="select($files)">
+		</div>
+		<div class="col">
 			<label class="item item-input">
-				<span class="input-label">Photo</span>
-				<div ng-controller="ImgCropCtrl" model="$parent.model.photoUrl" data-tap-disabled="true">
-					<div class="cropArea">
-						<img ng-src="{{$parent.model.photoUrl}}" />
-					</div>
-					<div class="cropArea">
-				    	<img-crop image="model.src" result-image="$parent.model.photoUrl" change-on-fly="true">
-				    	</img-crop>
-				    </div>
-				    <button class="button" ngf-select ngf-multiple='false' ngf-change="select($files)">
-						Load
-					</button>
-				</div>
+				<input type="text" ng-model="model.name.given" placeholder="Given">
 			</label>
 			<label class="item item-input">
-				<span class="input-label">Given Name</span>
-				<input type="text" ng-model="model.name.given">
+				<input type="text" ng-model="model.name.middle" placeholder="Middle">
 			</label>
 			<label class="item item-input">
-				<span class="input-label">Middle Name</span>
-				<input type="text" ng-model="model.name.middle">
+				<input type="text" ng-model="model.name.family" placeholder="Family">
 			</label>
 			<label class="item item-input">
-				<span class="input-label">Family Name</span>
-				<input type="text" ng-model="model.name.family">
+				<input type="text" ng-model="model.organization.name" placeholder="Organization">
 			</label>
 			<label class="item item-input">
-				<span class="input-label">Organization</span>
-				<input type="text" ng-model="model.organization.name">
-			</label>
-			<label class="item item-input">
-				<span class="input-label">Title</span>
-				<input type="text" ng-model="model.title">
-			</label>
-			<label class="item item-input">
-				<span class="input-label">Email</span>
-				<input type="text" ng-model="model.emails[0].email">
-			</label>
-			<label class="item item-input">
-				<span class="input-label">Address</span>
-				<input type="text" ng-model="model.addresses[0].street">
-			</label>
-			<label class="item item-input">
-				<span class="input-label">Phone</span>
-				<input type="text" ng-model="model.phoneNumbers[0].number">
+				<input type="text" ng-model="model.title" placeholder="Title">
 			</label>
 		</div>
-	</ion-list>
+	</div>
+	
+	<!-- phone, otherEmail, address -->
+	<div ng-repeat="attr in ['phone', 'otherEmail', 'address']">
+		<div class="row">
+			<div class="col col-33">
+				<label class="item item-input item-select" ng-repeat="item in model[attr]">
+					<span class="input-label">Type</span>
+					<select ng-model="item.type">
+						<option ng-repeat="type in buffer[attr].typeAvail">{{type}}</option>
+					</select>
+				</label>
+			</div>
+			<div class="col">
+				<div class="item item-input-inset" ng-repeat="item in model[attr]">
+					<label class="item-input-wrapper">
+						<input type="text" ng-model="item.value" placeholder="{{buffer[attr].placeholder}}">
+					</label>
+					<a class="button button-icon button-small icon ion-minus" style="vertical-align: middle"
+							ng-click="model[attr].splice($index, 1)">
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col col-33">
+				<label class="item item-input item-select">
+					<span class="input-label">Type</span>
+					<select ng-model="buffer[attr].type">
+						<option ng-repeat="type in buffer[attr].typeAvail">{{type}}</option>
+					</select>
+				</label>
+			</div>
+			<div class="col">
+				<div class="item item-input-inset">
+					<label class="item-input-wrapper">
+						<input type="text" ng-model="buffer[attr].value" placeholder="{{buffer[attr].placeholder}}">
+					</label>
+					<a class="button button-icon button-small icon ion-plus" style="vertical-align: middle"
+						ng-click="model[attr].push({type: buffer[attr].type, value: buffer[attr].value})">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </ion-content>

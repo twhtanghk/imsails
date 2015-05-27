@@ -14,13 +14,46 @@ mongoose.connect db.url, { db: { safe: true }}, (err) ->
   	if err
   		console.log "Mongoose - connection error: #{err}"
   	else console.log "Mongoose - connection OK"
-	
-UserSchema = new mongoose.Schema
+
+opts = 
+	toObject:
+		virtuals: true
+	toJSON:
+		virtuals: true
+
+UserAttrs =
 	_id:			{ type: String }
+	jid:			{ type: String }
 	url:			{ type: String, required: true, index: {unique: true} }
 	username:		{ type: String, required: true }
-	email:			{ type: String }
+	email:			{ type: String, required: true }
+	name:
+		given:		{ type: String }
+		middle:		{ type: String }
+		family:		{ type: String }
+	organization:
+		name:		{ type: String }
+	title:			{ type: String }
+	phone:
+		[
+			type:	{ type: String }
+			value:	{ type: String }
+		]
+	otherEmail:
+		[
+			type:	{ type: String }
+			value:	{ type: String }
+		]
+	address:		
+		[
+			type:	{ type: String }
+			value:	{ type: String }
+		]
+	photoUrl:		{ type: String, default: "img/photo.png" }
+	createdBy:		{ type: String, ref: 'User' }
 	createdAt:		{ type: Date, default: Date.now }
+
+UserSchema = new mongoose.Schema UserAttrs, opts
 	
 UserSchema.statics =
 	search_fields: ->
@@ -39,85 +72,43 @@ UserSchema.statics =
 UserSchema.plugin(findOrCreate)
 UserSchema.plugin(uniqueValidator)
 
+UserSchema.virtual('fullname').get ->
+	if @name.given or @name.middle or @name.family
+		"#{@name.given || ''} #{@name.middle || ''} #{@name.family || ''}"
+	else
+		@email
+	
+UserSchema.virtual('post').get ->
+	if @organization?.name or @title
+		"#{@organization?.name || ''}/#{@title || ''}"
+	else
+		""
+		
 UserSchema.path('url').set (url) ->
-	@_id ?= url
+	@_id = url
 	return url
 
-User = mongoose.model 'User', UserSchema
+UserSchema.path('username').set (username) ->
+	@jid = "#{username}@#{sails.config.xmpp.domain}" 
+	return username
 
-data = (name, persistent = true) ->
-	fields:	[ 
-		{
-			type:	"hidden"
-			name:	"FORM_TYPE"
-			value:	[ "http://jabber.org/protocol/muc#roomconfig" ]
-		},
-		{
-			type:	"text-single"
-			name:	"muc#roomconfig_roomname"
-			value:	name
-		},
-		{
-			type:	"text-single"
-			name:	"muc#roomconfig_roomdesc"
-			value:	""
-		},
-		{
-			type:	"boolean"
-			name:	"muc#roomconfig_persistentroom"
-			value:	persistent
-		},
-		{
-			type:	"boolean"
-			name:	"muc#roomconfig_publicroom"
-			value:	true
-		},
-		{
-			type:	"boolean"
-			name:	"muc#roomconfig_changesubject"
-			value:	true
-		},
-		{
-			type:	"list-single"
-			name:	"muc#roomconfig_whois"
-			value:	"moderators"
-		},
-		{
-			type:	"text-private"
-			name:	"muc#roomconfig_roomsecret"
-			value:	""
-		},
-		{
-			type:	"boolean"
-			name:	"muc#roomconfig_moderatedroom"
-			value:	true
-		},
-		{
-			type:	"boolean"
-			name:	"muc#roomconfig_membersonly"
-			value:	false
-		},
-		{
-			type:	"text-single"
-			name:	"muc#roomconfig_historylength"
-			value:	"20"
-		}
-	]
-	type:			'submit'
+UserSchema.pre 'save', (next) ->
+	@createdBy = @ 
+	next()	
+
+User = mongoose.model 'User', UserSchema
 		
-config = (client, roomJid, data, func) ->
-	client.configureRoom roomJid, data, (err, res) =>
-		func(err, res)
-				
-RoomSchema = new mongoose.Schema
+RoomAttrs =
 	_id:			{ type: String }
 	jid:			{ type: String, required: true, index: {unique: true} }
 	name:			{ type: String, required: true, index: {unique: true} }
 	privateroom:	{ type: Boolean, default: false }
-	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+	createdBy:		{ type: String, ref: 'User' }
 	createdAt:		{ type: Date, default: Date.now }
-	updatedBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+	updatedBy:		{ type: String, ref: 'User' }
 	updatedAt:		{ type: Date, default: Date.now }
+
+RoomSchema = new mongoose.Schema RoomAttrs, opts
 	
 RoomSchema.statics =
 	search_fields: ->
@@ -139,88 +130,20 @@ RoomSchema.path('name').set (name) ->
 	return name
 
 RoomSchema.pre 'save', (next) ->
-	@wasNew = @isNew
 	@update $set: updatedAt: Date.now() 
-	if @wasNew
-		XmppService.Room.create(@user, @jid, @privateroom).then next, next
-	else
-		room =
-			fields:	@fields
-			type:	'submit'
-		XmppService.Room.update(@user, @jid, room).then next, next	
+	next()	
 				
-RoomSchema.pre 'remove', (next) ->
-	XmppService.Room.del(@user, @jid).then next, next
-
 Room = mongoose.model 'Room', RoomSchema
 
-BookmarkSchema = new mongoose.Schema
-	jid:			{ type: String, required: true }
-	name:			{ type: String, required: true }
-	autoJoin:		{ type: Boolean, default: true }
-	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-	createdAt:		{ type: Date, default: Date.now }
-	
-BookmarkSchema.statics =
-	search_fields: ->
-		return ['jid']
-	ordering_fields: ->
-		return ['jid']
-	ordering: ->
-		return 'jid'
-
-BookmarkSchema.plugin(findOrCreate)
-BookmarkSchema.plugin(taggable)
-
-BookmarkSchema.path('name').set (name) ->
-	@jid ?= "#{name}@#{sails.config.xmpp.muc}"
-	return name
-
-BookmarkSchema.path('autoJoin').set (autoJoin) ->
-	xmpp @owner, (client) =>
-		if @autoJoin != autoJoin
-			if autoJoin 
-				client.addBookmark
-					jid: 		@jid
-					name:		@name
-					autoJoin: 	true
-			else
-				client.removeBookmark @jid
-	return autoJoin
-			
-BookmarkSchema.path('createdBy').set (createdBy) ->
-	@owner =
-		username: 	createdBy.username
-		token:		createdBy.token
-	return createdBy
-	
-BookmarkSchema.pre 'save', (next) ->
-	xmpp @owner, (client) ->
-		if autoJoin 
-			client.addBookmark
-				jid: 		@jid
-				name:		@name
-				autoJoin: 	true
-		else
-			client.removeBookmark @jid
-		client.disconnect()
-		next()
-		
-BookmarkSchema.pre 'remove', (next) ->
-	xmpp @owner, (client) =>
-		client.removeBookmark @jid
-		next()
-		
-Bookmark = mongoose.model 'Bookmark', BookmarkSchema
-
-MsgSchema = new mongoose.Schema
-	msgid:			{ type: String }
+MsgAttrs =
 	from:			{ type: String, required: true }
 	to:				{ type: String, required: true }
 	type:			{ type: String, default: 'chat' }
 	body:			{ type: String }
-	status:			{ type: [ Number ] }
-	stamp:			{ type: Date, default: Date.now }
+	createdBy:		{ type: String, ref: 'User' }
+	createdAt:		{ type: Date, default: Date.now }
+
+MsgSchema = new mongoose.Schema MsgAttrs, opts
 	
 MsgSchema.statics =
 	search_fields: ->
@@ -230,27 +153,20 @@ MsgSchema.statics =
 	ordering: ->
 		return '-stamp'
 
-MsgSchema.plugin(findOrCreate)
-
 MsgSchema.pre 'validate', (next) ->
-	if @user
-		@from = "#{@user.username}@#{sails.config.xmpp.domain}"
-	next()
-	
-MsgSchema.pre 'save', (next) ->
-	if @user.xmpp
-		@user.xmpp.sendMessage _.pick(@toJSON(), 'to', 'type', 'body')
+	@from = "#{@createdBy.username}@#{sails.config.xmpp.domain}"
 	next()
 	
 Msg = mongoose.model 'Msg', MsgSchema
-
-RosterSchema = new mongoose.Schema
-	_id:			{ type: String }
+			
+RosterAttrs =
 	jid:			{ type: String, required: true }
 	name:			{ type: String, required: true }
 	groups:			{ type: [ String ] }
 	createdBy:		{ type: String, ref: 'User' }
 	createdAt:		{ type: Date, default: Date.now }
+
+RosterSchema = new mongoose.Schema RosterAttrs, opts
 
 RosterSchema.index { jid: 1, createdBy: 1 }, { unique: true }	
 
@@ -258,22 +174,8 @@ RosterSchema.statics =
 	ordering: ->
 		return 'name'
 
-RosterSchema.plugin(findOrCreate)
 RosterSchema.plugin(uniqueValidator)
 
-RosterSchema.path('jid').set (jid) ->
-	@_id ?= jid
-	return jid
-
-RosterSchema.pre 'save', (next) ->
-	if @isNew
-		XmppService.Roster.create(@createdBy, @toJSON()).then next, next
-	else 
-		XmppService.Roster.update(@createdBy, @jid, @toJSON()).then next, next
-	
-RosterSchema.pre 'remove', (next) ->
-	XmppService.Roster.delete(@user, @jid).then next, next
-	
 Roster = mongoose.model 'Roster', RosterSchema
 
 module.exports = 
@@ -281,5 +183,4 @@ module.exports =
 		user: 		User
 		roster:		Roster
 		room: 		Room
-		bookmark:	Bookmark
 		msg:		Msg

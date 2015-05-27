@@ -36,7 +36,7 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 			resolve:
 				resource: 'resource'
 				collection: (resource) ->
-					resource.VCards.instance()
+					resource.Users.instance()
 			onEnter: (collection) ->
 				collection?.$fetch reset: true
 				
@@ -49,7 +49,7 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 			resolve:
 				resource: 'resource'
 				model: (resource) ->
-					new resource.VCard jid: 'me'
+					resource.User.me()
 			onEnter: (model) ->
 				model.$fetch()
 		
@@ -60,13 +60,39 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 					templateUrl: 'templates/vcard/read.html'
 					controller: 'VCardDetailCtrl'
 					
-		$stateProvider.state 'app.chat',
-			url: "chat"
+		$stateProvider.state 'app.vcard.photo',
+			url: '/photo'
 			views:
-				'menuContent':
-					templateUrl: "templates/chat/list.html"
-					controller: 'ChatCtrl'
+				vcardContent:
+					templateUrl: 'templates/vcard/photo.html'
+					controller: 'VCardPhotoCtrl'
+			resolve:
+				resource: 'resource'
+				model: (resource) ->
+					resource.User.me()
 					
+		$stateProvider.state 'app.chat',
+			url: "/chat"
+			abstract: true
+			views:
+				menuContent:
+					templateUrl: "templates/chat/index.html"
+					
+		$stateProvider.state 'app.chat.list',
+			url: "/:jid"
+			views:
+				chatContent:
+					templateUrl: 'templates/chat/list.html'
+					controller: 'ChatCtrl'
+			resolve:
+				resource: 'resource'
+				jid: ($stateParams) ->
+					$stateParams.jid
+				collection: (resource) ->
+					new resource.Msgs()
+			onEnter: (jid, collection) ->
+				collection?.$fetch reset: true, params: {to: jid, sort: 'createdAt DESC'}
+				
 		$urlRouterProvider.otherwise('/roster')
 	
 	.run ($ionicPlatform, $location, $http, $sailsSocket, authService) ->

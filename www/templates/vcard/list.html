@@ -4,7 +4,7 @@
     <h1 class='title'>VCard</h1>
     <a class="button button-clear" href="#/vcard/update">Personal Info</a>  
 </ion-header-bar>
-<div class="bar bar-subheader item-input-inset">
+<div class="bar item-input-inset">
 	<label class="item-input-wrapper">
 		<i class="icon ion-search placeholder-icon"></i>
 	    <input type="text" ng-model="searchText">
@@ -19,10 +19,10 @@
 			href="#/vcard/{{model.jid}}">
 			<img class="photo" ng-src="{{model.photoUrl}}" aria-label="{{model.name}}">
 			<h2>
-				<span>{{model.fullname()}}</span>
+				<span>{{model.fullname}}</span>
 			</h2>
 			<p>
-				{{model.post()}}
+				{{model.post}}
 			</p>
 			<ion-option-button class="button button-positive icon-left ion-plus-round" on-tap="addRoster()">Roster</ion-option-button>
 		</ion-item>
