@@ -2,8 +2,9 @@ module.exports =
 	path: '/im'		
 	server:
 		app:
-			type:	'io'
-			url:	''
+			type:		'io'						# for model to interface with server (io or rest)
+			url:		''							# for model urlRoot
+			urlRoot:	'http://localhost:3000'		# for socket.io to establish connection
 		auth:
 			url:	'https://mob.myvnc.com/org'
 	isMobile: ->

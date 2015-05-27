@@ -1,6 +1,8 @@
 env = require './env.coffee'
 
+io.socket.url = env.server.app.urlRoot
 io.socket.path = "#{env.path}/socket.io"
+io.sails.useCORSRouteToGetCookie = false
 
 window.oalert = window.alert
 window.alert = (err) ->
