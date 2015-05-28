@@ -22,7 +22,7 @@
 			{{model.body}}
 		</div>
 	</div>
-	<ion-infinite-scroll ng-if="collection.state.page < collection.state.total_page" on-infinite="loadMore()">
+	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">
 	</ion-infinite-scroll>
 </ion-content>
 <ion-footer-bar class="item-input-inset">

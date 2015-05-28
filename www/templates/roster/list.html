@@ -30,7 +30,7 @@
 				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="remove();">Delete</ion-option-button>
 			</ion-item>
 		</ion-list>
-		<ion-infinite-scroll ng-if="collection.state.page < collection.state.total_page" on-infinite="controller.loadMore()">
+		<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="controller.loadMore()">
 		</ion-infinite-scroll>
 	</ion-content>
 </ion-view>

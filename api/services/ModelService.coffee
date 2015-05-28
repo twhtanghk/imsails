@@ -56,7 +56,7 @@ Model =
 		new Promise (fulfill, reject) ->
 			count = new Promise (fulfill, reject) ->
 				model.count()
-					.where( actionUtil.parseCriteria(req) )
+					.where( cond )
 					.exec (err, data) ->
 						if err
 							reject err
