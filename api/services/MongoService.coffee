@@ -22,7 +22,6 @@ opts =
 		virtuals: true
 
 UserAttrs =
-	_id:			{ type: String }
 	jid:			{ type: String }
 	url:			{ type: String, required: true, index: {unique: true} }
 	username:		{ type: String, required: true }
@@ -50,7 +49,7 @@ UserAttrs =
 			value:	{ type: String }
 		]
 	photoUrl:		{ type: String, default: "img/photo.png" }
-	createdBy:		{ type: String, ref: 'User' }
+	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 	createdAt:		{ type: Date, default: Date.now }
 
 UserSchema = new mongoose.Schema UserAttrs, opts
@@ -84,10 +83,6 @@ UserSchema.virtual('post').get ->
 	else
 		""
 		
-UserSchema.path('url').set (url) ->
-	@_id = url
-	return url
-
 UserSchema.path('username').set (username) ->
 	@jid = "#{username}@#{sails.config.xmpp.domain}" 
 	return username
@@ -99,13 +94,12 @@ UserSchema.pre 'save', (next) ->
 User = mongoose.model 'User', UserSchema
 		
 RoomAttrs =
-	_id:			{ type: String }
 	jid:			{ type: String, required: true, index: {unique: true} }
 	name:			{ type: String, required: true, index: {unique: true} }
 	privateroom:	{ type: Boolean, default: false }
-	createdBy:		{ type: String, ref: 'User' }
+	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 	createdAt:		{ type: Date, default: Date.now }
-	updatedBy:		{ type: String, ref: 'User' }
+	updatedBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 	updatedAt:		{ type: Date, default: Date.now }
 
 RoomSchema = new mongoose.Schema RoomAttrs, opts
@@ -121,9 +115,6 @@ RoomSchema.statics =
 RoomSchema.plugin(findOrCreate)
 RoomSchema.plugin(taggable)
 RoomSchema.plugin(uniqueValidator)
-RoomSchema.path('jid').set (jid) ->
-	@_id ?= jid
-	return jid
 
 RoomSchema.path('name').set (name) ->
 	@jid ?= "#{name}@#{sails.config.xmpp.muc}"
@@ -140,7 +131,7 @@ MsgAttrs =
 	to:				{ type: String, required: true }
 	type:			{ type: String, default: 'chat' }
 	body:			{ type: String }
-	createdBy:		{ type: String, ref: 'User' }
+	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 	createdAt:		{ type: Date, default: Date.now }
 
 MsgSchema = new mongoose.Schema MsgAttrs, opts
@@ -163,7 +154,7 @@ RosterAttrs =
 	jid:			{ type: String, required: true }
 	name:			{ type: String, required: true }
 	groups:			{ type: [ String ] }
-	createdBy:		{ type: String, ref: 'User' }
+	createdBy:		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 	createdAt:		{ type: Date, default: Date.now }
 
 RosterSchema = new mongoose.Schema RosterAttrs, opts

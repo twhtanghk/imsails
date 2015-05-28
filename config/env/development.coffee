@@ -1,4 +1,4 @@
-path = '/im'
+path = '/im.app'
 
 module.exports =
 	path:			path

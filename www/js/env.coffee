@@ -1,5 +1,5 @@
 module.exports =
-	path: '/im'		
+	path: '/im.app'		
 	server:
 		app:
 			type:		'io'						# for model to interface with server (io or rest)
