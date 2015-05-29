@@ -43,7 +43,10 @@ img {
 img.center {
 	display: block;
 	margin: auto;
-	height: 140px;
+	width: 200px;
+	@media only screen and (max-device-width: 720px) {
+		width: 90%;
+	}
 }
 
 .cropArea {

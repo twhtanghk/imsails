@@ -54,12 +54,13 @@ VCardUpdateCtrl = ($scope, $state, model) ->
 	_.extend $scope,
 		model: model
 		buffer:
-			phone: 
-				placeholder: 	'Number'
+			phone:
+				placeholder: 	'Phone'
 				typeAvail:		['Mobile', 'Office', 'Home', 'Other']
 				type:			'Mobile'
 				value:			''
 			otherEmail:
+				title:			'Email'
 				placeholder:	'Email'
 				typeAvail:		['Office', 'Home', 'Other']
 				type:			'Office'
@@ -77,7 +78,6 @@ VCardUpdateCtrl = ($scope, $state, model) ->
 				reader = new FileReader()
 				reader.onload = (event) =>
 					@model.photoUrl = event.target.result
-					$scope.$apply 'model.photoUrl'
 					$state.go 'app.vcard.photo'
 				reader.readAsDataURL(files[0])
 

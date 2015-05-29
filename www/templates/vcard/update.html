@@ -34,6 +34,10 @@
 	
 	<!-- phone, otherEmail, address -->
 	<div ng-repeat="attr in ['phone', 'otherEmail', 'address']">
+		<ion-item class="item-divider">
+			{{buffer[attr].placeholder}}
+		</ion-item>
+		
 		<div class="row">
 			<div class="col col-33">
 				<label class="item item-input item-select" ng-repeat="item in model[attr]">
@@ -69,7 +73,7 @@
 						<input type="text" ng-model="buffer[attr].value" placeholder="{{buffer[attr].placeholder}}">
 					</label>
 					<a class="button button-icon button-small icon ion-plus" style="vertical-align: middle"
-						ng-click="model[attr].push({type: buffer[attr].type, value: buffer[attr].value})">
+						ng-click="model[attr].push({type: buffer[attr].type, value: buffer[attr].value}); buffer[attr].value = ''">
 					</a>
 				</div>
 			</div>
