@@ -1,7 +1,7 @@
 {
-  "name": "restim",
+  "name": "imsails",
   "version": "0.0.0",
-  "homepage": "https://github.com/twhtanghk/restim",
+  "homepage": "https://github.com/twhtanghk/imsails",
   "license": "MIT",
   "ignore": [
     "**/.*",
