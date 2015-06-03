@@ -69,6 +69,11 @@ ion-header-bar h1 img {
 
 ion-nav-view[name=vcardContent] {
 	.row {
+		.col-33 {
+			.button {
+				width: 100%;	/* phone, email, address type */
+			}
+		}
 		.col:last-of-type .item {
 			height: 49px;
 		}

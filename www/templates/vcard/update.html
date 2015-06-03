@@ -33,19 +33,21 @@
 	</div>
 	
 	<!-- phone, otherEmail, address -->
-	<div ng-repeat="attr in ['phone', 'otherEmail', 'address']">
+	<div ng-repeat="attr in ['phone', 'otherEmail', 'address']" ng-init="options = buffer[attr].typeAvail">
 		<ion-item class="item-divider">
 			{{buffer[attr].placeholder}}
 		</ion-item>
 		
+		<!-- model existing value -->
 		<div class="row">
 			<div class="col col-33">
-				<label class="item item-input item-select" ng-repeat="item in model[attr]">
-					<span class="input-label">Type</span>
-					<select ng-model="item.type">
-						<option ng-repeat="type in buffer[attr].typeAvail">{{type}}</option>
-					</select>
-				</label>
+				<span ng-controller="SelectCtrl" ng-repeat="item in $parent.model[attr]">
+					<fancy-select 
+						ng-model="model" 
+						template-url="../../lib/tagDirective/select.html" 
+						title="Select">
+					</fancy-select>
+				</span>
 			</div>
 			<div class="col">
 				<div class="item item-input-inset" ng-repeat="item in model[attr]">
@@ -58,14 +60,17 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- new entry for model attribute phone, otherEmail, or address -->
 		<div class="row">
-			<div class="col col-33">
-				<label class="item item-input item-select">
-					<span class="input-label">Type</span>
-					<select ng-model="buffer[attr].type">
-						<option ng-repeat="type in buffer[attr].typeAvail">{{type}}</option>
-					</select>
-				</label>
+			<div class="col col-33" ng-init="item = buffer[attr]">
+				<span ng-controller="SelectCtrl">
+					<fancy-select 
+						ng-model="model" 
+						template-url="../../lib/tagDirective/select.html" 
+						title="Select">
+					</fancy-select>
+				</span>
 			</div>
 			<div class="col">
 				<div class="item item-input-inset">

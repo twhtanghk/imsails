@@ -125,6 +125,23 @@ ChatCtrl = ($scope, $ionicScrollDelegate, jid, collection, resource) ->
 		if newmodels.length != oldmodels.length
 			$ionicScrollDelegate.scrollBottom true		
 
+###
+create model from $scope input parameter for fancySelect model
+in:
+	options: 	[opt1, opt2, ...]
+	item.type:	value
+out:
+	model: [{text: opt1, selected: true|false}, ...]
+###
+SelectCtrl = ($scope) ->
+	$scope.model = 
+		_.map $scope.options, (opt) ->
+			text: opt
+			selected: opt == $scope.item.type
+				
+	$scope.$on 'selected', (event, values) ->
+		$scope.item.type = values[0] || '' 
+		
 VCardsFilter = ->
 	(vcards, search) ->
 		return _.filter vcards, (vcard) ->
@@ -154,3 +171,4 @@ angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-intercept
 	.controller 'VCardPhotoCtrl', ['$scope', '$state', 'model', VCardPhotoCtrl]
 	.controller 'VCardsCtrl', ['$scope', 'pageableAR', 'collection', VCardsCtrl]
 	.controller 'ChatCtrl', ['$scope', '$ionicScrollDelegate', 'jid', 'collection', 'resource', ChatCtrl]
+	.controller 'SelectCtrl', ['$scope', SelectCtrl]
