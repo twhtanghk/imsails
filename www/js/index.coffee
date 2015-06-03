@@ -16,7 +16,7 @@ if env.isNative()
 	
 require 'ngCordova'
 require 'angular-activerecord'
-require 'angular-http-auth'
+require 'sails-auth'
 require 'angular-touch'
 require 'ng-file-upload'
 require 'ng-img-crop'
