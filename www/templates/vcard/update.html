@@ -39,18 +39,17 @@
 		</ion-item>
 		
 		<!-- model existing value -->
-		<div class="row">
+		<div class="row" ng-repeat="item in model[attr]">
 			<div class="col col-33">
-				<span ng-controller="SelectCtrl" ng-repeat="item in $parent.model[attr]">
-					<fancy-select 
-						ng-model="model" 
-						template-url="../../lib/tagDirective/select.html" 
-						title="Select">
-					</fancy-select>
-				</span>
+				<fancy-select 
+					ng-model="model" 
+					template-url="lib/tagDirective/select.html" 
+					title="Select"
+					ng-controller="SelectCtrl">
+				</fancy-select>
 			</div>
 			<div class="col">
-				<div class="item item-input-inset" ng-repeat="item in model[attr]">
+				<div class="item item-input-inset">
 					<label class="item-input-wrapper">
 						<input type="text" ng-model="item.value" placeholder="{{buffer[attr].placeholder}}">
 					</label>
@@ -62,15 +61,14 @@
 		</div>
 		
 		<!-- new entry for model attribute phone, otherEmail, or address -->
-		<div class="row">
-			<div class="col col-33" ng-init="item = buffer[attr]">
-				<span ng-controller="SelectCtrl">
-					<fancy-select 
-						ng-model="model" 
-						template-url="../../lib/tagDirective/select.html" 
-						title="Select">
-					</fancy-select>
-				</span>
+		<div class="row" ng-init="item = buffer[attr]">
+			<div class="col col-33">
+				<fancy-select 
+					ng-model="model" 
+					template-url="lib/tagDirective/select.html" 
+					title="Select"
+					ng-controller="SelectCtrl">
+				</fancy-select>
 			</div>
 			<div class="col">
 				<div class="item item-input-inset">

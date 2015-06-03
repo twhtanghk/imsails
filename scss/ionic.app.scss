@@ -28,6 +28,8 @@ $msg-color: #f5f5f5;
 
 $msg-arrow: 20px;
 
+$input-height: 49px;
+
 .selected {
 	background-color: $select-color;
 	
@@ -71,11 +73,12 @@ ion-nav-view[name=vcardContent] {
 	.row {
 		.col-33 {
 			.button {
+				height: $input-height;
 				width: 100%;	/* phone, email, address type */
 			}
 		}
 		.col:last-of-type .item {
-			height: 49px;
+			height: $input-height;
 		}
 	}	
 }
