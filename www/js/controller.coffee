@@ -1,4 +1,5 @@
 env = require './env.coffee'
+urlparser = require 'url'
 
 OAuthService = ($http, $sailsSocket, authService) ->
 	# set authorization header once oauth2 token is available
@@ -12,6 +13,18 @@ OAuthService = ($http, $sailsSocket, authService) ->
 		console.error reason
 		authService.loginCancelled(data, reason)
 
+	# check if input url match error or acess_token
+	# then trigger fulfill(data) or reject(err) 
+	matchUrl: (url, resolve, reject) ->
+		if url.match(/error|access_token/)
+			path = urlparser.parse(url)
+			data = $.deparam /(?:[#\/]*)(.*)/.exec(path.hash)[1]	# remove leading / or #
+			err = $.deparam /\?*(.*)/.exec(path.search)[1]			# remove leading ?
+			if err.error
+				reject err 
+			else
+				resolve data
+			
 AppCtrl = ($rootScope, platform, OAuthService) ->
 	$rootScope.$on 'event:auth-forbidden', ->
 		platform.auth()

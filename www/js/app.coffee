@@ -111,7 +111,9 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 				OAuthService.loginConfirmed data
 					
 		# notify parent window if access_token is available or access denied
-		if $location.absUrl().match(/error|access_token/)
-			data = $.deparam /\/*(.*)/.exec($location.url())[1]
-			err = $.deparam /\?*(.*)/.exec(window.location.search)[1]
-			$.postMessage _.extend(data, err), $location.absUrl()
+		url = $location.absUrl()
+		resolve = (data) ->
+			$.postMessage data, url
+		reject = (err) ->
+			$.postMessage err, url
+		OAuthService.matchUrl $location.absUrl(), resolve, reject
