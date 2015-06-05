@@ -69,6 +69,15 @@ ion-header-bar h1 img {
 	vertical-align: middle;
 }
 
+.scroll {
+	height: 100%;
+	
+	iframe {
+		width: 100%;
+		height: 100%;
+	}
+}
+
 ion-nav-view[name=vcardContent] {
 	.row {
 		.col-33 {

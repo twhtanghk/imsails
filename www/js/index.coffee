@@ -6,7 +6,7 @@ io.sails.useCORSRouteToGetCookie = false
 
 window.oalert = window.alert
 window.alert = (err) ->
-	window.oalert err.data.error
+	console.error err.message
 window.Promise = require 'promise'
 window._ = require 'lodash'
 window.$ = require 'jquery'
@@ -21,6 +21,7 @@ require 'angular-touch'
 require 'ng-file-upload'
 require 'ng-img-crop'
 require 'tagDirective'
+require 'jq-postmessage'
 require './app.coffee'
 require './controller.coffee'
 require './model.coffee'

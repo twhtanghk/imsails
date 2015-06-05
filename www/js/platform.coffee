@@ -1,14 +1,14 @@
 env = require './env.coffee'
 Promise = require 'promise'
 
-platform = ($rootScope, $cordovaInAppBrowser, $location, $http) ->
+platform = ($rootScope, $cordovaInAppBrowser, $location, $http, $ionicModal, OAuthService) ->
 	# return promise to authenticate user
 	auth = ->
 		url = "#{env.oauth2().authUrl}?#{$.param(env.oauth2().opts)}"
 		
 		func = 
 			mobile: ->
-				new Promise (fulfill, reject) ->
+				p = new Promise (fulfill, reject) ->
 					document.addEventListener 'deviceready', ->
 						$cordovaInAppBrowser.open url, '_blank'
 					
@@ -19,12 +19,25 @@ platform = ($rootScope, $cordovaInAppBrowser, $location, $http) ->
 					
 					$rootScope.$on '$cordovaInAppBrowser:exit', (e, event) ->
 						reject("The sign in flow was canceled")
+
+				p
+					.then (data) ->
+						OAuthService.loginConfirmed data
+						
+					.catch (err) ->
+						OAuthService.loginCancelled null, err
 					
 			browser: ->
-				new Promise (fulfill, reject) ->
-					window.location.href = url
-					fulfill()
-				
+				templateStr = """
+					<ion-modal-view>
+						<ion-content>
+							<iframe src='#{url}'></iframe>
+						</ion-content>
+					</ion-modal-view>
+				"""
+				$rootScope.modal = $ionicModal.fromTemplate(templateStr)
+				$rootScope.modal.show()
+			
 		func[env.platform()]()
 		
 	# open model.file
@@ -92,6 +105,8 @@ config =  ($cordovaInAppBrowserProvider) ->
 	document.addEventListener 'deviceready', ->
 		$cordovaInAppBrowserProvider.setDefaultOptions(opts)
 
-angular.module('platform', ['ionic', 'ngCordova']).config ['$cordovaInAppBrowserProvider', config]
+angular.module('platform', ['ionic', 'ngCordova', 'starter.controller'])
 
-angular.module('platform').factory 'platform', ['$rootScope', '$cordovaInAppBrowser', '$location', '$http', platform]
+	.config ['$cordovaInAppBrowserProvider', config]
+
+	.factory 'platform', ['$rootScope', '$cordovaInAppBrowser', '$location', '$http', '$ionicModal', 'OAuthService', platform]

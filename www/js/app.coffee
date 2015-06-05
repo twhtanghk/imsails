@@ -95,16 +95,23 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 				
 		$urlRouterProvider.otherwise('/roster')
 	
-	.run ($ionicPlatform, $location, $http, $sailsSocket, authService) ->
+	.run ($ionicPlatform, $location, $http, $sailsSocket, OAuthService) ->
 		$ionicPlatform.ready ->
 			if (window.cordova && window.cordova.plugins.Keyboard)
 				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true)
 			if (window.StatusBar)
 				StatusBar.styleDefault()
-			
-		# set authorization header once browser authentication completed
-		if $location.url().match /access_token/
-				data = $.deparam $location.url().split("/")[1]
-				$http.defaults.headers.common.Authorization = "Bearer #{data.access_token}"
-				$sailsSocket.defaults.headers.common.Authorization = "Bearer #{data.access_token}"
-				authService.loginConfirmed()
+				
+		# listen if access granted or denied in child window
+		$.receiveMessage (event) ->
+			data = $.deparam event.data
+			if data.error
+				OAuthService.loginCancelled null, data.error
+			else
+				OAuthService.loginConfirmed data
+					
+		# notify parent window if access_token is available or access denied
+		if $location.absUrl().match(/error|access_token/)
+			data = $.deparam /\/*(.*)/.exec($location.url())[1]
+			err = $.deparam /\?*(.*)/.exec(window.location.search)[1]
+			$.postMessage _.extend(data, err), $location.absUrl()

@@ -1,18 +1,27 @@
 env = require './env.coffee'
 
-AppCtrl = ($rootScope, $scope, $http, $sailsSocket, platform, authService) ->	
-	# set authorization header once mobile authentication completed
-	fulfill = (data) ->
+OAuthService = ($http, $sailsSocket, authService) ->
+	# set authorization header once oauth2 token is available
+	loginConfirmed: (data, configUpdater) ->
 		if data?
 			$http.defaults.headers.common.Authorization = "Bearer #{data.access_token}"
 			$sailsSocket.defaults.headers.common.Authorization = "Bearer #{data.access_token}"
 			authService.loginConfirmed()
-	
-	$scope.$on 'event:auth-forbidden', ->
-		platform.auth().then fulfill, alert
-	$scope.$on 'event:auth-loginRequired', ->
-		platform.auth().then fulfill, alert
-	
+		
+	loginCancelled:	(data, reason) ->
+		console.error reason
+		authService.loginCancelled(data, reason)
+
+AppCtrl = ($rootScope, platform, OAuthService) ->
+	$rootScope.$on 'event:auth-forbidden', ->
+		platform.auth()
+	$rootScope.$on 'event:auth-loginRequired', ->
+		platform.auth()
+	$rootScope.$on 'event:auth-loginConfirmed', ->
+		$rootScope.modal?.remove()
+	$rootScope.$on 'event:auth-loginCancelled', (data) ->
+		$rootScope.modal?.remove()
+		
 MenuCtrl = ($scope) ->
 	$scope.env = env
 	$scope.navigator = navigator
@@ -158,10 +167,11 @@ MsgFilter = ->
 			msg.body.indexOf(search) > -1
 							
 angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-interceptor', 'starter.model', 'platform', 'PageableAR'])
+	.factory 'OAuthService', ['$http', '$sailsSocket', 'authService', OAuthService]
 	.filter 'vcardsFilter', VCardsFilter
 	.filter 'rosterFilter', RosterFilter
 	.filter 'msgFilter', MsgFilter
-	.controller 'AppCtrl', ['$rootScope', '$scope', '$http', '$sailsSocket', 'platform', 'authService', AppCtrl]
+	.controller 'AppCtrl', ['$rootScope', 'platform', 'OAuthService', AppCtrl]
 	.controller 'MenuCtrl', ['$scope', MenuCtrl]
 	.controller 'RosterItemCtrl', ['$rootScope', '$scope', '$ionicModal', RosterItemCtrl]
 	.controller 'RosterCtrl', ['$scope', 'collection', RosterCtrl]
