@@ -88,9 +88,14 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 				resource: 'resource'
 				jid: ($stateParams) ->
 					$stateParams.jid
+				chat: (resource, jid) ->
+					_.findWhere resource.Roster.instance().models, jid: jid
+				me: (resource) ->
+					resource.User.me()
 				collection: (resource) ->
 					new resource.Msgs()
-			onEnter: (jid, collection) ->
+			onEnter: (jid, me, collection) ->
+				me.$fetch()
 				collection?.$fetch reset: true, params: {to: jid, sort: 'createdAt DESC'}
 				
 		$urlRouterProvider.otherwise('/roster')

@@ -20,8 +20,6 @@ iconUrl = (type) ->
 resource = ($rootScope, pageableAR) ->
 	
 	class RosterItem extends pageableAR.Model
-		$idAttribute: '_id'
-		
 		$urlRoot: "#{env.server.app.url}/api/roster"
 		
 		$parse: (data, opts) ->
@@ -32,8 +30,6 @@ resource = ($rootScope, pageableAR) ->
 	class Roster extends pageableAR.PageableCollection
 		_instance = null
 		
-		$idAttribute: '_id'
-	
 		$urlRoot: "#{env.server.app.url}/api/roster"
 		
 		model: RosterItem
@@ -44,17 +40,13 @@ resource = ($rootScope, pageableAR) ->
 	class User extends pageableAR.Model
 		_me = null
 		
-		$idAttribute: '_id'
-		
 		$urlRoot: "#{env.server.app.url}/api/user"
 		
 		@me: ->
-			_me ?= new User _id: 'me'
+			_me ?= new User id: 'me'
 			
 	class Users extends pageableAR.PageableCollection
 		_instance = null
-		
-		$idAttribute: '_id'
 		
 		$urlRoot: "#{env.server.app.url}/api/user"
 		
@@ -64,13 +56,9 @@ resource = ($rootScope, pageableAR) ->
 			_instance ?= new Users()
 			
 	class Msg extends pageableAR.Model
-		$idAttribute: '_id'
-		
 		$urlRoot: "#{env.server.app.url}/api/msg"
 		
 	class Msgs extends pageableAR.PageableCollection
-		$idAttribute: '_id'
-		
 		$urlRoot: "#{env.server.app.url}/api/msg"
 		
 		model: Msg

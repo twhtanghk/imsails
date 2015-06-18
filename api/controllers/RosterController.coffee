@@ -1,16 +1,12 @@
+ # RosterController
+ #
+ # @description :: Server-side logic for managing rosters
+ # @help        :: See http://links.sailsjs.org/docs/controllers
+_ = require 'lodash'
+find = require '../blueprints/find'
+
 module.exports =
-	find:		(req, res) ->
-		[fulfill, reject] = ModelService.handler(res)
-		ModelService.Roster.find(req, res).then fulfill, reject
-	
-	create:		(req, res) ->
-		[fulfill, reject] = ModelService.handler(res)
-		ModelService.Roster.create(req, res).then fulfill, reject
-	
-	update:		(req, res) ->
-		[fulfill, reject] = ModelService.handler(res)
-		ModelService.Roster.update(req, res).then fulfill, reject
-	
-	destroy:	(req, res) ->
-		[fulfill, reject] = ModelService.handler(res)
-		ModelService.Roster.destroy(req, res).then fulfill, reject
+	find: (req, res) ->
+		req.options.where = req.options.where || {}
+		_.extend req.options.where, createdBy: req.user.id
+		find(req, res)

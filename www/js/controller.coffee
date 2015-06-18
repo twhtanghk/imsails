@@ -64,6 +64,7 @@ VCardCtrl = ($scope, pageableAR, resource) ->
 			item = new resource.RosterItem
 				jid: $scope.model.jid
 				name: $scope.model.fullname
+				photoUrl: $scope.model.photoUrl
 			item.$save()
 
 # vcard detail view
@@ -123,14 +124,13 @@ VCardsCtrl = ($scope, pageableAR, collection) ->
 				.catch alert
 			return @
 	
-ChatCtrl = ($scope, $ionicScrollDelegate, jid, collection, resource) ->
-	item = _.findWhere resource.Roster.instance().models, jid: jid
-	
+ChatCtrl = ($scope, $ionicScrollDelegate, jid, chat, me, collection, resource) ->
 	_.extend $scope,
-		chat: item
+		chat: chat
+		me: me
 		collection: collection
 		loadMore: ->
-			collection.$fetch params: to: jid
+			collection.$fetch params: {to: jid, sort: 'createdAt DESC'}
 				.then ->
 					$scope.$broadcast('scroll.infiniteScrollComplete')
 				.catch alert
@@ -140,13 +140,17 @@ ChatCtrl = ($scope, $ionicScrollDelegate, jid, collection, resource) ->
 			msg.$save()
 				.then ->
 					collection.add msg
+					$ionicScrollDelegate.scrollTop true
 					$scope.msg = ''
 				.catch alert
 	
-	$scope.$watchCollection 'collection.models', (newmodels, oldmodels) ->
-		if newmodels.length != oldmodels.length
-			$ionicScrollDelegate.scrollBottom true		
-
+	# listen if msg is created on server
+	io.socket.on "msg", (event) ->
+		if event.verb == 'created'
+			collection.add new resource.Msg event.data
+			$scope.$apply('collection.models')
+			$ionicScrollDelegate.scrollTop true
+	
 ###
 create model from $scope input parameter for fancySelect model
 in:
@@ -166,18 +170,27 @@ SelectCtrl = ($scope) ->
 		
 VCardsFilter = ->
 	(vcards, search) ->
-		return _.filter vcards, (vcard) ->
-			vcard.fullname.indexOf(search) > -1 or vcard.post.indexOf(search) > -1
+		if search
+			return _.filter vcards, (vcard) ->
+				vcard.fullname.indexOf(search) > -1 or vcard.post.indexOf(search) > -1
+		else
+			return vcards
 	
 RosterFilter = ->
 	(roster, search) ->
-		return _.filter roster, (item) ->
-			item.name.indexOf(search) > -1 or item.jid.indexOf(search) > -1
+		if search
+			return _.filter roster, (item) ->
+				item.name.indexOf(search) > -1 or item.jid.indexOf(search) > -1
+		else
+			return roster
 	
 MsgFilter = ->
 	(msgs, search) ->
-		return _.filter msgs, (msg) ->
-			msg.body.indexOf(search) > -1
+		if search
+			return _.filter msgs, (msg) ->
+				msg.body.indexOf(search) > -1
+		else
+			return msgs
 							
 angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-interceptor', 'starter.model', 'platform', 'PageableAR'])
 	.factory 'OAuthService', ['$http', '$sailsSocket', 'authService', OAuthService]
@@ -193,5 +206,5 @@ angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-intercept
 	.controller 'VCardUpdateCtrl', ['$scope', '$state', 'model', VCardUpdateCtrl]
 	.controller 'VCardPhotoCtrl', ['$scope', '$state', 'model', VCardPhotoCtrl]
 	.controller 'VCardsCtrl', ['$scope', 'pageableAR', 'collection', VCardsCtrl]
-	.controller 'ChatCtrl', ['$scope', '$ionicScrollDelegate', 'jid', 'collection', 'resource', ChatCtrl]
+	.controller 'ChatCtrl', ['$scope', '$ionicScrollDelegate', 'jid', 'chat', 'me', 'collection', 'resource', ChatCtrl]
 	.controller 'SelectCtrl', ['$scope', SelectCtrl]

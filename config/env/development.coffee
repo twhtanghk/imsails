@@ -1,6 +1,33 @@
+_ = require 'lodash'
+
 path = '/im.app'
 
-module.exports =
+hooks = [
+	'blueprints'
+	'controllers'
+	'cors'
+	'csrf'
+	'grunt'
+	'http'
+	'i18n'
+	'logger'
+	'moduleloader'
+	'orm'
+	'policies'
+	'pubsub'
+	'request'
+	'responses'
+	'services'
+	'session'
+	'userconfig'
+	'userhooks'
+	'views'
+]
+timeout = {}
+_.each hooks, (hook) ->
+	timeout[hook] = _hookTimeout: 1000000
+
+conf =
 	path:			path
 	port:			3000
 	promise:
@@ -18,15 +45,13 @@ module.exports =
 		migrate:	'alter'
 	connections:
 		mongo:
-			adapter: 	'sails-mongo'
+			adapter:	'sails-mongo'
 			driver:		'mongodb'
 			host:		'localhost'
 			port:		27017
 			user:		'imrw'
 			password:	'password'
 			database:	'im'
-			socketOptions:
-				socketTimeoutMS: 0
 	session:
 		adapter:	'mongo'
 		host: 		'localhost'
@@ -34,5 +59,10 @@ module.exports =
 		db:			'im'
 		username:	'imrw'
 		password:	'password'
+		secret:		'!@#$5678()'
 	sockets:
-		path:	"#{path}/socket.io"			
+		path:	"#{path}/socket.io"
+		_hookTimeout: 1000000
+		
+module.exports =
+	_.extend conf, timeout

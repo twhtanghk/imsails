@@ -34,7 +34,7 @@ verifyToken = (token) ->
 			# create user
 			# otherwise check if user registered before (defined in model.User or not)
 			user = _.pick body.user, 'url', 'username', 'email'
-			MongoService.models.user.findOrCreate user, (err, user) ->
+			sails.models.user.findOrCreate user, (err, user) ->
 				if err
 					return reject(err)
 				fulfill(user)

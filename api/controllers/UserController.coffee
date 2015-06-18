@@ -1,12 +1,6 @@
-module.exports =
-	find:		(req, res) ->
-		[fulfill, reject] = ModelService.handler(res)
-		ModelService.User.find(req, res).then fulfill, reject
-	
-	findOne:	(req, res) ->
-		[fulfill, reject] = ModelService.handler(res)
-		ModelService.User.findOne(req, res).then fulfill, reject
-			
-	update:		(req, res) ->
-		[fulfill, reject] = ModelService.handler(res)
-		ModelService.User.update(req, res).then fulfill, reject
+ # UserController
+ #
+ # @description :: Server-side logic for managing users
+ # @help        :: See http://links.sailsjs.org/docs/controllers
+
+module.exports = {}

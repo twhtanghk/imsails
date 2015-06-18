@@ -1,13 +1,21 @@
 _ = require 'lodash'
+actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 
 # check if authenticated user is model owner  
 module.exports = (req, res, next) ->
 	
-	Model = ModelService.actionUtil.parseModel(req)
-	pk = ModelService.actionUtil.requirePk(req)
+	model = req.options.model || req.options.controller
+	Model = actionUtil.parseModel(req)
+	pk = actionUtil.requirePk(req)
 	cond = 
-		_id:		pk
-		createdBy:	req.user
+		if model == 'user'
+			and: [
+				{ id:	pk }
+				{ id:	req.user.id }
+			]
+		else
+			id:			pk
+			createdBy:	req.user.id
 	
 	Model.findOne()
 		.where( cond )
