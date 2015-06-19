@@ -12,7 +12,8 @@
 </div>
 <ion-content class='has-subheader'>
 	<ion-list>
-		<ion-item class="item-avatar" 
+		<ion-item class="item-avatar"
+			ng-class="model.online ? '' : 'offline'" 
 			ng-repeat="model in collection.models | vcardsFilter:searchText"
 			ng-controller="VCardCtrl"
 			ng-class="model.selected ? 'selected' : ''"

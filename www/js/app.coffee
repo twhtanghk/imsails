@@ -100,7 +100,7 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 				
 		$urlRouterProvider.otherwise('/roster')
 	
-	.run ($ionicPlatform, $location, $http, $sailsSocket, OAuthService) ->
+	.run ($ionicPlatform, $location, $http, $sailsSocket, OAuthService, resource) ->
 		$ionicPlatform.ready ->
 			if (window.cordova && window.cordova.plugins.Keyboard)
 				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true)
@@ -122,3 +122,12 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 		reject = (err) ->
 			$.postMessage err, url
 		OAuthService.matchUrl $location.absUrl(), resolve, reject
+		
+		# update status of current login user once connected
+		io.socket.on 'connect', (event) ->
+			resource.User.me().$save
+				online:	true
+				status:	'available'
+				
+		# subscribe to users update
+		resource.Users.instance().$fetch()

@@ -8,11 +8,8 @@ module.exports = (req, res, next) ->
 	Model = actionUtil.parseModel(req)
 	pk = actionUtil.requirePk(req)
 	cond = 
-		if model == 'user'
-			and: [
-				{ id:	pk }
-				{ id:	req.user.id }
-			]
+		if model == 'user' and (pk == 'me' or pk == req.user.id)
+			id:			req.user.id
 		else
 			id:			pk
 			createdBy:	req.user.id

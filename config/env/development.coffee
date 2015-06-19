@@ -59,7 +59,6 @@ conf =
 		db:			'im'
 		username:	'imrw'
 		password:	'password'
-		secret:		'!@#$5678()'
 	sockets:
 		path:	"#{path}/socket.io"
 		_hookTimeout: 1000000

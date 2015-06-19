@@ -57,6 +57,11 @@ module.exports =
 		photoUrl:
 			type: 		'string'
 			defaultsTo:	"img/photo.png"
+		online:
+			type:		'boolean'
+		status:
+			type:		'string'
+			defaultsTo:	'available'
 		createdBy:
 			model:		'user'
 			

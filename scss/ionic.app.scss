@@ -30,6 +30,10 @@ $msg-arrow: 20px;
 
 $input-height: 49px;
 
+.offline { 
+	opacity: 0.5;
+}
+
 .selected {
 	background-color: $select-color;
 	

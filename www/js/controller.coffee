@@ -39,12 +39,21 @@ MenuCtrl = ($scope) ->
 	$scope.env = env
 	$scope.navigator = navigator
 				
-RosterItemCtrl = ($rootScope, $scope, $ionicModal) ->
+RosterItemCtrl = ($rootScope, $scope, $ionicModal, resource) ->
 	_.extend $scope,
 		edit: ->
 			return
 		remove: ->
 			$scope.collection.remove $scope.model
+			
+	# listen if user status is updated
+	io.socket.on "user", (event) ->
+		if event.verb == 'updated'
+			user = new resource.User id: event.id
+			user.$fetch().then ->
+				if user.jid == $scope.model.jid
+					_.extend $scope.model, event.data
+					$scope.$apply('model')
 
 RosterCtrl = ($scope, collection) ->
 	_.extend $scope,
@@ -67,6 +76,12 @@ VCardCtrl = ($scope, pageableAR, resource) ->
 				photoUrl: $scope.model.photoUrl
 			item.$save()
 
+	# listen if user status is updated
+	io.socket.on "user", (event) ->
+		if event.verb == 'updated' and event.id == $scope.model.id
+			_.extend $scope.model, event.data
+			$scope.$apply('model')
+		
 # vcard detail view
 VCardDetailCtrl = ($scope, $stateParams, resource) ->
 	collection = resource.Users.instance()
@@ -199,7 +214,7 @@ angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-intercept
 	.filter 'msgFilter', MsgFilter
 	.controller 'AppCtrl', ['$rootScope', 'platform', 'OAuthService', AppCtrl]
 	.controller 'MenuCtrl', ['$scope', MenuCtrl]
-	.controller 'RosterItemCtrl', ['$rootScope', '$scope', '$ionicModal', RosterItemCtrl]
+	.controller 'RosterItemCtrl', ['$rootScope', '$scope', '$ionicModal', 'resource', RosterItemCtrl]
 	.controller 'RosterCtrl', ['$scope', 'collection', RosterCtrl]
 	.controller 'VCardCtrl', ['$scope', 'pageableAR', 'resource', VCardCtrl]
 	.controller 'VCardDetailCtrl', ['$scope', '$stateParams', 'resource', VCardDetailCtrl]

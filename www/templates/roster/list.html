@@ -13,6 +13,7 @@
 	<ion-content class='has-subheader'>
 		<ion-list>
 			<ion-item class="item-avatar" 
+				ng-class="model.online ? '' : 'offline'"
 				ng-repeat="model in collection.models | rosterFilter:searchText"
 				ng-controller="RosterItemCtrl"
 				ng-class="model.selected ? 'selected' : ''"

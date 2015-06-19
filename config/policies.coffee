@@ -2,16 +2,16 @@ module.exports =
 	policies:
 		UserController:
 			'*':		false
-			find:		['bearer']
-			findOne:	['bearer']
-			update:		['bearer', 'owner']
+			find:		['bearer', 'online']
+			findOne:	['bearer', 'online']
+			update:		['bearer', 'online', 'owner']
 		RosterController:
 			'*':		false
-			find:		['bearer']
-			create:		['bearer']
-			update:		['bearer', 'owner']
-			destroy:	['bearer', 'owner']
+			find:		['bearer', 'online']
+			create:		['bearer', 'online']
+			update:		['bearer', 'online', 'owner']
+			destroy:	['bearer', 'online', 'owner']
 		MsgController:
 			'*':		false
-			'find':		['bearer']
-			'create':	['bearer']	
+			'find':		['bearer', 'online']
+			'create':	['bearer', 'online']	
