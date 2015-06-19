@@ -1,4 +1,5 @@
 env = require './env.coffee'
+_ = require 'lodash'
 urlparser = require 'url'
 
 OAuthService = ($http, $sailsSocket, authService) ->
@@ -26,10 +27,11 @@ OAuthService = ($http, $sailsSocket, authService) ->
 				resolve data
 			
 AppCtrl = ($rootScope, platform, OAuthService) ->
+	auth = _.once platform.auth
 	$rootScope.$on 'event:auth-forbidden', ->
-		platform.auth()
+		auth()
 	$rootScope.$on 'event:auth-loginRequired', ->
-		platform.auth()
+		auth()
 	$rootScope.$on 'event:auth-loginConfirmed', ->
 		$rootScope.modal?.remove()
 	$rootScope.$on 'event:auth-loginCancelled', (data) ->

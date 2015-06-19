@@ -34,10 +34,8 @@ platform = ($rootScope, $cordovaInAppBrowser, $location, $http, $ionicModal, OAu
 						</ion-content>
 					</ion-modal-view>
 				"""
-				# show modal once for multiple request for authentication
-				if _.isUndefined $rootScope.modal
-					$rootScope.modal = $ionicModal.fromTemplate(templateStr)
-					$rootScope.modal.show()
+				$rootScope.modal = $ionicModal.fromTemplate(templateStr)
+				$rootScope.modal.show()
 			
 		func[env.platform()]()
 		
