@@ -55,8 +55,7 @@ RosterItemCtrl = ($rootScope, $scope, $ionicModal, resource) ->
 			user.$fetch().then ->
 				if user.jid == $scope.model.jid
 					_.extend $scope.model, event.data
-					$scope.$apply('model')
-
+					
 RosterCtrl = ($scope, collection) ->
 	_.extend $scope,
 		searchText:		''
@@ -82,8 +81,7 @@ VCardCtrl = ($scope, pageableAR, resource) ->
 	io.socket.on "user", (event) ->
 		if event.verb == 'updated' and event.id == $scope.model.id
 			_.extend $scope.model, event.data
-			$scope.$apply('model')
-		
+			
 # vcard detail view
 VCardDetailCtrl = ($scope, $stateParams, resource) ->
 	collection = resource.Users.instance()
