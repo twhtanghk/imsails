@@ -2,8 +2,8 @@
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
     <h1 class='title'>
-    	<img class="photo" ng-src="{{chat.photoUrl}}" aria-label="{{chat.name}}">
-    	<span>{{chat.name}}</span>
+    	<img class="photo" ng-src="{{chat.photoUrl || chat.user.photoUrl}}" aria-label="{{chat.name || chat.user.name}}">
+    	<span>{{chat.name || chat.user.name}}</span>
     </h1>  
 </ion-header-bar>
 <div class="bar item-input-inset">
