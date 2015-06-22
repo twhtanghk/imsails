@@ -24,6 +24,7 @@ module.exports =
 		query = new Promise (fulfill, reject) ->
 			model.find()
 				.where( cond )
+				.populate( 'user' )
 				.limit( actionUtil.parseLimit(req) )
 				.skip( actionUtil.parseSkip(req) )
 				.sort( actionUtil.parseSort(req) )
@@ -37,17 +38,7 @@ module.exports =
 								model.watch(req)
 						_.each data, (record) ->
 							actionUtil.subscribeDeep(req, record)
-						p = _.map data, (item) ->
-							new Promise (fulfill, reject) ->
-								sails.models.user.findOne(jid: item.jid).exec (err, user) ->
-									if err
-										reject err
-									else
-										fulfill _.extend item, _.pick(user, 'online', 'status')
-						Promise.all(p)
-							.then (results) ->
-								fulfill results
-							.catch reject
+						fulfill data
 		Promise.all([count, query])
 			.then (data) ->
 				res.ok

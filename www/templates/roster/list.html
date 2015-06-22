@@ -13,14 +13,14 @@
 	<ion-content class='has-subheader'>
 		<ion-list>
 			<ion-item class="item-avatar" 
-				ng-class="model.online ? '' : 'offline'"
+				ng-class="model.user.online ? '' : 'offline'"
 				ng-repeat="model in collection.models | rosterFilter:searchText"
 				ng-controller="RosterItemCtrl"
 				ng-class="model.selected ? 'selected' : ''"
 				href="#/chat/{{model.jid}}">
-				<img ng-src="{{model.photoUrl}}" aria-label="{{model.name}}">
+				<img ng-src="{{model.photoUrl || model.user.photoUrl}}" aria-label="{{model.name}}">
 				<h2>
-					<span>{{model.name}}</span>
+					<span>{{model.name || model.user.fullname}}</span>
 					<!-- tag-editor ng-model="model.tags" fetch="https://mob.myvnc.com/file/api/tag" template-url='templates/tag.html' placeholder="Tag (e.g. Team)">
 	  				</tag-editor -->
 				</h2>

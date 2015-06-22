@@ -40,8 +40,11 @@ AppCtrl = ($rootScope, platform, OAuthService) ->
 		$rootScope.modal?.remove()
 		
 MenuCtrl = ($scope) ->
-	$scope.env = env
-	$scope.navigator = navigator
+	_.extend $scope,
+		env: env
+		exit: ->
+			io.socket.disconnect()
+			navigator.app.exitApp()
 				
 RosterItemCtrl = ($rootScope, $scope, $ionicModal, resource) ->
 	_.extend $scope,
@@ -52,11 +55,9 @@ RosterItemCtrl = ($rootScope, $scope, $ionicModal, resource) ->
 			
 	# listen if user status is updated
 	io.socket.on "user", (event) ->
-		if event.verb == 'updated'
-			user = new resource.User id: event.id
-			user.$fetch().then ->
-				if user.jid == $scope.model.jid
-					_.extend $scope.model, event.data
+		if event.verb == 'updated' and event.id == $scope.model.user.id
+			_.extend $scope.model.user, event.data
+			$scope.$apply 'model'
 					
 RosterCtrl = ($scope, collection) ->
 	_.extend $scope,
@@ -74,15 +75,14 @@ VCardCtrl = ($scope, pageableAR, resource) ->
 	_.extend $scope,
 		addRoster: ->
 			item = new resource.RosterItem
-				jid: $scope.model.jid
-				name: $scope.model.fullname
-				photoUrl: $scope.model.photoUrl
+				user: $scope.model
 			item.$save()
 
 	# listen if user status is updated
 	io.socket.on "user", (event) ->
 		if event.verb == 'updated' and event.id == $scope.model.id
 			_.extend $scope.model, event.data
+			$scope.$apply 'model'
 			
 # vcard detail view
 VCardDetailCtrl = ($scope, $stateParams, resource) ->

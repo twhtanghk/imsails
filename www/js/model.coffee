@@ -24,9 +24,14 @@ resource = ($rootScope, pageableAR) ->
 		
 		$parse: (data, opts) ->
 			ret = super(data, opts)
+			
 			_.each ['updatedAt', 'createdAt'], (field) ->
 				if ret[field]
-					ret[field] = new Date Date.parse ret[field]				
+					ret[field] = new Date Date.parse ret[field]
+			
+			if ret['user']
+				ret['user'] = new User ret['user'] 				
+			
 			return ret
 			
 	class Roster extends pageableAR.PageableCollection
@@ -38,7 +43,7 @@ resource = ($rootScope, pageableAR) ->
 
 		@instance: ->
 			_instance ?= new Roster()
-		
+
 	class User extends pageableAR.Model
 		_me = null
 		

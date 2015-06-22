@@ -10,12 +10,11 @@ module.exports =
 	schema:		true
 	
 	attributes:
-		jid:
-			type: 		'string'
-			required: 	true
+		user:
+			model:		'user'
+			required:	true
 		name:
 			type: 		'string'
-			required: 	true
 		photoUrl:
 			type: 		'string'
 		groups:
