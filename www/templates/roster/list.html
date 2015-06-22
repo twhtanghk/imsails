@@ -17,8 +17,8 @@
 				ng-repeat="model in collection.models | rosterFilter:searchText"
 				ng-controller="RosterItemCtrl"
 				ng-class="model.selected ? 'selected' : ''"
-				href="#/chat/{{model.jid}}">
-				<img ng-src="{{model.photoUrl || model.user.photoUrl}}" aria-label="{{model.name}}">
+				href="#/chat/{{model.user.jid}}">
+				<img ng-src="{{model.photoUrl || model.user.photoUrl}}" aria-label="{{model.name || model.user.fullname}}">
 				<h2>
 					<span>{{model.name || model.user.fullname}}</span>
 					<!-- tag-editor ng-model="model.tags" fetch="https://mob.myvnc.com/file/api/tag" template-url='templates/tag.html' placeholder="Tag (e.g. Team)">
