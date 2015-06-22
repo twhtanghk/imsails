@@ -14,12 +14,12 @@
 </div>
 <ion-content class='has-subheader'>
 	<div class="card" ng-repeat="model in collection.models |msgFilter:searchText |orderBy:'-createdAt'" ng-class="model.from == me.jid ? 'left' : 'right'">
+		<div class="item item-text-wrap">
+			{{model.body}}
+		</div>
 		<div class="item item-divider">
 			<span ng-if="model.type == 'groupchat'">{{model.from}}</span>
 			<span class='time'>{{model.createdAt.toLocaleString()}}</span>
-		</div>
-		<div class="item item-text-wrap">
-			{{model.body}}
 		</div>
 	</div>
 	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">

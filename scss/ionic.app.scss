@@ -102,23 +102,27 @@ ion-nav-view[name=chatContent] {
 		width: 80%;
 		position: relative;
 		background-color: $msg-color;
+		margin-top: .6em;
+		margin-bottom: .6em;
 		
-		div.item-divider:first-of-type {
+		div.item-divider:last-of-type {
+			padding: 5px;
 			font-size: smaller;
-			font-weight: bold;
 			span.time {
 				float: right;
 			}
 		}
 		
 		div.item {
+			padding: 10px;
 			background-color: $msg-color;
+			border: none;
 		}
 	}
 	
 	.card.left {
-		clear: both;
-		margin-left: $msg-arrow;
+		float: left;
+		margin-left: $msg-arrow + 5px;
 	}
 	
 	.card.left:before {
@@ -135,7 +139,7 @@ ion-nav-view[name=chatContent] {
 	
 	.card.right {
 		float: right;
-		margin-right: $msg-arrow;
+		margin-right: $msg-arrow + 5px;
 	}
 	
 	.card.right:before {

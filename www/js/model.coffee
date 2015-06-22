@@ -25,6 +25,8 @@ resource = ($rootScope, pageableAR) ->
 		$parse: (data, opts) ->
 			ret = super(data, opts)
 			ret.photoUrl ?= "img/photo.png"
+			_.each ['updatedAt', 'createdAt'], (field) ->
+				ret[field] = new Date Date.parse ret[field]				
 			return ret
 			
 	class Roster extends pageableAR.PageableCollection
@@ -45,6 +47,13 @@ resource = ($rootScope, pageableAR) ->
 		@me: ->
 			_me ?= new User id: 'me'
 			
+		$parse: (data, opts) ->
+			ret = super(data, opts)
+			ret.photoUrl ?= "img/photo.png"
+			_.each ['updatedAt', 'createdAt'], (field) ->
+				ret[field] = new Date Date.parse ret[field]				
+			return ret
+			
 	class Users extends pageableAR.PageableCollection
 		_instance = null
 		
@@ -57,6 +66,12 @@ resource = ($rootScope, pageableAR) ->
 			
 	class Msg extends pageableAR.Model
 		$urlRoot: "#{env.server.app.url}/api/msg"
+		
+		$parse: (data, opts) ->
+			ret = super(data, opts)
+			_.each ['updatedAt', 'createdAt'], (field) ->
+				ret[field] = new Date Date.parse ret[field]				
+			return ret
 		
 	class Msgs extends pageableAR.PageableCollection
 		$urlRoot: "#{env.server.app.url}/api/msg"
