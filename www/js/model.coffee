@@ -24,9 +24,9 @@ resource = ($rootScope, pageableAR) ->
 		
 		$parse: (data, opts) ->
 			ret = super(data, opts)
-			ret.photoUrl ?= "img/photo.png"
 			_.each ['updatedAt', 'createdAt'], (field) ->
-				ret[field] = new Date Date.parse ret[field]				
+				if ret[field]
+					ret[field] = new Date Date.parse ret[field]				
 			return ret
 			
 	class Roster extends pageableAR.PageableCollection
@@ -49,9 +49,9 @@ resource = ($rootScope, pageableAR) ->
 			
 		$parse: (data, opts) ->
 			ret = super(data, opts)
-			ret.photoUrl ?= "img/photo.png"
 			_.each ['updatedAt', 'createdAt'], (field) ->
-				ret[field] = new Date Date.parse ret[field]				
+				if ret[field]
+					ret[field] = new Date Date.parse ret[field]				
 			return ret
 			
 	class Users extends pageableAR.PageableCollection
