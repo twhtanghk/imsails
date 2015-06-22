@@ -33,6 +33,8 @@ AppCtrl = ($rootScope, platform, OAuthService) ->
 	$rootScope.$on 'event:auth-loginRequired', ->
 		auth()
 	$rootScope.$on 'event:auth-loginConfirmed', ->
+		# auth is successfully called once, new auth process for token expiry
+		auth = _.once platform.auth
 		$rootScope.modal?.remove()
 	$rootScope.$on 'event:auth-loginCancelled', (data) ->
 		$rootScope.modal?.remove()

@@ -15,7 +15,6 @@
     "bootstrap": "~3.1.1",
     "bootstrap.growl": "~2.0.1",
     "select2": "~3.5.2",
-    "PageableAR": "https://github.com/twhtanghk/PageableAR.git",
     "ngCordova": "~0.1.14-alpha",
     "jquery-deparam": "~0.3.0",
     "angular-activerecord": "~0.3.0",
@@ -25,7 +24,8 @@
     "ng-file-upload": "~4.2.4",
     "tagDirective": "*",
     "sails-auth": "*",
-    "jq-postmessage": "*"
+    "jq-postmessage": "*",
+    "PageableAR": "*"
   },
   "devDependencies": {
     "ionic": "~1.0.0"
