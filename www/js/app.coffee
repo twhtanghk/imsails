@@ -89,7 +89,8 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 				jid: ($stateParams) ->
 					$stateParams.jid
 				chat: (resource, jid) ->
-					_.findWhere resource.Roster.instance().models, jid: jid
+					_.find resource.Roster.instance().models, (item) ->
+						item.user.jid == jid
 				me: (resource) ->
 					resource.User.me()
 				collection: (resource) ->
