@@ -1,4 +1,39 @@
 <a class="item item-icon-right" ng-click="click()">
 	{{selectedTitle()}}
 	<i class="icon ion-ios-arrow-right"></i>
+	
+	<script id="fancy-select.html" type="text/ng-template">
+	    <ion-view class="fancy-select-items modal">
+	      <ion-header-bar class="bar-positive">
+	
+			<button ng-click="close()" class="button button-positive button-icon ion-ios-arrow-back"></button>
+	        
+	        <h1 class="title">{{title}}</h1>
+			
+	      </ion-header-bar>
+	      <ion-content>
+	        <div class="list">
+	          <!-- Multi select -->
+	          <ion-toggle
+	                      ng-repeat="item in model"
+	                      ng-if="multiple"
+	                      ng-model="model.selected"
+	                      ng-change="select(model)"
+	                      ng-init="model = {label: item, selected: selected.indexOf(item) != -1}"
+	                      class="item item-text-wrap">
+	            {{model.label}}
+	          </ion-toggle>
+	
+	          <!-- Single select -->
+	          <label
+	                 ng-repeat="item in model"
+	                 ng-if="!multiple"
+	                 ng-click="select({label: item, selected: true})"
+	                 class="item item-text-wrap">
+	            {{item}}
+	          </label>
+	        </div>
+	      </ion-content>
+	    </ion-view>
+	</script>
 </a>
