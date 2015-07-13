@@ -1,0 +1,71 @@
+<ion-header-bar class="item-input-inset">
+	<button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+    </button>
+	<h1 class='title'>
+		<icon ng-src="model.photoUrl"
+			aria-label="{{model.name}}"
+			otherwise="icon ion-android-people">
+		</icon>
+    	<span>{{model.name}}</span>
+	</h1>
+	<a class="button button-clear" ng-click="save()">Save</a>
+</ion-header-bar>
+<ion-content>
+	<div class="row">
+		<div class="col col-33">
+			<icon class="photoEdit" 
+				ng-src="model.photoUrl"
+				ngf-select ngf-multiple='false' 
+				ngf-change="select($files)" 
+				ngf-accept="'image/*'"
+				aria-label="{{model.name}}"
+				otherwise="icon ion-android-people">
+			</icon>
+		</div>
+		<div class="col">
+			<label class="item item-input">
+				<input type="text" ng-model="model.name" placeholder="Name">
+			</label>
+			<fancy-select
+				name="typeSelect"
+				template-url='lib/tagDirective/select.html'
+				ng-selected="model.type"
+				ng-model="resource.Group.type.values"
+				title="Select group type">
+			</fancy-select>
+		</div>
+	</div>
+	<div ng-repeat="type in ['moderators', 'members']">
+		<ion-list>
+			<ion-item class="item-divider">
+				{{resource.Group.type.placeholder[type]}}
+			</ion-item>
+			
+			<div class="row">
+				<div class="col">
+					<fancy-select-model 
+						template-url='lib/tagDirective/select.html'
+						label="fullname"
+						multiple
+						ng-selected="$parent.model[type]"
+						ng-model="users"
+						title="Select {{type}}">
+					</fancy-select-model>
+				</div>
+			</div>
+		
+			<ion-item class="item-avatar"
+				ng-repeat="user in model[type]"
+				ng-controller="UserCtrl">
+				<img class="photo" ng-src="{{user.photoUrl}}" aria-label="{{user.fullname}}">
+				<h2>
+					<span>{{user.fullname}}</span>
+				</h2>
+				<p>
+					{{user.post}}
+				</p>
+				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="model[type].splice($index, 1)">Delete</ion-option-button>
+			</ion-item>
+		</ion-list>
+	</div>
+</ion-content>

@@ -2,7 +2,11 @@
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
     <h1 class='title'>
-    	<img class="photo" ng-src="{{model.photoUrl}}" aria-label="{{model.name}}">
+    	<icon class="photo" 
+			ng-src="model.photoUrl"
+			aria-label="{{model.name}}"
+			otherwise="icon ion-android-person">
+		</icon>
     	<span>{{model.fullname}}</span>
     </h1>  
 </ion-header-bar>

@@ -29,9 +29,12 @@ resource = ($rootScope, pageableAR) ->
 				if ret[field]
 					ret[field] = new Date Date.parse ret[field]
 			
-			if ret['user']
-				ret['user'] = new User ret['user'] 				
+			if ret.user
+				ret.user = new User ret.user 				
 			
+			if ret.group
+				ret.group = new Group ret.group
+					
 			return ret
 			
 	class Roster extends pageableAR.PageableCollection
@@ -45,6 +48,17 @@ resource = ($rootScope, pageableAR) ->
 			_instance ?= new Roster()
 
 	class User extends pageableAR.Model
+		@type:
+			placeholder:
+				phone:		'Phone'
+				otherEmail:	'Email'
+				address:	'Address'
+			values:
+				phone:		['Mobile', 'Office', 'Home', 'Other']
+				otherEmail:	['Office', 'Home', 'Other']
+				address:	['Office', 'Home', 'Other']
+			status:		['Available', 'Meeting', 'Busy', 'Vacation', 'Sick', 'Training', 'Home', 'Other']
+			
 		_me = null
 		
 		$urlRoot: "#{env.server.app.url}/api/user"
@@ -68,7 +82,58 @@ resource = ($rootScope, pageableAR) ->
 	
 		@instance: ->
 			_instance ?= new Users()
+
+	class Group extends pageableAR.Model
+		@type:
+			placeholder:
+				moderators:	'Moderators'
+				members:	'Members'
+				visitors:	'Visitors'
+			values: ['Members-Only', 'Unmoderated', 'Moderated']
+		
+		$urlRoot: "#{env.server.app.url}/api/group"
+		
+		$defaults:
+			type:		'Members-Only'
+			moderators:	[]
+			members:	[]
+			visitors:	[]
 			
+		$parse: (data, opts) ->
+			ret = super(data, opts)
+			
+			_.each ['updatedAt', 'createdAt'], (field) ->
+				if ret[field]
+					ret[field] = new Date Date.parse ret[field]
+			
+			if ret.members
+				ret.members = _.map ret.members, (user) ->
+					new User user
+					
+			return ret
+	
+	# public groups
+	class Groups extends pageableAR.PageableCollection
+		_instance = null
+		
+		$urlRoot: "#{env.server.app.url}/api/group"
+		
+		model: Group
+		
+		@instance: ->
+			_instance ?= new Groups()
+	
+	# membersOnly groups
+	class GroupsPrivate extends pageableAR.Collection
+		_instance = null
+		
+		$urlRoot: "#{env.server.app.url}/api/group/membersOnly"
+		
+		model: Group
+		
+		@instance: ->
+			_instance ?= new GroupsPrivate()
+	
 	class Msg extends pageableAR.Model
 		$urlRoot: "#{env.server.app.url}/api/msg"
 		
@@ -83,12 +148,15 @@ resource = ($rootScope, pageableAR) ->
 		
 		model: Msg
 		
-	User:		User
-	Users:		Users
-	RosterItem:	RosterItem
-	Roster:		Roster
-	Msg:		Msg
-	Msgs:		Msgs
+	User:			User
+	Users:			Users
+	Group:			Group
+	Groups:			Groups
+	GroupsPrivate:	GroupsPrivate
+	RosterItem:		RosterItem
+	Roster:			Roster
+	Msg:			Msg
+	Msgs:			Msgs
 
 angular.module('starter.model', ['ionic', 'PageableAR'])
 	.value 'server', env.server.app

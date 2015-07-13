@@ -9,15 +9,24 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item nav-clear menu-close href="#/roster">
+        <ion-item nav-clear menu-close href="#/roster/list">
           Roster
         </ion-item>
-        <ion-item nav-clear menu-close href="#/chat">
-          Room
+        <ion-item nav-clear menu-close href="#/user/list">
+          User
         </ion-item>
-        <ion-item nav-clear menu-close href="#/vcard/list">
-          VCard
+        <ion-item nav-clear menu-close href="#/group/list/public">
+          Group
         </ion-item>
+        <ion-item nav-clear menu-close href="#/user/update">
+          Personal Info
+        </ion-item>
+        <fancy-select
+			template-url='templates/user/status.html'
+			ng-selected="model.status"
+			ng-model="resource.User.type.status"
+			title="Select">
+		</fancy-select>
         <ion-item nav-clear menu-close ng-if="env.isNative()" ng-click="exit()">
           Exit
         </ion-item>

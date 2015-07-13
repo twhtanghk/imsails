@@ -34,6 +34,11 @@ $input-height: 49px;
 	opacity: 0.5;
 }
 
+.status {
+	font-size: smaller;
+	background-color: #FFAD33;
+}
+
 .selected {
 	background-color: $select-color;
 	
@@ -46,10 +51,34 @@ img {
 	border-radius: 50%;
 }
 
-img.center {
+i.avatar {
+	position: absolute;
+	top: 16px;
+	left: 16px;
+	max-width: 40px;
+	max-height: 40px;
+	width: 100%;
+	font-size: 40px;
+	border-radius: 50%;
+	overflow: hidden;
+	text-align: center;
+	background-color: #e0e0e0;
+	color: white;
+}
+
+.photoEdit {
 	display: block;
 	margin: auto;
-	width: 200px;
+	max-width: 200px;
+	max-height: 200px;
+	width: 100%;
+	font-size: 200px;
+	border-radius: 50%;
+	overflow: hidden;
+	text-align: center;
+	background-color: #e0e0e0;
+	color: white;
+	cursor: pointer;
 	@media only screen and (max-device-width: 720px) {
 		width: 90%;
 	}
@@ -68,6 +97,25 @@ img.center {
 	}
 }
 
+.item-avatar {
+	icon {
+		img, i {
+			position: absolute;
+		    top: 16px;
+		    left: 16px;
+		    max-width: 40px;
+		    max-height: 40px;
+		    width: 100%;
+		    height: 100%;
+		    border-radius: 50%;
+		    font-size: 40px;
+			background-color: #e0e0e0;
+			color: white;
+			text-align: center;
+		}
+	}
+}
+
 ion-header-bar h1 img {
 	height: 80%;
 	vertical-align: middle;
@@ -82,7 +130,20 @@ ion-header-bar h1 img {
 	}
 }
 
-ion-nav-view[name=vcardContent] {
+ion-nav-view[name=groupContent] {
+	.row {
+		.col {
+			.button {
+				width: 100%;
+			}
+		}
+	}
+	[name=typeSelect] a {
+		@extend .disabled;
+	}
+}
+
+ion-nav-view[name=userContent] {
 	.row {
 		.col-33 {
 			.button {
@@ -108,9 +169,7 @@ ion-nav-view[name=chatContent] {
 		div.item-divider:last-of-type {
 			padding: 5px;
 			font-size: smaller;
-			span.time {
-				float: right;
-			}
+			float: right;
 		}
 		
 		div.item {

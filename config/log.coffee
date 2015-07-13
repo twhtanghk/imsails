@@ -1,3 +1,3 @@
 module.exports = 
 	log:
-		level:		'silly'
+		level:		'info'

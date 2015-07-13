@@ -30,16 +30,18 @@ _.each hooks, (hook) ->
 conf =
 	path:			path
 	port:			3000
+	adminUser:		
+		username:	'imadmin'
+		email:		'twhtanghk@gmail.com'
+	authGrp:		'Authenticated Users'
 	promise:
 		timeout:	10000 # ms
 	oauth2:
 		verifyURL:			"https://mob.myvnc.com/org/oauth2/verify/"
 		scope:				[ "https://mob.myvnc.com/org/users", "https://mob.myvnc.com/xmpp" ]
 	xmpp:
-		domain:		'mob.myvnc.com'
-		transports:	['old-websocket']
-		wsURL:		"wss://mob.myvnc.com/xmpp-websocket"
-		muc:		"muc.mob.myvnc.com"
+		domain:			'mob.myvnc.com'
+		muc:			'muc.mob.myvnc.com'
 	models:
 		connection: 'mongo'
 		migrate:	'alter'
@@ -62,6 +64,8 @@ conf =
 	sockets:
 		path:	"#{path}/socket.io"
 		_hookTimeout: 1000000
+	log:
+		level:		'silly'
 		
 module.exports =
 	_.extend conf, timeout

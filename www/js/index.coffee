@@ -4,9 +4,6 @@ io.socket.url = env.server.app.urlRoot
 io.socket.path = "#{env.path}/socket.io"
 io.sails.useCORSRouteToGetCookie = false
 
-window.oalert = window.alert
-window.alert = (err) ->
-	console.error err.message
 window.Promise = require 'promise'
 window._ = require 'lodash'
 window.$ = require 'jquery'
@@ -23,6 +20,6 @@ require 'ngImgCrop'
 require 'tagDirective'
 require 'jq-postmessage'
 require './app.coffee'
-require './controller.coffee'
+require './controllers/index.coffee'
 require './model.coffee'
 require './platform.coffee'

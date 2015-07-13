@@ -12,6 +12,7 @@ module.exports =
 	attributes:
 		from:				
 			type: 		'string'
+			required:	true
 		to:				
 			type: 		'string'
 			required: 	true
@@ -20,5 +21,7 @@ module.exports =
 			defaultsTo: 'chat'
 		body:			
 			type: 		'string'
+			required:	true
 		createdBy:
 			model:		'user'
+			required:	true

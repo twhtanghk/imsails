@@ -2,7 +2,10 @@
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
     <h1 class='title'>
-    	<img class="photo" ng-src="{{model.photoUrl}}" aria-label="{{model.name}}">
+    	<icon ng-src="model.photoUrl"
+			aria-label="{{model.fullname}}"
+			otherwise="icon ion-android-person">
+		</icon>
     	<span>{{model.fullname}}</span>
     </h1>
     <a class="button button-clear" ng-click="save()">Save</a>  
@@ -10,8 +13,14 @@
 <ion-content>
 	<div class="row">
 		<div class="col col-33">
-			<img class="center" ng-src="{{model.photoUrl}}" style="cursor: pointer"
-				ngf-select ngf-multiple='false' ngf-change="select($files)">
+			<icon class="photoEdit" 
+				ng-src="model.photoUrl"
+				ngf-select ngf-multiple='false' 
+				ngf-change="select($files)" 
+				ngf-accept="'image/*'"
+				aria-label="{{model.fullname}}"
+				otherwise="icon ion-android-person">
+			</icon>
 		</div>
 		<div class="col">
 			<label class="item item-input">
@@ -33,25 +42,25 @@
 	</div>
 	
 	<!-- phone, otherEmail, address -->
-	<div ng-repeat="attr in ['phone', 'otherEmail', 'address']" ng-init="options = buffer[attr].typeAvail">
+	<div ng-repeat="attr in ['phone', 'otherEmail', 'address']">
 		<ion-item class="item-divider">
-			{{buffer[attr].placeholder}}
+			{{resource.User.type.placeholder[attr]}}
 		</ion-item>
 		
 		<!-- model existing value -->
 		<div class="row" ng-repeat="item in model[attr]">
 			<div class="col col-33">
-				<fancy-select 
-					ng-model="model" 
-					template-url="lib/tagDirective/select.html" 
-					title="Select"
-					ng-controller="SelectCtrl">
+				<fancy-select
+					template-url='lib/tagDirective/select.html'
+					ng-selected="item.type"
+					ng-model="resource.User.type.values[attr]"
+					title="Select">
 				</fancy-select>
 			</div>
 			<div class="col">
 				<div class="item item-input-inset">
 					<label class="item-input-wrapper">
-						<input type="text" ng-model="item.value" placeholder="{{buffer[attr].placeholder}}">
+						<input type="text" ng-model="item.value" placeholder="{{resource.User.type.placeholder[attr]}}">
 					</label>
 					<a class="button button-icon button-small icon ion-minus" style="vertical-align: middle"
 							ng-click="model[attr].splice($index, 1)">
@@ -61,22 +70,22 @@
 		</div>
 		
 		<!-- new entry for model attribute phone, otherEmail, or address -->
-		<div class="row" ng-init="item = buffer[attr]">
+		<div class="row" ng-init="item = {type: resource.User.type.values[attr][0], value: ''}">
 			<div class="col col-33">
-				<fancy-select 
-					ng-model="model" 
-					template-url="lib/tagDirective/select.html" 
-					title="Select"
-					ng-controller="SelectCtrl">
+				<fancy-select
+					template-url='lib/tagDirective/select.html'
+					ng-selected="item.type"
+					ng-model="resource.User.type.values[attr]"
+					title="Select">
 				</fancy-select>
 			</div>
 			<div class="col">
 				<div class="item item-input-inset">
 					<label class="item-input-wrapper">
-						<input type="text" ng-model="buffer[attr].value" placeholder="{{buffer[attr].placeholder}}">
+						<input type="text" ng-model="item.value" placeholder="{{resource.User.type.placeholder[attr]}}">
 					</label>
 					<a class="button button-icon button-small icon ion-plus" style="vertical-align: middle"
-						ng-click="model[attr].push({type: buffer[attr].type, value: buffer[attr].value}); buffer[attr].value = ''">
+						ng-click="model[attr].push({type: item.type, value: item.value}); item.value = ''">
 					</a>
 				</div>
 			</div>

@@ -33,6 +33,7 @@ module.exports =
 	attributes:
 		jid:
 			type: 		'string'
+			required:	true
 		url:
 			type: 		'string'
 			required: 	true
@@ -56,15 +57,33 @@ module.exports =
 			type:		'array'
 		photoUrl:
 			type: 		'string'
-			defaultsTo:	"img/photo.png"
 		online:
 			type:		'boolean'
 		status:
 			type:		'string'
-			defaultsTo:	'available'
-		createdBy:
-			model:		'user'
 			
+		# relationship
+		ownerGrps:
+			collection:	'group'
+			via:		'createdBy'
+		moderatorGrps:
+			collection:	'group'
+			via:		'moderators'
+		memberGrps:
+			collection:	'group'
+			via:		'members'
+			
+		# right of visitor group is NA for Members-Only group 
+		# so that visitor group is not considered here
+		membersOnlyGrps: ->
+			membersOnly = _.union(
+				_.where(@ownerGrps, type: 'Members-Only'),
+				_.where(@moderatorGrps, type: 'Members-Only'),
+				_.where(@memberGrps, type: 'Members-Only')
+			)
+			membersOnly = _.sortBy membersOnly, 'name'
+			_.uniq membersOnly, 'id'
+				
 		_fullname: ->
 			if @name?.given or @name?.middle or @name?.family
 				"#{@name?.given || ''} #{@name?.middle || ''} #{@name?.family || ''}"
@@ -83,6 +102,42 @@ module.exports =
 			@address = @address || []
 			_.extend @toObject(), post: @_post(), fullname: @_fullname() 
 			
-	beforeCreate: (values, cb) ->
-		values.jid = "#{values.username}@#{sails.config.xmpp.domain}"
-		cb()
+	beforeValidate: (values, cb) ->
+		if values.username
+			values.jid = "#{values.username}@#{sails.config.xmpp.domain}"
+		cb(null, values)
+		
+	afterCreate: (values, cb) ->
+		# add created user into "Authenticated Users" group except administrator
+		if values.username == sails.config.adminUser.username
+			return cb null, values
+			
+		sails.models.group.authGrp null, (err, group) ->
+			if err
+				return cb err
+			if group
+				group.members.add values
+				group.save()
+					.then ->
+						cb null, values
+					.catch (err) ->
+						sails.log.error err
+						cb err
+			else
+				cb "#{sails.config.authGrp} not defined"
+		
+	# return administrator		
+	admin: (opts, cb) ->
+		user = 
+			url:		"https://mob.myvnc.com/org/api/users/#{sails.config.adminUser.username}/"
+			username:	sails.config.adminUser.username
+			email:		sails.config.adminUser.email
+			name: 
+				given:	'Administrator'
+		sails.models.user
+			.findOrCreate username: sails.config.adminUser.username, user 
+			.then (admin) ->
+				cb null, admin
+			.catch (err) ->
+				sails.log.error err
+				cb err

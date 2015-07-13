@@ -2,8 +2,17 @@
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
     <h1 class='title'>
-    	<img class="photo" ng-src="{{chat.photoUrl || chat.user.photoUrl}}" aria-label="{{chat.name || chat.user.fullname}}">
-    	<span>{{chat.name || chat.user.fullname}}</span>
+    	<icon ng-src="chat.photoUrl"
+			aria-label="{{chat.fullname}}"
+			otherwise="icon ion-android-person"
+			ng-if="type == 'chat'">
+		</icon>
+		<icon ng-src="chat.photoUrl"
+			aria-label="{{chat.name}}"
+			otherwise="icon ion-android-people"
+			ng-if="type != 'chat'">
+		</icon>
+    	<span>{{chat.fullname || chat.name}}</span>
     </h1>  
 </ion-header-bar>
 <div class="bar item-input-inset">
@@ -18,8 +27,8 @@
 			{{model.body}}
 		</div>
 		<div class="item item-divider">
-			<span ng-if="model.type == 'groupchat'">{{model.from}}</span>
-			<span class='time'>{{model.createdAt.toLocaleString()}}</span>
+			<span ng-if="type == 'groupchat'">{{model.from}}</span>
+			<span>{{model.createdAt.toLocaleString()}}</span>
 		</div>
 	</div>
 	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">

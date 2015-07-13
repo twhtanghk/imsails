@@ -1,8 +1,7 @@
 <ion-header-bar class="item-input-inset">
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
-    <h1 class='title'>VCard</h1>
-    <a class="button button-clear" href="#/vcard/update">Personal Info</a>  
+    <h1 class='title'>User</h1>  
 </ion-header-bar>
 <div class="bar item-input-inset">
 	<label class="item-input-wrapper">
@@ -14,18 +13,23 @@
 	<ion-list>
 		<ion-item class="item-avatar"
 			ng-class="model.online ? '' : 'offline'" 
-			ng-repeat="model in collection.models | vcardsFilter:searchText"
-			ng-controller="VCardCtrl"
+			ng-repeat="model in collection.models | UserSearchFilter:searchText"
+			ng-controller="UserCtrl"
 			ng-class="model.selected ? 'selected' : ''"
-			href="#/vcard/{{model.jid}}">
-			<img class="photo" ng-src="{{model.photoUrl}}" aria-label="{{model.name}}">
+			href="#/user/{{model.jid}}">
+			<icon class="photo" 
+				ng-src="model.photoUrl"
+				aria-label="{{model.name}}"
+				otherwise="icon ion-android-person">
+			</icon>
 			<h2>
 				<span>{{model.fullname}}</span>
+				<span class='status'>{{model.status}}</span>
 			</h2>
 			<p>
 				{{model.post}}
 			</p>
-			<ion-option-button class="button button-positive icon-left ion-plus-round" on-tap="addRoster()">Roster</ion-option-button>
+			<ion-option-button class="button button-balanced icon-left ion-plus-round" on-tap="addRoster()">Roster</ion-option-button>
 		</ion-item>
 	</ion-list>
 	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">

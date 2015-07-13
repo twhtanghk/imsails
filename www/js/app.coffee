@@ -1,107 +1,16 @@
-angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect'])
+angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon'])
 	
 	.config ($stateProvider, $urlRouterProvider) ->
 		$stateProvider.state 'app',
 			url: ""
 			abstract: true
-			controller: 'AppCtrl'
 			templateUrl: "templates/menu.html"
-			
-		$stateProvider.state 'app.roster',
-			url: "/roster"
-			views:
-				menuContent:
-					templateUrl: 'templates/roster/list.html'
-					controller: 'RosterCtrl'
-			resolve:
-				resource: 'resource'
-				collection: (resource) ->
-					resource.Roster.instance()
-			onEnter: (collection) ->
-				collection?.$fetch reset: true
-			
-		$stateProvider.state 'app.vcard',
-			url: "/vcard"
-			abstract: true
-			views:
-				menuContent:
-					templateUrl: "templates/vcard/index.html"
-			
-		$stateProvider.state 'app.vcard.list',
-			url: "/list"
-			views:
-				vcardContent:
-					templateUrl: 'templates/vcard/list.html'
-					controller: 'VCardsCtrl'
-			resolve:
-				resource: 'resource'
-				collection: (resource) ->
-					resource.Users.instance()
-			onEnter: (collection) ->
-				collection?.$fetch reset: true
-				
-		$stateProvider.state 'app.vcard.update',
-			url: '/update'
-			views:
-				vcardContent:
-					templateUrl: 'templates/vcard/update.html'
-					controller: 'VCardUpdateCtrl'
-			resolve:
-				resource: 'resource'
-				model: (resource) ->
-					resource.User.me()
-			onEnter: (model) ->
-				model.$fetch()
-		
-		$stateProvider.state 'app.vcard.read',
-			url: "/:jid"
-			views:
-				vcardContent:
-					templateUrl: 'templates/vcard/read.html'
-					controller: 'VCardDetailCtrl'
-					
-		$stateProvider.state 'app.vcard.photo',
-			url: '/photo'
-			views:
-				vcardContent:
-					templateUrl: 'templates/vcard/photo.html'
-					controller: 'VCardPhotoCtrl'
-			resolve:
-				resource: 'resource'
-				model: (resource) ->
-					resource.User.me()
-					
-		$stateProvider.state 'app.chat',
-			url: "/chat"
-			abstract: true
-			views:
-				menuContent:
-					templateUrl: "templates/chat/index.html"
-					
-		$stateProvider.state 'app.chat.list',
-			url: "/:jid"
-			views:
-				chatContent:
-					templateUrl: 'templates/chat/list.html'
-					controller: 'ChatCtrl'
-			resolve:
-				resource: 'resource'
-				jid: ($stateParams) ->
-					$stateParams.jid
-				chat: (resource, jid) ->
-					_.find resource.Roster.instance().models, (item) ->
-						item.user.jid == jid
-				me: (resource) ->
-					resource.User.me()
-				collection: (resource) ->
-					new resource.Msgs()
-			onEnter: (jid, me, collection) ->
-				me.$fetch()
-				collection?.$fetch reset: true, params: {to: jid, sort: 'createdAt DESC'}
-				
-		$urlRouterProvider.otherwise('/roster')
 	
-	.run ($ionicPlatform, $location, $http, $sailsSocket, OAuthService, resource) ->
+		$urlRouterProvider.otherwise('/roster/list')
+	
+	.run ($ionicPlatform, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, OAuthService, AlertService, resource) ->
+		window.alert = AlertService.alert
+		
 		$ionicPlatform.ready ->
 			if (window.cordova && window.cordova.plugins.Keyboard)
 				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true)
@@ -128,7 +37,37 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 		io.socket.on 'connect', (event) ->
 			resource.User.me().$save
 				online:	true
-				status:	'available'
+				status:	resource.User.type.status[0]
 				
 		# subscribe to users update
 		resource.Users.instance().$fetch()
+		
+		$rootScope.$on '$stateChangeError', (evt, toState, toParams, fromState, fromParams, error) ->
+			window.alert error.data
+	
+		auth = _.once platform.auth
+		$rootScope.$on 'event:auth-forbidden', ->
+			auth()
+		$rootScope.$on 'event:auth-loginRequired', ->
+			auth()
+		$rootScope.$on 'event:auth-loginConfirmed', ->
+			# auth is successfully called once, new auth process for token expiry
+			auth = _.once platform.auth
+			$rootScope.modal?.remove()
+		$rootScope.$on 'event:auth-loginCancelled', ->
+			# auth is successfully called once, new auth process for token expiry
+			auth = _.once platform.auth
+			$rootScope.modal?.remove()
+		
+		$rootScope.$on 'cropImg', (event, inImg) ->
+			_.extend $rootScope,
+				model: 
+					inImg: inImg
+					outImg: ''
+				confirm: ->
+					$rootScope.$broadcast 'cropImg.completed', $rootScope.model.outImg
+					$rootScope.modal?.remove()
+			$ionicModal.fromTemplateUrl 'templates/img/crop.html', scope: $rootScope
+				.then (modal) ->
+					modal.show()
+					$rootScope.modal = modal

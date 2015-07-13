@@ -16,6 +16,7 @@ module.exports = (req, res) ->
 	query = new Promise (fulfill, reject) ->
 		model.find()
 			.where( cond )
+			.populateAll()
 			.limit( actionUtil.parseLimit(req) )
 			.skip( actionUtil.parseSkip(req) )
 			.sort( actionUtil.parseSort(req) )

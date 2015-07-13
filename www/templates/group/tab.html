@@ -1,0 +1,28 @@
+<ion-view title="tab">
+	<ion-content>
+		<ion-list>
+			<ion-item class="item-avatar" 
+				ng-repeat="model in collection.models | groupFilter:searchText"
+				ng-controller="GroupCtrl"
+				ng-class="model.selected ? 'selected' : ''"
+				href="#/chat/groupchat/{{model.id}}">
+				<div ng-if="model.photoUrl == null">
+					<i class="avatar icon ion-android-people">
+					</i>
+				</div>
+				<img ng-src="{{model.photoUrl}}" aria-label="model.name"  ng-if="model.photoUrl != null">
+				<h2>
+					<span>{{model.name}}</span>
+				</h2>
+				<p>
+					{{model.jid}}
+				</p>
+				<ion-option-button class="button button-balanced icon-left ion-plus-round" on-tap="addRoster()">Roster</ion-option-button>
+				<ion-option-button class="button button-positive icon-left ion-edit" on-tap="edit()">Edit</ion-option-button>
+				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="remove()">Delete</ion-option-button>
+			</ion-item>
+		</ion-list>
+		<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="controller.loadMore()">
+		</ion-infinite-scroll>
+	</ion-content>
+</ion-view>

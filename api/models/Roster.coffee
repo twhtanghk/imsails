@@ -10,14 +10,16 @@ module.exports =
 	schema:		true
 	
 	attributes:
+		jid:
+			type: 		'string'
+			required:	true
 		user:
 			model:		'user'
-			required:	true
-		name:
-			type: 		'string'
-		photoUrl:
-			type: 		'string'
-		groups:
-			type: 		'array'
+		group:
+			model:		'group'
+		type:
+			type:		'string'
+			defaultsTo:	'chat'			# 'chat' or 'groupchat'
 		createdBy:
 			model:		'user'
+			required:	true
