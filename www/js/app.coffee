@@ -1,12 +1,15 @@
 angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon'])
 	
-	.config ($stateProvider, $urlRouterProvider) ->
+	.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
 		$stateProvider.state 'app',
 			url: ""
 			abstract: true
 			templateUrl: "templates/menu.html"
 	
 		$urlRouterProvider.otherwise('/roster/list')
+		
+		$ionicConfigProvider.tabs.style 'standard'
+		$ionicConfigProvider.tabs.position 'bottom'
 	
 	.run ($ionicPlatform, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, OAuthService, AlertService, resource) ->
 		window.alert = AlertService.alert

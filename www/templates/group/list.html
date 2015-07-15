@@ -3,16 +3,6 @@
 	<h1 class='title'>Group</h1>
 	<a class="button button-icon button-clear" ng-href="#/group/create">Create</a>
 </ion-header-bar>
-<div class="tabs tabs-icon-left">
-	<a class="tab-item" ng-class="{active: $location.url() == '/group/list/public'}" href="#/group/list/public">
-		<i class="icon ion-android-people"></i>
-		Public
-	</a>
-	<a class="tab-item" ng-class="{active: $location.url() == '/group/list/private'}" href="#/group/list/private">
-		<i class="icon ion-locked"></i>
-		Private
-	</a>
-</div>
 <div class="bar item-input-inset">
 	<label class="item-input-wrapper">
 		<i class="icon ion-search placeholder-icon"></i>
@@ -20,11 +10,15 @@
 	</label>
 </div>
 <ion-content class='has-subheader'>
-	<ion-tabs>
-		<ion-tab title="Public" href="#/group/list/public">
+	<ion-tabs class="tabs-icon-left">
+		<ion-tab title="Public" 
+			icon="ion-android-people"
+			href="#/group/list/public">
 			<ion-nav-view name="tabPublic"></ion-nav-view>
 		</ion-tab>
-		<ion-tab title="Private" href="#/group/list/private">
+		<ion-tab title="Private"
+			icon="ion-locked"
+			href="#/group/list/private">
 			<ion-nav-view name="tabPrivate"></ion-nav-view>
 		</ion-tab>
 	</ion-tabs>
