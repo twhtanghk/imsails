@@ -33,19 +33,18 @@ domain =
 		
 		$stateProvider.state 'app.user.read',
 			cache: false
-			url: "/:jid"
+			url: "/:id"
 			views:
 				userContent:
 					templateUrl: 'templates/user/read.html'
 					controller: 'UserDetailCtrl'
 			resolve:
 				resource: 'resource'
-				jid: ($stateParams) ->
-					$stateParams.jid
-				collection: (resource) ->
-					resource.Users.instance()
-				model: (jid, collection) ->
-					_.findWhere collection.models, jid: jid
+				id: ($stateParams) ->
+					$stateParams.id
+				model: (id, resource) ->
+					ret = new resource.User id: id
+					ret.$fetch()
 		
 	detail: ($scope, model) ->
 		$scope.model = model

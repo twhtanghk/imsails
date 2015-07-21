@@ -16,8 +16,8 @@
 			ng-repeat="model in collection.models | UserSearchFilter:searchText"
 			ng-controller="UserCtrl"
 			ng-class="model.selected ? 'selected' : ''"
-			href="#/user/{{model.jid}}">
-			<icon class="photo" 
+			href="#/user/{{model.id}}">
+			<icon class="avatar" 
 				ng-src="model.photoUrl"
 				aria-label="{{model.name}}"
 				otherwise="icon ion-android-person">

@@ -1,33 +1,6 @@
-_ = require 'lodash'
-
 path = '/im.app'
 
-hooks = [
-	'blueprints'
-	'controllers'
-	'cors'
-	'csrf'
-	'grunt'
-	'http'
-	'i18n'
-	'logger'
-	'moduleloader'
-	'orm'
-	'policies'
-	'pubsub'
-	'request'
-	'responses'
-	'services'
-	'session'
-	'userconfig'
-	'userhooks'
-	'views'
-]
-timeout = {}
-_.each hooks, (hook) ->
-	timeout[hook] = _hookTimeout: 1000000
-
-conf =
+module.exports =
 	path:			path
 	port:			3000
 	adminUser:		
@@ -63,9 +36,5 @@ conf =
 		password:	'password'
 	sockets:
 		path:	"#{path}/socket.io"
-		_hookTimeout: 1000000
 	log:
 		level:		'silly'
-		
-module.exports =
-	_.extend conf, timeout

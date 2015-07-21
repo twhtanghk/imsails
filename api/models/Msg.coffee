@@ -25,3 +25,21 @@ module.exports =
 		createdBy:
 			model:		'user'
 			required:	true
+			
+	broadcast: (roomName, eventName, data, socketToOmit) ->
+		# filter if socket.user is authorized to listen the created msg
+		sockets = _.map sails.sockets.subscribers(roomName)
+		to = data.data.to
+		if sails.services.jid.isMuc to
+			sails.models.group
+				.findOne jid: to
+				.populateAll()
+				.then (group) ->
+					ret = _.filter sockets, (id) ->
+						group?.enterAllowed sails.sockets.get(id).user
+					sails.sockets.emit ret, eventName, data
+				.catch sails.log.error
+		else
+			ret = _.filter sockets, (id) ->
+				to == sails.sockets.get(id).user.jid
+			sails.sockets.emit ret, eventName, data

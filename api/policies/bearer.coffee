@@ -51,4 +51,7 @@ module.exports = (req, res, next) ->
 	if req.isSocket
 		req = _.extend req, _.pick(require('http').IncomingMessage.prototype, 'login', 'logIn', 'logout', 'logOut', 'isAuthenticated', 'isUnauthenticated')
 	middleware = passport.authenticate('bearer', { session: false })
-	middleware(req, res, next)
+	middleware req, res, ->
+		if req.isSocket
+			req.socket.user = req.user
+		next()

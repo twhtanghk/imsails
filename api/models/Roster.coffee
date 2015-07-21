@@ -13,6 +13,7 @@ module.exports =
 		jid:
 			type: 		'string'
 			required:	true
+			unique:		true
 		user:
 			model:		'user'
 		group:

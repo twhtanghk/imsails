@@ -13,7 +13,7 @@
 <ion-content>
 	<div class="row">
 		<div class="col col-33">
-			<icon class="photoEdit" 
+			<icon class="photo edit" 
 				ng-src="model.photoUrl"
 				ngf-select ngf-multiple='false' 
 				ngf-change="select($files)" 
@@ -56,7 +56,11 @@
 			<ion-item class="item-avatar"
 				ng-repeat="user in model[type]"
 				ng-controller="UserCtrl">
-				<img class="photo" ng-src="{{user.photoUrl}}" aria-label="{{user.fullname}}">
+				<icon class="avatar" 
+					ng-src="user.photoUrl"
+					aria-label="{{user.name}}"
+					otherwise="icon ion-android-person">
+				</icon>
 				<h2>
 					<span>{{user.fullname}}</span>
 				</h2>

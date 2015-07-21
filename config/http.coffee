@@ -1,4 +1,3 @@
-logging = require 'morgan'
 express = require 'express'
 prefix = (req, res, next) ->
 	p = new RegExp('^' + sails.config.path)
@@ -8,14 +7,12 @@ prefix = (req, res, next) ->
 module.exports = 
 	http:
 		middleware:
-			logging: logging('combined')
 			static: express.static('www')
 			prefix: prefix
 			order: [
 				'startRequestTimer'
 				'cookieParser'
 				'session'
-				'logging'
 				'prefix'
 				'bodyParser'
 				'compress'

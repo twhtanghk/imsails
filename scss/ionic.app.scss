@@ -66,9 +66,10 @@ i.avatar {
 	color: white;
 }
 
-.photoEdit {
+.photo {
 	display: block;
 	margin: auto;
+	min-width: 200px;
 	max-width: 200px;
 	max-height: 200px;
 	width: 100%;
@@ -78,10 +79,13 @@ i.avatar {
 	text-align: center;
 	background-color: #e0e0e0;
 	color: white;
-	cursor: pointer;
 	@media only screen and (max-device-width: 720px) {
 		width: 90%;
 	}
+}
+
+.photo.edit {
+	cursor: pointer;
 }
 
 .cropArea {

@@ -2,24 +2,24 @@ module.exports =
 	policies:
 		UserController:
 			'*':		false
-			find:		['bearer', 'online']
-			findOne:	['bearer', 'online', 'user/me']
-			update:		['bearer', 'online', 'user/me', 'isOwner', 'omitId']
+			find:		['bearer']
+			findOne:	['bearer', 'user/me']
+			update:		['bearer', 'user/me', 'isOwner', 'omitId']
 		RosterController:
 			'*':		false
-			find:		['bearer', 'online', 'roster/filterByOwner']
-			create:		['bearer', 'online', 'setOwner', 'roster/setJid']
-			update:		['bearer', 'online', 'isOwner', 'omitId']
-			destroy:	['bearer', 'online', 'isOwner']
+			find:		['bearer', 'roster/filterByOwner']
+			create:		['bearer', 'setOwner', 'roster/setJid']
+			update:		['bearer', 'isOwner', 'omitId']
+			destroy:	['bearer', 'isOwner']
 		GroupController:
 			'*':		false
-			find:		['bearer', 'online', 'group/publicOnly']
-			membersOnly:['bearer', 'online']
-			findOne:	['bearer', 'online']
-			create:		['bearer', 'online', 'setOwner', 'group/setJid']
-			update:		['bearer', 'online', 'group/editAllowed', 'omitId']
-			destroy:	['bearer', 'online', 'isOwner']
+			find:		['bearer', 'group/publicOnly']
+			membersOnly:['bearer']
+			findOne:	['bearer']
+			create:		['bearer', 'setOwner', 'group/setJid']
+			update:		['bearer', 'group/editAllowed', 'omitId']
+			destroy:	['bearer', 'isOwner']
 		MsgController:
 			'*':		false
-			'find':		['bearer', 'online', 'msg/enterAllowed', 'msg/filterByRoom']
-			'create':	['bearer', 'online', 'msg/withVoice', 'setOwner', 'msg/setFrom']	
+			'find':		['bearer', 'msg/enterAllowed', 'msg/filterByRoom']
+			'create':	['bearer', 'msg/withVoice', 'setOwner', 'msg/setFrom']	
