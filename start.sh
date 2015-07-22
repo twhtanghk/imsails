@@ -3,5 +3,4 @@
 root=~/prod/imsails
 sails=`which sails`
 
-cd ${root}
-/usr/local/bin/forever start -a -l imsails.log $sails lift --prod
+forever start --workingDir ${root} -a -l imsails.log ${sails} lift --prod
