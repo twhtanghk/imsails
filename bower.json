@@ -25,10 +25,11 @@
     "tagDirective": "*",
     "sails-auth": "*",
     "jq-postmessage": "*",
-    "PageableAR": "*"
+    "PageableAR": "*",
+    "sails.io.js": "~0.11.5"
   },
   "devDependencies": {
-    "ionic": "~1.0.0"
+    "ionic": "driftyco/ionic-bower#1.0.1"
   },
   "resolutions": {
     "angular": "1.3.13"

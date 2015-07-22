@@ -24,7 +24,7 @@
 		</div>
 		<div class="col">
 			<label class="item item-input">
-				<input type="text" ng-model="model.name" placeholder="Name">
+				<input type="text" ng-model="model.name" placeholder="Name" required>
 			</label>
 			<fancy-select
 				name="typeSelect"
@@ -57,7 +57,11 @@
 			<ion-item class="item-avatar"
 				ng-repeat="user in model[type]"
 				ng-controller="UserCtrl">
-				<img class="photo" ng-src="{{user.photoUrl}}" aria-label="{{user.fullname}}">
+				<icon class="avatar" 
+					ng-src="user.photoUrl"
+					aria-label="{{user.fullname}}"
+					otherwise="icon ion-android-person">
+				</icon>
 				<h2>
 					<span>{{user.fullname}}</span>
 				</h2>
