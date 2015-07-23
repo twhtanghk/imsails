@@ -126,6 +126,10 @@ module.exports =
 						cb err
 			else
 				cb "#{sails.config.authGrp} not defined"
+	
+	broadcast: (roomName, eventName, data, socketToOmit) ->
+		# ignore socketToOmit to broadcast the event to sender also
+		sails.sockets.broadcast roomName, eventName, data
 		
 	# return administrator		
 	admin: (opts, cb) ->
