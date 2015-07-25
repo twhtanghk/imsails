@@ -74,6 +74,13 @@ resource = ($rootScope, pageableAR) ->
 			return ret
 			
 	class Users extends pageableAR.PageableCollection
+		$defaults: ->
+			state:
+				count:		0
+				skip:		0
+				limit:		2
+				total_page:	0
+		
 		_instance = null
 		
 		$urlRoot: "#{env.server.app.url}/api/user"
