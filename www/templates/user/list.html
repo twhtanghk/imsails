@@ -29,7 +29,7 @@
 			<p>
 				{{model.post}}
 			</p>
-			<ion-option-button class="button button-balanced icon-left ion-plus-round" on-tap="addRoster()">Roster</ion-option-button>
+			<ion-option-button class="button button-balanced icon-left ion-plus-round" on-tap="addRoster()" ng-if="model.jid != resource.User.me().jid">Roster</ion-option-button>
 		</ion-item>
 	</ion-list>
 	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">

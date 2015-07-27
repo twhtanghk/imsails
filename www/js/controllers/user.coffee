@@ -63,9 +63,10 @@ domain =
 				_.extend $scope.model, event.data
 				$scope.$apply 'model'
 		
-	list: ($scope, pageableAR, collection) ->
+	list: ($scope, pageableAR, resource, collection) ->
 		_.extend $scope,
 			searchText:		''
+			resource:		resource
 			collection:		collection
 			loadMore: ->
 				collection.$fetch()
@@ -136,7 +137,7 @@ module.exports = (angularModule) ->
 		.config ['$stateProvider', domain.state]
 		.controller 'UserDetailCtrl', ['$scope', 'model', domain.detail]
 		.controller 'UserCtrl', ['$scope', 'pageableAR', 'resource', domain.item]
-		.controller 'UsersCtrl', ['$scope', 'pageableAR', 'collection', domain.list]
+		.controller 'UsersCtrl', ['$scope', 'pageableAR', 'resource', 'collection', domain.list]
 		.controller 'UserUpdateCtrl', ['$scope', '$state', 'resource', 'model', domain.update]
 		.controller 'UserSelectCtrl', ['$scope', 'resource', domain.select]
 		.filter 'UserSelectFilter', filter.select
