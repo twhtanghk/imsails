@@ -5,6 +5,12 @@
 
 module.exports =
 
+	autoWatch:			true
+	
+	autoSubscribe:		false
+	
+	autoSubscribeDeep:	false
+	
 	tableName:	'msgs'
 		
 	schema:		true

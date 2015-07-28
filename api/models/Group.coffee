@@ -6,6 +6,12 @@ Promise = require 'promise'
 
 module.exports =
 
+	autoWatch:			true
+	
+	autoSubscribe:		true
+	
+	autoSubscribeDeep:	true
+	
 	tableName:	'groups'
 	
 	types:

@@ -5,6 +5,12 @@
 
 module.exports =
 
+	autoWatch:			false
+	
+	autoSubscribe:		true
+	
+	autoSubscribeDeep:	true
+	
 	tableName:	'rosters'
 	
 	schema:		true

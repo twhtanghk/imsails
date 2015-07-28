@@ -13,6 +13,12 @@ pair = (array) ->
 			
 module.exports =
 	
+	autoWatch:			false
+	
+	autoSubscribe:		true
+	
+	autoSubscribeDeep:	false
+	
 	tableName:	'users'
 	
 	types:
