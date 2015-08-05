@@ -87,7 +87,7 @@ domain =
 				_.extend $scope.model, event.data
 				$scope.$apply 'model'
 		
-	list: ($scope, collection) ->
+	list: ($scope, $location, collection) ->
 		_.extend $scope,
 			collection:		collection
 			loadMore: ->
@@ -97,6 +97,11 @@ domain =
 					.catch (err) ->
 						alert err.data
 				return @
+				
+		# reload collection once reconnected
+		io.socket.on 'connect', (event) ->
+			if $location.url().indexOf('/group/list') != -1
+				$scope.collection.$fetch reset: true
 	
 	create: ($scope, $state, resource, model) ->
 		_.extend $scope,
@@ -157,7 +162,7 @@ module.exports = (angularModule) ->
 	angularModule
 		.config ['$stateProvider', domain.state]
 		.controller 'GroupCtrl', ['$rootScope', '$scope', '$location', 'resource', domain.item]
-		.controller 'GroupsCtrl', ['$scope', 'collection', domain.list]
+		.controller 'GroupsCtrl', ['$scope', '$location', 'collection', domain.list]
 		.controller 'GroupCreateCtrl', ['$scope', '$state', 'resource', 'model', domain.create]
 		.controller 'GroupUpdateCtrl', ['$scope', '$state', 'resource', 'model', domain.update]
 		.filter 'groupFilter', filter.list

@@ -34,7 +34,7 @@ domain =
 				_.extend $scope.model.user, event.data
 				$scope.$apply 'model'
 						
-	list: ($scope, collection) ->
+	list: ($scope, $location, collection) ->
 		_.extend $scope,
 			searchText:		''
 			collection:		collection
@@ -44,6 +44,11 @@ domain =
 						$scope.$broadcast('scroll.infiniteScrollComplete')
 					.catch alert
 				return @
+				
+		# reload collection once reconnected
+		io.socket.on 'connect', (event) ->
+			if $location.url().indexOf('/roster/list') != -1
+				$scope.collection.$fetch reset: true
 
 filter =		
 	list: ->
@@ -61,5 +66,5 @@ module.exports = (angularModule) ->
 	angularModule
 		.config ['$stateProvider', domain.state]
 		.controller 'RosterItemCtrl', ['$rootScope', '$scope', 'resource', domain.item]
-		.controller 'RosterCtrl', ['$scope', 'collection', domain.list]
+		.controller 'RosterCtrl', ['$scope', '$location', 'collection', domain.list]
 		.filter 'rosterFilter', filter.list

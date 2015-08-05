@@ -29,9 +29,9 @@ domain =
 					resource.User.me()
 				collection: (type, chat, resource) ->
 					ret = new resource.Msgs()
-					ret.$fetch params: {type: type, to: chat.jid, sort: 'createdAt DESC'}			
-
-	list: ($scope, $ionicScrollDelegate, type, chat, me, collection, resource) ->
+					ret.$fetch params: {type: type, to: chat.jid, sort: 'createdAt DESC'}
+			
+	list: ($scope, $ionicScrollDelegate, $location, type, chat, me, collection, resource) ->
 		_.extend $scope,
 			type: type
 			chat: chat
@@ -53,6 +53,11 @@ domain =
 					.catch (err) ->
 						alert err.data
 		
+		# reload collection once reconnected
+		io.socket.on 'connect', (event) ->
+			if $location.url().indexOf('/chat') != -1
+				$scope.collection.$fetch  params: {type: type, to: chat.jid, sort: 'createdAt DESC'}, reset: true 
+		
 		# listen if msg is created on server
 		io.socket.on "msg", (event) ->
 			if event.verb == 'created'
@@ -69,10 +74,9 @@ filter =
 					msg.body.indexOf(search) > -1
 			else
 				return msgs
-
 		
 module.exports = (angularModule) ->
 	angularModule
 		.config ['$stateProvider', domain.state]
-		.controller 'ChatCtrl', ['$scope', '$ionicScrollDelegate', 'type', 'chat', 'me', 'collection', 'resource', domain.list]
+		.controller 'ChatCtrl', ['$scope', '$ionicScrollDelegate', '$location', 'type', 'chat', 'me', 'collection', 'resource', domain.list]
 		.filter 'msgFilter', filter.list

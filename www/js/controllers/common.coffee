@@ -5,6 +5,8 @@ urlparser = require 'url'
 service = 
 	alert: ($ionicPopup, $timeout) ->
 		alert: (msg) ->
+			msg = JSON.stringify(msg)
+			console.log msg
 			popup = $ionicPopup.alert template: msg
 			popup.then ->
 				return

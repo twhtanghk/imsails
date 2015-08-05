@@ -69,19 +69,21 @@ i.avatar {
 .photo {
 	display: block;
 	margin: auto;
-	min-width: 200px;
 	max-width: 200px;
 	max-height: 200px;
 	width: 100%;
-	font-size: 200px;
 	border-radius: 50%;
 	overflow: hidden;
 	text-align: center;
 	background-color: #e0e0e0;
 	color: white;
-	@media only screen and (max-device-width: 720px) {
-		width: 90%;
-	}
+}
+
+i.photo {
+	position: relative;
+	height: 0;
+	padding-bottom: 100%;
+	font-size: 33vw;
 }
 
 .photo.edit {
@@ -174,6 +176,7 @@ ion-nav-view[name=chatContent] {
 			padding: 5px;
 			font-size: smaller;
 			float: right;
+			max-width: 100%;
 		}
 		
 		div.item {

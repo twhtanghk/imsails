@@ -63,7 +63,7 @@ domain =
 				_.extend $scope.model, event.data
 				$scope.$apply 'model'
 		
-	list: ($scope, pageableAR, resource, collection) ->
+	list: ($scope, $location, pageableAR, resource, collection) ->
 		_.extend $scope,
 			searchText:		''
 			resource:		resource
@@ -74,6 +74,11 @@ domain =
 						$scope.$broadcast('scroll.infiniteScrollComplete')
 					.catch alert
 				return @
+				
+		# reload collection once reconnected
+		io.socket.on 'connect', (event) ->
+			if $location.url().indexOf('/user/list') != -1
+				$scope.collection.$fetch reset: true
 				
 	select: ($scope, resource) ->
 		convert = (collection, selected) ->
@@ -137,7 +142,7 @@ module.exports = (angularModule) ->
 		.config ['$stateProvider', domain.state]
 		.controller 'UserDetailCtrl', ['$scope', 'model', domain.detail]
 		.controller 'UserCtrl', ['$scope', 'pageableAR', 'resource', domain.item]
-		.controller 'UsersCtrl', ['$scope', 'pageableAR', 'resource', 'collection', domain.list]
+		.controller 'UsersCtrl', ['$scope', '$location', 'pageableAR', 'resource', 'collection', domain.list]
 		.controller 'UserUpdateCtrl', ['$scope', '$state', 'resource', 'model', domain.update]
 		.controller 'UserSelectCtrl', ['$scope', 'resource', domain.select]
 		.filter 'UserSelectFilter', filter.select
