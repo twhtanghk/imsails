@@ -94,8 +94,7 @@ domain =
 				collection.$fetch()
 					.then ->
 						$scope.$broadcast('scroll.infiniteScrollComplete')
-					.catch (err) ->
-						alert err.data
+					.catch alert
 				return @
 				
 		# reload collection once reconnected
@@ -120,8 +119,7 @@ domain =
 						if $scope.model.type == 'Members-Only'
 							next = 'app.group.list.private' 
 						$state.go next
-					.catch (err) ->
-						alert err.data.raw.message
+					.catch alert
 		
 		$scope.$on 'cropImg.completed', (event, outImg) ->
 			$scope.model.photoUrl = outImg
@@ -143,8 +141,7 @@ domain =
 						if $scope.model.type == 'Members-Only'
 							next = 'app.group.list.private' 
 						$state.go next
-					.catch (err) ->
-						alert err.data
+					.catch alert
 		
 		$scope.$on 'cropImg.completed', (event, outImg) ->
 			$scope.model.photoUrl = outImg		

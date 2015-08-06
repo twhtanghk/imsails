@@ -45,13 +45,13 @@ module.exports =
 			type:		'string'
 			required:	true
 		isOwner: (user) ->
-			@createdBy.id == user.id
+			@createdBy.id == user?.id
 		isModerator: (user) ->
 			_.any @moderators, (item) ->
-				item.id == user.id
+				item.id == user?.id
 		isMember: (user) ->
 			@type == 'Unmoderated' or _.any @members, (item) ->
-				item.id == user.id 
+				item.id == user?.id 
 		isVisitor: (user) ->
 			@type == 'Moderated'
 		enterAllowed: (user) ->

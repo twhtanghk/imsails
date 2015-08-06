@@ -47,5 +47,24 @@ module.exports =
 				.catch sails.log.error
 		else
 			ret = _.filter sockets, (id) ->
-				to == sails.sockets.get(id).user.jid
+				to == sails.sockets.get(id)?.user.jid
 			sails.sockets.emit ret, eventName, data
+			
+	afterPublishCreate: (values, req) ->
+		# query for chat
+		query = sails.models.roster
+			.find()
+			.where(jid: values.from)
+			.populate('createdBy', where: jid: values.to)
+		# query for groupchat
+		if values.type != 'chat'
+			query = sails.models.roster
+			.find()
+			.where(jid: values.to)
+		query
+			.then (roster) ->
+				_.each roster, (item) ->
+					item.newmsg ?= 0
+					item.newmsg = item.newmsg + 1
+					item.save().catch sails.log.error
+			.catch sails.log.error

@@ -9,7 +9,7 @@ module.exports =
 			'*':		false
 			find:		['bearer', 'roster/filterByOwner']
 			create:		['bearer', 'setOwner', 'roster/setJid']
-			update:		['bearer', 'isOwner', 'omitId']
+			update:		['bearer', 'isOwner', 'omitId', 'roster/include']
 			destroy:	['bearer', 'isOwner']
 		GroupController:
 			'*':		false

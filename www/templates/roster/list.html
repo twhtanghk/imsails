@@ -37,6 +37,7 @@
 				{{model.jid}}
 			</p>
 			<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="remove();">Delete</ion-option-button>
+			<span class="badge badge-assertive" ng-if="model.newmsg > 0">{{model.newmsg}}</span>
 		</ion-item>
 	</ion-list>
 	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">

@@ -33,6 +33,12 @@ domain =
 			if event.verb == 'updated' and event.id == $scope.model.user?.id
 				_.extend $scope.model.user, event.data
 				$scope.$apply 'model'
+				
+		# listen if roster item is updated
+		io.socket.on "roster", (event) ->
+			if event.verb == 'updated' and event.id == $scope.model.id
+				_.extend $scope.model, event.data
+				$scope.$apply 'model'
 						
 	list: ($scope, $location, collection) ->
 		_.extend $scope,

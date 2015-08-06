@@ -30,6 +30,9 @@ domain =
 				collection: (type, chat, resource) ->
 					ret = new resource.Msgs()
 					ret.$fetch params: {type: type, to: chat.jid, sort: 'createdAt DESC'}
+			onExit: (resource, chat) ->
+				item = _.findWhere resource.Roster.instance().models, jid: chat.jid
+				item?.$save(newmsg: 0).catch alert			
 			
 	list: ($scope, $ionicScrollDelegate, $location, type, chat, me, collection, resource) ->
 		_.extend $scope,
@@ -37,6 +40,7 @@ domain =
 			chat: chat
 			me: me
 			collection: collection
+			msg: ''
 			loadMore: ->
 				collection.$fetch params: {type: type, to: chat.jid, sort: 'createdAt DESC'}
 					.then ->
@@ -44,14 +48,14 @@ domain =
 					.catch alert
 				return @
 			send: ->
-				msg = new resource.Msg type: type, to: chat.jid, body: $scope.msg
-				msg.$save()
-					.then ->
-						collection.add msg
-						$ionicScrollDelegate.scrollTop true
-						$scope.msg = ''
-					.catch (err) ->
-						alert err.data
+				if $scope.msg != ''
+					msg = new resource.Msg type: type, to: chat.jid, body: $scope.msg
+					msg.$save()
+						.then ->
+							collection.add msg
+							$ionicScrollDelegate.scrollTop true
+						.catch alert
+					$scope.msg = ''
 		
 		# reload collection once reconnected
 		io.socket.on 'connect', (event) ->
