@@ -109,7 +109,7 @@ module.exports =
 			@address = @address || []
 			ret = _.extend @toObject(), post: @_post(), fullname: @_fullname()
 			if ret.photoUrl
-				ret.photoUrl = "user/photo/#{ret.id}"
+				ret.photoUrl = "#{sails.config.url}/user/photo/#{ret.id}"
 			return ret
 			
 	beforeValidate: (values, cb) ->

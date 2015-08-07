@@ -16,7 +16,7 @@ module.exports =
 			'*':		false
 			find:		['bearer', 'group/publicOnly']
 			findOne:	['bearer']
-			create:		['bearer', 'setOwner']
+			create:		['bearer', 'setOwner', 'group/setJid']
 			update:		['bearer', 'group/canEdit', 'omitId']
 			destroy:	['bearer', 'group/canRemove']
 			membersOnly:['bearer']

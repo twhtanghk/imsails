@@ -79,16 +79,8 @@ module.exports =
 		toJSON: ->
 			ret = @toObject()
 			if ret.photoUrl
-				ret.photoUrl = "group/photo/#{ret.id}"
+				ret.photoUrl = "#{sails.config.url}/group/photo/#{ret.id}"
 			return ret
-			
-	beforeValidate: (values, cb) ->
-		# set jid = name@domain 
-		domain = sails.config.xmpp.muc
-		if values.type == "Members-Only"
-			domain = "#{values.createdBy.username}.#{domain}"
-		values.jid = "#{values.name}@#{domain}"
-		cb()
 	
 	afterCreate: (values, cb) ->
 		if values.type != 'Members-Only'

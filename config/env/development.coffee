@@ -2,6 +2,7 @@ path = '/im.app'
 
 module.exports =
 	path:			path
+	url:			"http://localhost:3000#{path}"
 	port:			3000
 	adminUser:		
 		username:	'imadmin'
