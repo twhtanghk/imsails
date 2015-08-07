@@ -107,7 +107,10 @@ module.exports =
 			@phone = @phone || []
 			@otherEmail = @otherEmail || []
 			@address = @address || []
-			_.extend @toObject(), post: @_post(), fullname: @_fullname() 
+			ret = _.extend @toObject(), post: @_post(), fullname: @_fullname()
+			if ret.photoUrl
+				ret.photoUrl = "user/photo/#{ret.id}"
+			return ret
 			
 	beforeValidate: (values, cb) ->
 		if values.username

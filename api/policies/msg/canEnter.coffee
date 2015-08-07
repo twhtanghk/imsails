@@ -23,7 +23,7 @@ module.exports = (req, res, next) ->
 			.populateAll()
 			.then (group) ->
 				if group
-					if group.enterAllowed req.user
+					if group.canEnter req.user
 						return next()
 					else
 						return res.serverError "Not authorized to enter room #{group.name}"

@@ -83,7 +83,10 @@ i.photo {
 	position: relative;
 	height: 0;
 	padding-bottom: 100%;
-	font-size: 33vw;
+	font-size: 200px;
+	@media only screen and (max-width: 600px) {
+		font-size: 33vw;
+	}
 }
 
 .photo.edit {

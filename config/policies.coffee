@@ -5,6 +5,7 @@ module.exports =
 			find:		['bearer']
 			findOne:	['bearer', 'user/me']
 			update:		['bearer', 'user/me', 'isOwner', 'omitId']
+			getPhoto:	true
 		RosterController:
 			'*':		false
 			find:		['bearer', 'roster/filterByOwner']
@@ -14,12 +15,13 @@ module.exports =
 		GroupController:
 			'*':		false
 			find:		['bearer', 'group/publicOnly']
-			membersOnly:['bearer']
 			findOne:	['bearer']
-			create:		['bearer', 'setOwner', 'group/setJid']
-			update:		['bearer', 'group/editAllowed', 'omitId']
-			destroy:	['bearer', 'isOwner']
+			create:		['bearer', 'setOwner']
+			update:		['bearer', 'group/canEdit', 'omitId']
+			destroy:	['bearer', 'group/canRemove']
+			membersOnly:['bearer']
+			getPhoto:	true
 		MsgController:
 			'*':		false
-			'find':		['bearer', 'msg/enterAllowed', 'msg/filterByRoom']
-			'create':	['bearer', 'msg/withVoice', 'setOwner', 'msg/setFrom']	
+			'find':		['bearer', 'msg/canEnter', 'msg/filterByRoom']
+			'create':	['bearer', 'msg/canVoice', 'setOwner', 'msg/setFrom']	

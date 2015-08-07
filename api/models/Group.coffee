@@ -44,28 +44,56 @@ module.exports =
 		type: 
 			type:		'string'
 			required:	true
+		
 		isOwner: (user) ->
 			@createdBy.id == user?.id
+			
 		isModerator: (user) ->
 			_.any @moderators, (item) ->
 				item.id == user?.id
+				
 		isMember: (user) ->
 			@type == 'Unmoderated' or _.any @members, (item) ->
-				item.id == user?.id 
+				item.id == user?.id
+				
 		isVisitor: (user) ->
 			@type == 'Moderated'
-		enterAllowed: (user) ->
+
+		# check if user is authorized to enter the chatroom
+		canEnter: (user) ->
 			@isVisitor(user) or @isMember(user) or @isModerator(user) or @isOwner(user)
-		withVoice: (user) ->
+			
+		# check if user is authorized to send message to the chatroom
+		canVoice: (user) ->
 			@isMember(user) or @isModerator(user) or @isOwner(user)
-		editAllowed: (user) ->
+			
+		# check if user is authorized to edit the group settings
+		canEdit: (user) ->
 			@isModerator(user) or @isOwner(user)
-		removeAllowed: (user) ->
+		
+		# check if user is authorized to remove this group
+		canRemove: (user) ->
 			@isOwner(user)
 			
+		# exclude the field photo for data retrieval
+		toJSON: ->
+			ret = @toObject()
+			if ret.photoUrl
+				ret.photoUrl = "group/photo/#{ret.id}"
+			return ret
+			
+	beforeValidate: (values, cb) ->
+		# set jid = name@domain 
+		domain = sails.config.xmpp.muc
+		if values.type == "Members-Only"
+			domain = "#{values.createdBy.username}.#{domain}"
+		values.jid = "#{values.name}@#{domain}"
+		cb()
+	
 	afterCreate: (values, cb) ->
 		if values.type != 'Members-Only'
 			return cb null, values
+		# add this group into roster of the defined members 
 		sails.models.group
 			.findOne()
 			.populateAll()

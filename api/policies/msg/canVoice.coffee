@@ -24,7 +24,7 @@ module.exports = (req, res, next) ->
 			.populateAll()
 			.then (group) ->
 				if group
-					if group.withVoice req.user
+					if group.canVoice req.user
 						return next()
 					else
 						return res.serverError "Not granted with voice for the room #{group.jid}"
