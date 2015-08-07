@@ -42,7 +42,7 @@ module.exports =
 				.populateAll()
 				.then (group) ->
 					ret = _.filter sockets, (id) ->
-						group?.enterAllowed sails.sockets.get(id).user
+						group?.canEnter sails.sockets.get(id).user
 					sails.sockets.emit ret, eventName, data
 				.catch sails.log.error
 		else
@@ -59,8 +59,8 @@ module.exports =
 		# query for groupchat
 		if values.type != 'chat'
 			query = sails.models.roster
-			.find()
-			.where(jid: values.to)
+				.find()
+				.where(jid: values.to)
 		query
 			.then (roster) ->
 				_.each roster, (item) ->
