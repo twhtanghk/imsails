@@ -75,11 +75,12 @@ module.exports =
 		canRemove: (user) ->
 			@isOwner(user)
 			
+		_photoUrl: ->
+			return if @photo then "#{sails.config.url}/group/photo/#{@id}?m=#{@updatedAt}" else null
+			
 		# exclude the field photo for data retrieval
 		toJSON: ->
-			ret = @toObject()
-			if ret.photo
-				ret.photoUrl = "#{sails.config.url}/group/photo/#{ret.id}?m=#{ret.updatedAt}"
+			ret = _.extend @toObject(), photoUrl: @_photoUrl()
 			delete ret.photo
 			return ret
 	
@@ -106,6 +107,13 @@ module.exports =
 						cb null, values
 					.catch cb
 			.catch cb
+		
+	beforePublishUpdate: (id, changes, req, options) ->
+		# update photoUrl if photo is updated
+		if changes.photo
+			now = new Date()
+			changes.photoUrl = "#{sails.config.url}/group/photo/#{id}?m=#{now}"
+			delete changes.photo
 		
 	# return group "Authenticated Users"	
 	authGrp: (opts, cb) ->

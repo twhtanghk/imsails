@@ -31,8 +31,12 @@ domain =
 					ret = new resource.Msgs()
 					ret.$fetch params: {type: type, to: chat.jid, sort: 'createdAt DESC'}
 			onExit: (resource, chat) ->
+				# clear roster newmsg counter
 				item = _.findWhere resource.Roster.instance().models, jid: chat.jid
 				item?.$save(newmsg: 0).catch alert			
+				
+				# no more listen to those registered events
+				io.socket.removeAllListeners 'msg'
 			
 	list: ($scope, $ionicScrollDelegate, $location, type, chat, me, collection, resource) ->
 		_.extend $scope,

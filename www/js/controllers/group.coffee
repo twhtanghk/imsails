@@ -48,7 +48,8 @@ domain =
 							$location:	$location
 					
 		$stateProvider.state 'app.group.list.public',
-			url: "/public"
+			cache:	false
+			url: 	"/public"
 			views:
 				tabPublic:
 					templateUrl: 'templates/group/tab.html'
@@ -57,8 +58,13 @@ domain =
 				resource: 'resource'
 				collection: (resource) ->
 					resource.Groups.instance().$fetch reset: true
+			onExit: ->
+				# no more listen to those registered events
+				_.each ['connect', 'group'], (event) ->
+					io.socket.removeAllListeners event
 					
 		$stateProvider.state 'app.group.list.private',
+			cache:	false
 			url: "/private"
 			views:
 				tabPrivate:
@@ -68,7 +74,10 @@ domain =
 				resource: 'resource'
 				collection: (resource) ->
 					resource.GroupsPrivate.instance().$fetch reset: true
-						
+			onExit: ->
+				_.each ['connect', 'group'], (event) ->
+					io.socket.removeAllListeners event
+
 	item: ($rootScope, $scope, $location, resource) ->
 		_.extend $scope,
 			edit: ->

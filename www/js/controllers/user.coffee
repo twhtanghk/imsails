@@ -10,7 +10,8 @@ domain =
 					templateUrl: "templates/user/index.html"
 			
 		$stateProvider.state 'app.user.list',
-			url: "/list"
+			cache:	false
+			url: 	"/list"
 			views:
 				userContent:
 					templateUrl: 'templates/user/list.html'
@@ -19,6 +20,10 @@ domain =
 				resource: 'resource'
 				collection: (resource) ->
 					resource.Users.instance().$fetch reset: true
+			onExit: ->
+				# no more listen to those registered events
+				_.each ['connect', 'user'], (event) ->
+					io.socket.removeAllListeners event
 				
 		$stateProvider.state 'app.user.update',
 			url: '/update'

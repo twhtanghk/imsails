@@ -10,7 +10,8 @@ domain =
 					templateUrl: "templates/roster/index.html"
 		
 		$stateProvider.state 'app.roster.list',
-			url: "/list"
+			cache:	false
+			url: 	"/list"
 			views:
 				rosterContent:
 					templateUrl: 'templates/roster/list.html'
@@ -20,11 +21,13 @@ domain =
 				collection: (resource) ->
 					ret = resource.Roster.instance()
 					ret.$fetch reset: true
+			onExit: ->
+				# no more listen to those registered events
+				_.each ['connect', 'user', 'group', 'roster'], (event) ->
+					io.socket.removeAllListeners event
 		
 	item: ($rootScope, $scope, resource) ->
 		_.extend $scope,
-			edit: ->
-				return
 			remove: ->
 				$scope.collection.remove $scope.model
 		
@@ -32,6 +35,12 @@ domain =
 		io.socket.on "user", (event) ->
 			if event.verb == 'updated' and event.id == $scope.model.user?.id
 				_.extend $scope.model.user, event.data
+				$scope.$apply 'model'
+		
+		# listen if user status is updated
+		io.socket.on "group", (event) ->
+			if event.verb == 'updated' and event.id == $scope.model.group?.id
+				_.extend $scope.model.group, event.data
 				$scope.$apply 'model'
 				
 		# listen if roster item is updated

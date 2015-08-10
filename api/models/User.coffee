@@ -103,13 +103,14 @@ module.exports =
 			else
 				""
 				
+		_photoUrl: ->
+			return if @photo then "#{sails.config.url}/user/photo/#{@id}?m=#{@updatedAt}" else null
+			
 		toJSON: ->
 			@phone = @phone || []
 			@otherEmail = @otherEmail || []
 			@address = @address || []
-			ret = _.extend @toObject(), post: @_post(), fullname: @_fullname()
-			if ret.photo
-				ret.photoUrl = "#{sails.config.url}/user/photo/#{ret.id}?m=#{ret.updatedAt}"
+			ret = _.extend @toObject(), post: @_post(), fullname: @_fullname(), photoUrl: @_photoUrl()
 			delete ret.photo
 			return ret
 			
@@ -137,10 +138,17 @@ module.exports =
 			else
 				cb "#{sails.config.authGrp} not defined"
 	
+	beforePublishUpdate: (id, changes, req, options) ->
+		# update photoUrl if photo is updated
+		if changes.photo
+			now = new Date()
+			changes.photoUrl = "#{sails.config.url}/user/photo/#{id}?m=#{now}"
+			delete changes.photo
+	
 	broadcast: (roomName, eventName, data, socketToOmit) ->
 		# ignore socketToOmit to broadcast the event to sender also
 		sails.sockets.broadcast roomName, eventName, data
-		
+		 
 	# return administrator		
 	admin: (opts, cb) ->
 		user = 
