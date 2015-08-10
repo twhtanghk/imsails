@@ -31,7 +31,7 @@ module.exports =
 		name:
 			type: 		'string'
 			required:	true
-		photoUrl:
+		photo:
 			type: 		'string'
 		moderators:
 			collection:	'user'
@@ -78,8 +78,9 @@ module.exports =
 		# exclude the field photo for data retrieval
 		toJSON: ->
 			ret = @toObject()
-			if ret.photoUrl
-				ret.photoUrl = "#{sails.config.url}/group/photo/#{ret.id}"
+			if ret.photo
+				ret.photoUrl = "#{sails.config.url}/group/photo/#{ret.id}?m=#{ret.updatedAt}"
+			delete ret.photo
 			return ret
 	
 	afterCreate: (values, cb) ->

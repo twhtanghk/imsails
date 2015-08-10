@@ -4,7 +4,7 @@ module.exports =
 			'*':		false
 			find:		['bearer']
 			findOne:	['bearer', 'user/me']
-			update:		['bearer', 'user/me', 'isOwner', 'omitId']
+			update:		['bearer', 'user/me', 'isOwner', 'omitId', 'user/exclude']
 			getPhoto:	true
 		RosterController:
 			'*':		false
@@ -17,7 +17,7 @@ module.exports =
 			find:		['bearer', 'group/publicOnly']
 			findOne:	['bearer']
 			create:		['bearer', 'setOwner', 'group/setJid']
-			update:		['bearer', 'group/canEdit', 'omitId']
+			update:		['bearer', 'group/canEdit', 'omitId', 'group/exclude']
 			destroy:	['bearer', 'group/canRemove']
 			membersOnly:['bearer']
 			getPhoto:	true

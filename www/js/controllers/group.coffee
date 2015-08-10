@@ -135,10 +135,12 @@ domain =
 						.then (inImg) ->
 							$scope.$emit 'cropImg', inImg 
 			save: ->
-				$scope.model.$save()
+				if model.photoUrl.match(/^data:(.+);base64,(.*)$/)
+					model.photo = model.photoUrl
+				model.$save()
 					.then ->
 						next = 'app.group.list.public'
-						if $scope.model.type == 'Members-Only'
+						if model.type == 'Members-Only'
 							next = 'app.group.list.private' 
 						$state.go next
 					.catch alert

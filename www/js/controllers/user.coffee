@@ -108,6 +108,8 @@ domain =
 			resource: resource
 			model: model
 			save: ->
+				if model.photoUrl.match(/^data:(.+);base64,(.*)$/)
+					model.photo = model.photoUrl
 				model.$save().then ->
 					$state.go 'app.user.list'
 			select: (files) ->

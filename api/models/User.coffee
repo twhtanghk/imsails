@@ -62,7 +62,7 @@ module.exports =
 			type:		'array'
 		address:		
 			type:		'array'
-		photoUrl:
+		photo:
 			type: 		'string'
 		online:
 			type:		'boolean'
@@ -108,8 +108,9 @@ module.exports =
 			@otherEmail = @otherEmail || []
 			@address = @address || []
 			ret = _.extend @toObject(), post: @_post(), fullname: @_fullname()
-			if ret.photoUrl
-				ret.photoUrl = "#{sails.config.url}/user/photo/#{ret.id}"
+			if ret.photo
+				ret.photoUrl = "#{sails.config.url}/user/photo/#{ret.id}?m=#{ret.updatedAt}"
+			delete ret.photo
 			return ret
 			
 	beforeValidate: (values, cb) ->

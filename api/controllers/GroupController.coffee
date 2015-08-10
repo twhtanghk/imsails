@@ -20,7 +20,7 @@ module.exports =
 	getPhoto: (req, res) ->
 		pk = actionUtil.requirePk(req)
 		Model = actionUtil.parseModel(req)
-		sails.services.file.get(Model, pk, 'photoUrl')
+		sails.services.file.get(Model, pk, 'photo')
 			.then (data) ->
 				if data
 					[data, type, content] = data.match(/^data:(.+);base64,(.*)$/)

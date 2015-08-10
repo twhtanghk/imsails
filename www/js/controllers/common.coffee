@@ -50,7 +50,8 @@ ctrl =
 				
 		$scope.$watch 'model.status', (newvalue, oldvalue) ->
 			if newvalue != oldvalue
-				$scope.model.$save()
+				data = new resource.User id: $scope.model.id
+				data.$save(status: $scope.model.status).catch alert
 	
 module.exports = (angularModule) ->
 	angularModule
