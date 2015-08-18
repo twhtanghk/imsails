@@ -1,7 +1,6 @@
+argv = require('yargs').argv
 gulp = require 'gulp'
-gutil = require 'gulp-util'
 bower = require 'bower'
-concat = require 'gulp-concat'
 sass = require 'gulp-sass'
 minifyCss = require 'gulp-minify-css'
 rename = require 'gulp-rename'
@@ -24,32 +23,22 @@ gulp.task 'sass', (done) ->
     .pipe(rename({ extname: '.min.css' }))
     .pipe(gulp.dest('./www/css/'))
     
-gulp.task 'coffee', ->
+gulp.task 'copy', ->
+  gulp.src(if argv.prod then './www/js/config/production.coffee' else './www/js/config/development.coffee')
+    .pipe(rename('env.coffee'))
+    .pipe(gulp.dest('./www/js/'))
+	   
+gulp.task 'coffee', ['copy'],  ->
   browserify(entries: ['./www/js/index.coffee'])
-    .transform('coffeeify')
+  	.transform('coffeeify')
     .transform('debowerify')
     .bundle()
     .pipe(source('index.js'))
     .pipe(gulp.dest('./www/js/'))
+	
+gulp.task 'package', ['plugin', 'sass', 'coffee'], ->
+  sh.exec "ionic run"
 
 gulp.task 'plugin', ->
   for plugin in require('./package.json').cordovaPlugins
   	sh.exec "cordova plugin add #{plugin}"
-  
-gulp.task 'watch', ->
-  gulp.watch(paths.sass, ['sass'])
-
-gulp.task 'install', ['git-check'], ->
-  bower.commands.install().on 'log', (data) ->
-    gutil.log('bower', gutil.colors.cyan(data.id), data.message)
-    
-gulp.task 'git-check', (done) ->
-  if (!sh.which('git'))
-    console.log(
-      '  ' + gutil.colors.red('Git is not installed.'),
-      '\n  Git, the version control system, is required to download Ionic.',
-      '\n  Download git here:', gutil.colors.cyan('http://git-scm.com/downloads') + '.',
-      '\n  Once git is installed, run \'' + gutil.colors.cyan('gulp install') + '\' again.'
-    )
-    process.exit(1)
-  done()

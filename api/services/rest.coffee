@@ -33,7 +33,7 @@ module.exports =
 					
 	push: (token, roster, msg) ->
 		data =
-			url: _.template "/chat/<%=msg.type%>/<%=roster.createdBy.id%>",
+			url: _.template "/chat/<%=msg.type%>/<%=msg.createdBy%>",
 				roster: roster
 				msg:	msg 
 			msg: _.template "<%=roster.newmsg%> message from <%=roster.createdBy.email%>}",

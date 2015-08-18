@@ -87,7 +87,7 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 					device.$save().catch alert
 				when 'message'
 					$location.path notification.payload.url
-					$cordovaLocalNotification.add
+					$cordovaLocalNotification.schedule
 						title:	notification.payload.msg
 				else
 					alert notification

@@ -56,7 +56,8 @@
     "gulp-sass": "^0.7.1",
     "gulp-util": "^3.0.3",
     "shelljs": "^0.3.0",
-    "vinyl-source-stream": "^1.0.0"
+    "vinyl-source-stream": "^1.0.0",
+    "yargs": "^3.19.0"
   },
   "scripts": {
     "start": "node app.js",
