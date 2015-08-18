@@ -70,11 +70,13 @@
   "author": "twhtang",
   "license": "",
   "cordovaPlugins": [
-    "org.apache.cordova.device",
-    "org.apache.cordova.console",
+    "cordova-plugin-device",
+    "cordova-plugin-console",
     "com.ionic.keyboard",
-    "org.apache.cordova.camera",
-    "org.apache.cordova.inappbrowser"
+    "cordova-plugin-camera",
+    "cordova-plugin-inappbrowser",
+    "https://github.com/phonegap-build/PushPlugin.git#2.4.0",
+    "https://github.com/katzer/cordova-plugin-local-notifications.git"
   ],
   "cordovaPlatforms": [
     "android"

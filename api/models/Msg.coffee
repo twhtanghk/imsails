@@ -51,20 +51,30 @@ module.exports =
 			sails.sockets.emit ret, eventName, data
 			
 	afterPublishCreate: (values, req) ->
-		# query for chat
-		query = sails.models.roster
-			.find()
-			.where(jid: values.from)
-			.populate('createdBy', where: jid: values.to)
-		# query for groupchat
-		if values.type != 'chat'
+		# update all subscribed parties (jid exists in roster)
+		query = null
+		if sails.services.jid.isMuc(values.to)
 			query = sails.models.roster
 				.find()
 				.where(jid: values.to)
+				.populate('createdBy')
+		else
+			query = sails.models.roster
+				.find()
+				.where(jid: values.from)
+				.populate('createdBy', where: jid: values.to)
 		query
 			.then (roster) ->
+				# update roster newmsg counter
 				_.each roster, (item) ->
 					item.newmsg ?= 0
 					item.newmsg = item.newmsg + 1
-					item.save().catch sails.log.error
+					item.save()
+						.then ->
+							# send push notification
+							sails.services.rest
+								.push req.user.token, item, values
+								.then sails.log.verbose
+								.catch sails.log.error
+						.catch sails.log.error
 			.catch sails.log.error

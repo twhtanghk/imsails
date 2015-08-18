@@ -1,3 +1,5 @@
+env = require './env.coffee'
+
 angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon'])
 	
 	.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
@@ -11,14 +13,14 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 		$ionicConfigProvider.tabs.style 'standard'
 		$ionicConfigProvider.tabs.position 'bottom'
 	
-	.run ($ionicPlatform, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, OAuthService, AlertService, resource) ->
+	.run ($ionicPlatform, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, OAuthService, AlertService, resource) ->
 		window.alert = AlertService.alert
 		
 		$ionicPlatform.ready ->
-			if (window.cordova && window.cordova.plugins.Keyboard)
-				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true)
-			if (window.StatusBar)
-				StatusBar.styleDefault()
+			if env.isNative()
+				cordova.plugins.Keyboard?.hideKeyboardAccessoryBar(true)
+				StatusBar?.styleDefault()
+				platform.pushRegister()
 				
 		# listen if access granted or denied in child window
 		$.receiveMessage (event) ->
@@ -74,3 +76,18 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 				.then (modal) ->
 					modal.show()
 					$rootScope.modal = modal
+					
+		$rootScope.$on '$cordovaPush:notificationReceived', (event, notification) ->
+			switch notification.event
+				when 'registered'
+					device = new resource.Device
+						regid: 		notification.regid
+						model:		$cordovaDevice.getModel()
+						version:	$cordovaDevice.getVersion()
+					device.$save().catch alert
+				when 'message'
+					$location.path notification.payload.url
+					$cordovaLocalNotification.add
+						title:	notification.payload.msg
+				else
+					alert notification

@@ -1,7 +1,13 @@
 env = require './env.coffee'
 Promise = require 'promise'
 
-platform = ($rootScope, $cordovaInAppBrowser, $location, $http, $ionicModal, OAuthService) ->
+platform = ($rootScope, $cordovaInAppBrowser, $cordovaPush, $location, $http, $ionicModal, OAuthService) ->
+	# register for push notification
+	pushRegister = ->
+		if env.platform() == 'mobile'
+			$cordovaPush.register env.push.gcm
+				.catch alert
+		
 	# return promise to authenticate user
 	auth = ->
 		url = "#{env.oauth2().authUrl}?#{$.param(env.oauth2().opts)}"
@@ -91,8 +97,9 @@ platform = ($rootScope, $cordovaInAppBrowser, $location, $http, $ionicModal, OAu
 		else
 			func[env.platform()]()
 			
-	auth: auth
-	open: open
+	pushRegister:	pushRegister
+	auth: 			auth
+	open: 			open
 	
 config =  ($cordovaInAppBrowserProvider) ->
 	opts = 
@@ -108,4 +115,4 @@ angular.module('platform', ['ionic', 'ngCordova', 'starter.controller'])
 
 	.config ['$cordovaInAppBrowserProvider', config]
 
-	.factory 'platform', ['$rootScope', '$cordovaInAppBrowser', '$location', '$http', '$ionicModal', 'OAuthService', platform]
+	.factory 'platform', ['$rootScope', '$cordovaInAppBrowser', '$cordovaPush', '$location', '$http', '$ionicModal', 'OAuthService', platform]

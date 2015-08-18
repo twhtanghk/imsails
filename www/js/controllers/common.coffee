@@ -1,12 +1,12 @@
 env = require '../env.coffee'
 _ = require 'lodash'
 urlparser = require 'url'
+util = require 'util'
 
 service = 
 	alert: ($ionicPopup, $timeout) ->
 		alert: (msg) ->
-			msg = JSON.stringify(msg)
-			console.log msg
+			console.log util.inspect(msg)
 			popup = $ionicPopup.alert template: msg
 			popup.then ->
 				return

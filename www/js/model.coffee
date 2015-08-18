@@ -148,6 +148,13 @@ resource = ($rootScope, pageableAR) ->
 		
 		model: Msg
 		
+	class Device extends pageableAR.Model
+		$urlRoot: "#{env.server.mobile.url}/api/device"
+	
+		$sync: (op, model, opts) ->
+			@restsync(op, model, opts)
+
+	
 	User:			User
 	Users:			Users
 	Group:			Group
@@ -157,6 +164,7 @@ resource = ($rootScope, pageableAR) ->
 	Roster:			Roster
 	Msg:			Msg
 	Msgs:			Msgs
+	Device:			Device
 
 angular.module('starter.model', ['ionic', 'PageableAR'])
 	.value 'server', env.server.app

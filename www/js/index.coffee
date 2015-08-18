@@ -11,6 +11,14 @@ window.$.deparam = require 'jquery-deparam'
 if env.isNative()
 	window.$.getScript 'cordova.js'
 	
+	# ensure all cordova plugins are loaded
+	document.addEventListener 'deviceready', ->
+		console.log 'ready'
+		angular.bootstrap(document, ['starter'])
+else
+	$(document).ready ->
+		angular.bootstrap(document, ['starter'])
+		
 require 'ngCordova'
 require 'angular-activerecord'
 require 'sails-auth'

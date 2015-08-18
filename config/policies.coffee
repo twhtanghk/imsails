@@ -2,26 +2,26 @@ module.exports =
 	policies:
 		UserController:
 			'*':		false
-			find:		['bearer']
-			findOne:	['bearer', 'user/me']
-			update:		['bearer', 'user/me', 'isOwner', 'omitId', 'user/exclude']
+			find:		['isAuth']
+			findOne:	['isAuth', 'user/me']
+			update:		['isAuth', 'user/me', 'isOwner', 'omitId', 'user/exclude']
 			getPhoto:	true
 		RosterController:
 			'*':		false
-			find:		['bearer', 'roster/filterByOwner']
-			create:		['bearer', 'setOwner', 'roster/setJid']
-			update:		['bearer', 'isOwner', 'omitId', 'roster/include']
-			destroy:	['bearer', 'isOwner']
+			find:		['isAuth', 'roster/filterByOwner']
+			create:		['isAuth', 'setOwner', 'roster/setJid']
+			update:		['isAuth', 'isOwner', 'omitId', 'roster/include']
+			destroy:	['isAuth', 'isOwner']
 		GroupController:
 			'*':		false
-			find:		['bearer', 'group/publicOnly']
-			findOne:	['bearer']
-			create:		['bearer', 'setOwner', 'group/setJid']
-			update:		['bearer', 'group/canEdit', 'omitId', 'group/exclude']
-			destroy:	['bearer', 'group/canRemove']
-			membersOnly:['bearer']
+			find:		['isAuth', 'group/publicOnly']
+			findOne:	['isAuth']
+			create:		['isAuth', 'setOwner', 'group/setJid']
+			update:		['isAuth', 'group/canEdit', 'omitId', 'group/exclude']
+			destroy:	['isAuth', 'group/canRemove']
+			membersOnly:['isAuth']
 			getPhoto:	true
 		MsgController:
 			'*':		false
-			'find':		['bearer', 'msg/canEnter', 'msg/filterByRoom']
-			'create':	['bearer', 'msg/canVoice', 'setOwner', 'msg/setFrom']	
+			'find':		['isAuth', 'msg/canEnter', 'msg/filterByRoom']
+			'create':	['isAuth', 'msg/canVoice', 'setOwner', 'msg/setFrom']	
