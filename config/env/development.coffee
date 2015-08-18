@@ -14,7 +14,7 @@ module.exports =
 		url:		"https://mob.myvnc.com/mobile/api/push"
 	oauth2:
 		verifyURL:			"https://mob.myvnc.com/org/oauth2/verify/"
-		scope:				[ "https://mob.myvnc.com/org/users"]
+		scope:				[ "https://mob.myvnc.com/org/users", "https://mob.myvnc.com/mobile"]
 	xmpp:
 		domain:			'mob.myvnc.com'
 		muc:			'muc.mob.myvnc.com'
