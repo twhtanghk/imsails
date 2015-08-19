@@ -10,14 +10,27 @@ pair = (array) ->
 	_.each array, (item) ->
 		ret = ret && item.type? && item.value?
 	return ret
-			
+		
+fullname = (user) ->
+	if user.name?.given or user.name?.middle or user.name?.family
+		"#{user.name?.given || ''} #{user.name?.middle || ''} #{user.name?.family || ''}"
+	else
+		user.email
+		
+post = (user) ->
+	if user.organization?.name or user.title
+		"#{user.organization?.name || ''}/#{user.title || ''}"
+	else
+		""
+		
+photoUrl = (user) ->
+	return if user.photo then "#{sails.config.url}/user/photo/#{user.id}?m=#{user.updatedAt}" else null
+	
 module.exports =
 	
 	autoWatch:			false
 	
-	autoSubscribe:		true
-	
-	autoSubscribeDeep:	false
+	autosubscribe:		['update']
 	
 	tableName:	'users'
 	
@@ -90,27 +103,21 @@ module.exports =
 			)
 			membersOnly = _.sortBy membersOnly, 'name'
 			_.uniq membersOnly, 'id'
-				
-		_fullname: ->
-			if @name?.given or @name?.middle or @name?.family
-				"#{@name?.given || ''} #{@name?.middle || ''} #{@name?.family || ''}"
-			else
-				@email
-				
-		_post: ->
-			if @organization?.name or @title
-				"#{@organization?.name || ''}/#{@title || ''}"
-			else
-				""
-				
-		_photoUrl: ->
-			return if @photo then "#{sails.config.url}/user/photo/#{@id}?m=#{@updatedAt}" else null
 			
+		fullname: ->
+			fullname(@)
+			
+		post: ->
+			post(@)
+			
+		photoUrl: ->
+			photoUrl(@)
+				
 		toJSON: ->
 			@phone = @phone || []
 			@otherEmail = @otherEmail || []
 			@address = @address || []
-			ret = _.extend @toObject(), post: @_post(), fullname: @_fullname(), photoUrl: @_photoUrl()
+			ret = _.extend @toObject(), post: @post(), fullname: @fullname(), photoUrl: @photoUrl()
 			delete ret.photo
 			return ret
 			
@@ -142,8 +149,9 @@ module.exports =
 		# update photoUrl if photo is updated
 		if changes.photo
 			now = new Date()
-			changes.photoUrl = "#{sails.config.url}/user/photo/#{id}?m=#{now}"
+			_.extend changes, photoUrl: "#{sails.config.url}/user/photo/#{id}?m=#{now}"
 			delete changes.photo
+		_.extend changes, post: post(changes), fullname: fullname(changes)
 	
 	broadcast: (roomName, eventName, data, socketToOmit) ->
 		# ignore socketToOmit to broadcast the event to sender also

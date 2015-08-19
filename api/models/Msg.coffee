@@ -7,9 +7,7 @@ module.exports =
 
 	autoWatch:			true
 	
-	autoSubscribe:		false
-	
-	autoSubscribeDeep:	false
+	autosubscribe:		false
 	
 	tableName:	'msgs'
 		
@@ -57,12 +55,14 @@ module.exports =
 			query = sails.models.roster
 				.find()
 				.where(jid: values.to)
-				.populate('createdBy')
+				.populateAll()
 		else
 			query = sails.models.roster
 				.find()
 				.where(jid: values.from)
 				.populate('createdBy', where: jid: values.to)
+				.populate('user')
+				.populate('group')
 		query
 			.then (roster) ->
 				# update roster newmsg counter

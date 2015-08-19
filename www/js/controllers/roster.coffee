@@ -34,12 +34,14 @@ domain =
 		# listen if user status is updated
 		io.socket.on "user", (event) ->
 			if event.verb == 'updated' and event.id == $scope.model.user?.id
+				_.extend $scope.model, name: event.data.fullname
 				_.extend $scope.model.user, event.data
 				$scope.$apply 'model'
 		
 		# listen if user status is updated
 		io.socket.on "group", (event) ->
 			if event.verb == 'updated' and event.id == $scope.model.group?.id
+				_.extend $scope.model, name: event.data.name
 				_.extend $scope.model.group, event.data
 				$scope.$apply 'model'
 				

@@ -8,9 +8,7 @@ module.exports =
 
 	autoWatch:			true
 	
-	autoSubscribe:		true
-	
-	autoSubscribeDeep:	true
+	autosubscribe:		['update']
 	
 	tableName:	'groups'
 	

@@ -18,13 +18,11 @@ module.exports = (req, res) ->
 	Promise.all([count, query])
 		.then (data) ->
 			if req._sails.hooks.pubsub and req.isSocket
-				if model.autoSubscribe
-					model.subscribe(req, data[1])
+				model.subscribe(req, data[1])
 				if model.autoWatch or req.options.autoWatch
 					model.watch(req)
-				if model.autoSubscribeDeep
-					_.each data[1], (record) ->
-						actionUtil.subscribeDeep(req, record)
+				_.each data[1], (record) ->
+					actionUtil.subscribeDeep(req, record)
 			res.ok
 				count:		data[0]
 				results:	data[1]
