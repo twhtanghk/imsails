@@ -36,7 +36,7 @@ module.exports =
 			if sails.services.jid.isMuc(@jid)
 				@group?.name
 			else
-				@user?.fullname()
+				@user?.fullname
 				
 	afterUpdate: (updatedRecord, cb) ->
 		@publishUpdate updatedRecord.id, _.omit(updatedRecord, 'user', 'group')
