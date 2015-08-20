@@ -39,7 +39,7 @@ module.exports =
 				@user?.fullname()
 				
 	afterUpdate: (updatedRecord, cb) ->
-		@publishUpdate updatedRecord.id, _.pick(updatedRecord, 'newmsg')
+		@publishUpdate updatedRecord.id, _.omit(updatedRecord, 'user', 'group')
 		cb() 
 		
 	broadcast: (roomName, eventName, data, socketToOmit) ->

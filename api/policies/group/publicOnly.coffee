@@ -1,5 +1,3 @@
-_ = require 'lodash'
-
 # add criteria to filter group list for current login user  
 module.exports = (req, res, next) ->
 	req.options.where = req.options.where || {}

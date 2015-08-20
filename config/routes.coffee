@@ -1,11 +1,34 @@
 module.exports = 
 	routes:
-		'get /user/photo/:id':
-			controller:		'UserController'
-			action:			'getPhoto'
-		'get /group/membersOnly':
+		'GET /api/group':
+			controller:		'GroupController'
+			action:			'find'
+			sort:			
+				name:	'desc'
+		'GET /api/group/membersOnly':
 			controller:		'GroupController'
 			action:			'membersOnly'
-		'get /group/photo/:id':
+			sort:			
+				name:	'desc'
+		'GET /group/photo/:id':
 			controller:		'GroupController'
+			action:			'getPhoto'
+		'GET /api/msg':
+			controller:		'MsgController'
+			action:			'find'
+			sort:			
+				createdAt:	'desc'
+		'GET /api/roster':
+			controller:		'RosterController'
+			action:			'find'
+			sort:			
+				updatedAt:	'desc'
+				jid:		'asc'
+		'GET /api/user':
+			controller:		'UserController'
+			action:			'find'
+			sort:			
+				fullname:	'asc'
+		'GET /user/photo/:id':
+			controller:		'UserController'
 			action:			'getPhoto'

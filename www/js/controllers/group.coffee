@@ -144,7 +144,7 @@ domain =
 						.then (inImg) ->
 							$scope.$emit 'cropImg', inImg 
 			save: ->
-				if model.photoUrl.match(/^data:(.+);base64,(.*)$/)
+				if model.photoUrl?.match(/^data:(.+);base64,(.*)$/)
 					model.photo = model.photoUrl
 				model.$save()
 					.then ->

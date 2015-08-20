@@ -1,4 +1,3 @@
-_ = require 'lodash'
 actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 
 # add criteria for room jid and current login user  

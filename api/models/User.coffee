@@ -65,6 +65,8 @@ module.exports =
 			required:	true
 		name:
 			type:		'json'
+		fullname:
+			type:		'string'
 		organization:
 			type:		'json'
 		title:
@@ -104,9 +106,6 @@ module.exports =
 			membersOnly = _.sortBy membersOnly, 'name'
 			_.uniq membersOnly, 'id'
 			
-		fullname: ->
-			fullname(@)
-			
 		post: ->
 			post(@)
 			
@@ -117,13 +116,14 @@ module.exports =
 			@phone = @phone || []
 			@otherEmail = @otherEmail || []
 			@address = @address || []
-			ret = _.extend @toObject(), post: @post(), fullname: @fullname(), photoUrl: @photoUrl()
+			ret = _.extend @toObject(), post: @post(), photoUrl: @photoUrl()
 			delete ret.photo
 			return ret
 			
 	beforeValidate: (values, cb) ->
 		if values.username
 			values.jid = "#{values.username}@#{sails.config.xmpp.domain}"
+		values.fullname = fullname(values)
 		cb(null, values)
 		
 	afterCreate: (values, cb) ->
@@ -151,7 +151,7 @@ module.exports =
 			now = new Date()
 			_.extend changes, photoUrl: "#{sails.config.url}/user/photo/#{id}?m=#{now}"
 			delete changes.photo
-		_.extend changes, post: post(changes), fullname: fullname(changes)
+		_.extend changes, post: post(changes)
 	
 	broadcast: (roomName, eventName, data, socketToOmit) ->
 		# ignore socketToOmit to broadcast the event to sender also
