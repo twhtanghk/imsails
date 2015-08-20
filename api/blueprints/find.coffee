@@ -1,4 +1,3 @@
-_ = require 'lodash'
 Promise = require 'promise'
 actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 
