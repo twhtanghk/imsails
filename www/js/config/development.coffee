@@ -20,7 +20,7 @@ module.exports =
 		opts:
 			response_type:	"token"
 			scope:			"https://mob.myvnc.com/org/users https://mob.myvnc.com/xmpp https://mob.myvnc.com/mobile"
-			client_id:		if @isNative() then 'imappPRD' else 'imDEV'
+			client_id:		if @isNative() then 'imappDEV' else 'imDEV'
 	push:
 		gcm:
 			senderID:	'1027958128694'
