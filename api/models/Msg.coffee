@@ -34,6 +34,7 @@ module.exports =
 		# filter if socket.user is authorized to listen the created msg
 		sockets = _.map sails.sockets.subscribers(roomName)
 		to = data.data.to
+		from = data.data.from
 		if sails.services.jid.isMuc to
 			sails.models.group
 				.findOne jid: to
@@ -45,7 +46,8 @@ module.exports =
 				.catch sails.log.error
 		else
 			ret = _.filter sockets, (id) ->
-				to == sails.sockets.get(id)?.user.jid
+				to == sails.sockets.get(id)?.user.jid or
+				from == sails.sockets.get(id)?.user.jid
 			sails.sockets.emit ret, eventName, data
 			
 	afterPublishCreate: (values, req) ->

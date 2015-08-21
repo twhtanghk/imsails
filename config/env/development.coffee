@@ -12,6 +12,10 @@ module.exports =
 		timeout:	10000 # ms
 	push:
 		url:		"https://mob.myvnc.com/mobile/api/push"
+		data:
+			url:		"/roster/list"
+			title:		"<%=roster.name()%>"
+			message:	"<%=roster.newmsg%> new message(s)"	
 	oauth2:
 		verifyURL:			"https://mob.myvnc.com/org/oauth2/verify/"
 		scope:				[ "https://mob.myvnc.com/org/users", "https://mob.myvnc.com/mobile"]

@@ -39,6 +39,12 @@ service =
 					resolve data
 	
 ctrl = 
+	state: ($stateProvider) ->
+		$stateProvider.state 'app',
+			url: ""
+			abstract: true
+			templateUrl: "templates/menu.html"
+	
 	menu: ($scope, resource) ->
 		_.extend $scope,
 			env: env
@@ -57,4 +63,5 @@ module.exports = (angularModule) ->
 	angularModule
 		.factory 'AlertService', ['$ionicPopup', '$timeout', service.alert]
 		.factory 'OAuthService', ['$http', '$sailsSocket', 'authService', service.oauth]
+		.config ['$stateProvider', ctrl.state]
 		.controller 'MenuCtrl', ['$scope', 'resource', ctrl.menu]

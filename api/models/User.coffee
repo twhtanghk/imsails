@@ -123,7 +123,8 @@ module.exports =
 	beforeValidate: (values, cb) ->
 		if values.username
 			values.jid = "#{values.username}@#{sails.config.xmpp.domain}"
-		values.fullname = fullname(values)
+		if values.name
+			values.fullname = fullname(values)
 		cb(null, values)
 		
 	afterCreate: (values, cb) ->

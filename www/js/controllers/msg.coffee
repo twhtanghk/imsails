@@ -54,11 +54,7 @@ domain =
 			send: ->
 				if $scope.msg != ''
 					msg = new resource.Msg type: type, to: chat.jid, body: $scope.msg
-					msg.$save()
-						.then ->
-							collection.add msg
-							$ionicScrollDelegate.scrollTop true
-						.catch alert
+					msg.$save().catch alert
 					$scope.msg = ''
 		
 		# reload collection once reconnected
@@ -67,9 +63,14 @@ domain =
 				$scope.collection.$fetch  params: {type: type, to: chat.jid, sort: 'createdAt DESC'}, reset: true 
 		
 		# listen if msg is created on server
+		isValid = (msg) ->
+			if type == 'chat'
+				return (msg.from == chat.jid and msg.to == me.jid) or (msg.to == chat.jid and msg.from == me.jid)
+			else
+				return msg.to == chat.jid
 		io.socket.on "msg", (event) ->
 			if event.verb == 'created'
-				if (type == 'chat' and event.data.from == chat.jid and event.data.to == me.jid) or (type == 'groupchat' and event.data.to == chat.jid)
+				if isValid(event.data) 
 					collection.add new resource.Msg event.data
 					$scope.$apply('collection.models')
 					$ionicScrollDelegate.scrollTop true

@@ -35,10 +35,8 @@ module.exports =
 		param =
 			roster: roster
 			msg:	msg
-		data =
-			url: _.template "/chat/<%=msg.type%>/<%=msg.createdBy%>", param
-			title: _.template "<%=roster.name()%>", param
-			message: _.template "<%=roster.newmsg%> message(s)", param
+		data = _.mapValues sails.config.push.data, (value) ->
+			_.template value, param
 		@post token, sails.config.push.url, 
 			users:	[roster.createdBy.email]
 			data:	data

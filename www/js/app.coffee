@@ -2,12 +2,7 @@ env = require './env.coffee'
 
 angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon'])
 	
-	.config ($stateProvider, $urlRouterProvider, $ionicConfigProvider) ->
-		$stateProvider.state 'app',
-			url: ""
-			abstract: true
-			templateUrl: "templates/menu.html"
-	
+	.config ($urlRouterProvider, $ionicConfigProvider) ->
 		$urlRouterProvider.otherwise('/roster/list')
 		
 		$ionicConfigProvider.tabs.style 'standard'
@@ -43,9 +38,6 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 			resource.User.me().$save
 				online:	true
 				status:	resource.User.type.status[0]
-				
-		# subscribe to users update
-		resource.Users.instance().$fetch()
 		
 		$rootScope.$on '$stateChangeError', (evt, toState, toParams, fromState, fromParams, error) ->
 			window.alert error.data
