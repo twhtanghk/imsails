@@ -8,7 +8,7 @@ module.exports = (req, res, next) ->
 	type = values.type
 	to = values.to
 	
-	if type == 'chat'
+	if not sails.services.jid.isMuc(to)
 		sails.models.user
 			.findOne(jid: to)
 			.populateAll()
@@ -27,7 +27,7 @@ module.exports = (req, res, next) ->
 					if group.canVoice req.user
 						return next()
 					else
-						return res.serverError "Not granted with voice for the room #{group.jid}"
+						return res.serverError msg: "Not granted with voice for room #{group.name}"
 				else
 					return res.notFound()
 			.catch res.serverError

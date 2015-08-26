@@ -8,8 +8,8 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 		$ionicConfigProvider.tabs.style 'standard'
 		$ionicConfigProvider.tabs.position 'bottom'
 	
-	.run ($ionicPlatform, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, OAuthService, AlertService, resource) ->
-		window.alert = AlertService.alert
+	.run ($ionicPlatform, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, OAuthService, ErrorService, resource) ->
+		window.alert = ErrorService.alert
 		
 		$ionicPlatform.ready ->
 			if env.isNative()
@@ -40,7 +40,7 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 				status:	resource.User.type.status[0]
 		
 		$rootScope.$on '$stateChangeError', (evt, toState, toParams, fromState, fromParams, error) ->
-			window.alert error.data
+			window.alert error
 	
 		auth = _.once platform.auth
 		$rootScope.$on 'event:auth-forbidden', ->
@@ -78,7 +78,6 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 						version:	$cordovaDevice.getVersion()
 					device.$save().catch alert
 				when 'message'
-					$location.path notification.payload.url
 					$cordovaLocalNotification.schedule notification.payload
 				else
 					alert notification

@@ -6,11 +6,11 @@
 				ng-controller="GroupCtrl"
 				ng-class="model.selected ? 'selected' : ''"
 				href="#/chat/groupchat/{{model.id}}">
-				<div ng-if="model.photoUrl == null">
-					<i class="avatar icon ion-android-people">
-					</i>
-				</div>
-				<img ng-src="{{model.photoUrl}}" aria-label="model.name"  ng-if="model.photoUrl != null">
+				<icon 
+					ng-src="model.photoUrl"
+					aria-label="{{model.name}}"
+					otherwise="icon ion-android-people">
+				</icon>
 				<h2>
 					<span>{{model.name}}</span>
 				</h2>
@@ -18,8 +18,8 @@
 					{{model.jid}}
 				</p>
 				<ion-option-button class="button button-balanced icon-left ion-plus-round" on-tap="addRoster()">Roster</ion-option-button>
-				<ion-option-button class="button button-positive icon-left ion-edit" on-tap="edit()">Edit</ion-option-button>
-				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="remove()">Delete</ion-option-button>
+				<ion-option-button class="button button-positive icon-left ion-edit" on-tap="edit()" ng-if="model.canEdit(me)">Edit</ion-option-button>
+				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="remove()" ng-if="model.canRemove(me)">Delete</ion-option-button>
 			</ion-item>
 		</ion-list>
 		<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="controller.loadMore()">

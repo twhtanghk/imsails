@@ -96,9 +96,10 @@ domain =
 				_.extend $scope.model, event.data
 				$scope.$apply 'model'
 		
-	list: ($scope, $location, collection) ->
+	list: ($scope, $location, resource, collection) ->
 		_.extend $scope,
 			collection:		collection
+			me:				resource.User.me()
 			loadMore: ->
 				collection.$fetch()
 					.then ->
@@ -111,7 +112,7 @@ domain =
 			if $location.url().indexOf('/group/list') != -1
 				$scope.collection.$fetch reset: true
 	
-	create: ($scope, $state, resource, model) ->
+	create: ($scope, $state, resource, model, ErrorService) ->
 		_.extend $scope,
 			resource: resource
 			model: model
@@ -128,8 +129,9 @@ domain =
 						if $scope.model.type == 'Members-Only'
 							next = 'app.group.list.private' 
 						$state.go next
-					.catch alert
-		
+					.catch (err) ->
+						ErrorService.formErr $scope.groupCreate, err
+						
 		$scope.$on 'cropImg.completed', (event, outImg) ->
 			$scope.model.photoUrl = outImg
 		
@@ -170,7 +172,7 @@ module.exports = (angularModule) ->
 	angularModule
 		.config ['$stateProvider', domain.state]
 		.controller 'GroupCtrl', ['$rootScope', '$scope', '$location', 'resource', domain.item]
-		.controller 'GroupsCtrl', ['$scope', '$location', 'collection', domain.list]
-		.controller 'GroupCreateCtrl', ['$scope', '$state', 'resource', 'model', domain.create]
+		.controller 'GroupsCtrl', ['$scope', '$location', 'resource', 'collection', domain.list]
+		.controller 'GroupCreateCtrl', ['$scope', '$state', 'resource', 'model', 'ErrorService', domain.create]
 		.controller 'GroupUpdateCtrl', ['$scope', '$state', 'resource', 'model', domain.update]
 		.filter 'groupFilter', filter.list

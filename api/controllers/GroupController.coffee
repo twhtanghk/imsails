@@ -14,7 +14,13 @@ module.exports =
 			.then (user) ->
 				if not user
 					return res.notFound "No Members-Only group found for the authenticated user #{req.user.fullname}"
-				res.ok user.membersOnlyGrps()
+				ids = _.map user.membersOnlyGrps(), (group) ->
+					group.id
+				sails.models.group
+					.find(ids)
+					.populateAll()
+					.then res.ok
+					.catch res.serverError
 			.catch res.serverError
 			
 	getPhoto: (req, res) ->
@@ -29,3 +35,17 @@ module.exports =
 				else
 					res.ok()
 			.catch res.serverError
+			
+	create: (req, res) ->
+		Model = actionUtil.parseModel(req)
+		data = actionUtil.parseValues(req)
+			
+		sails.services.crud
+			.create(Model, data)
+			.then (newInstance) ->
+				res.created(newInstance)
+			.catch (err) ->
+				res.serverError
+					code:	err.originalError.code
+					fields:
+						name: "Duplicate name '#{data.name}'"

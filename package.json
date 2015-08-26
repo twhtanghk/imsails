@@ -76,7 +76,9 @@
     "cordova-plugin-camera",
     "cordova-plugin-inappbrowser",
     "https://github.com/phonegap-build/PushPlugin.git#2.4.0",
-    "https://github.com/katzer/cordova-plugin-local-notifications.git"
+    "https://github.com/katzer/cordova-plugin-local-notifications.git",
+    "https://github.com/VersoSolutions/CordovaClipboard.git",
+    "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git"
   ],
   "cordovaPlatforms": [
     "android"

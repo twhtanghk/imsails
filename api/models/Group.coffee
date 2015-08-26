@@ -44,34 +44,32 @@ module.exports =
 			required:	true
 		
 		isOwner: (user) ->
-			@createdBy.id == user?.id
+			sails.services.group.isOwner(@, user)
 			
 		isModerator: (user) ->
-			_.any @moderators, (item) ->
-				item.id == user?.id
+			sails.services.group.isModerator(@, user)
 				
 		isMember: (user) ->
-			@type == 'Unmoderated' or _.any @members, (item) ->
-				item.id == user?.id
-				
+			sails.services.group.isMember(@, user)
+			
 		isVisitor: (user) ->
-			@type == 'Moderated'
+			sails.services.group.isVisitor(@, user)
 
 		# check if user is authorized to enter the chatroom
 		canEnter: (user) ->
-			@isVisitor(user) or @isMember(user) or @isModerator(user) or @isOwner(user)
+			sails.services.group.canEnter(@, user)
 			
 		# check if user is authorized to send message to the chatroom
 		canVoice: (user) ->
-			@isMember(user) or @isModerator(user) or @isOwner(user)
+			sails.services.group.canVoice(@, user)
 			
 		# check if user is authorized to edit the group settings
 		canEdit: (user) ->
-			@isModerator(user) or @isOwner(user)
+			sails.services.group.canEdit(@, user)
 		
 		# check if user is authorized to remove this group
 		canRemove: (user) ->
-			@isOwner(user)
+			sails.services.group.canRemove(@, user)
 			
 		_photoUrl: ->
 			return if @photo then "#{sails.config.url}/group/photo/#{@id}?m=#{@updatedAt}" else null

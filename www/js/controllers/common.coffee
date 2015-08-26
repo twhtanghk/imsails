@@ -4,13 +4,17 @@ urlparser = require 'url'
 util = require 'util'
 
 service = 
-	alert: ($ionicPopup, $timeout) ->
-		alert: (msg) ->
-			console.log util.inspect(msg)
-			popup = $ionicPopup.alert template: msg
+	error: ($ionicPopup, $timeout, $log) ->
+		alert: (err) ->
+			$log.error util.inspect(err.data.msg)
+			popup = $ionicPopup.alert template: err.data.msg
 			popup.then ->
 				return
 			$timeout popup.close, 3000
+			
+		formErr: (form, err) ->
+			_.each err.data.fields, (value, key) ->
+				_.extend form[key].$error, server: err.data.fields[key]
 			
 	oauth: ($http, $sailsSocket, authService) ->
 		# set authorization header once oauth2 token is available
@@ -61,7 +65,7 @@ ctrl =
 	
 module.exports = (angularModule) ->
 	angularModule
-		.factory 'AlertService', ['$ionicPopup', '$timeout', service.alert]
+		.factory 'ErrorService', ['$ionicPopup', '$timeout', '$log', service.error]
 		.factory 'OAuthService', ['$http', '$sailsSocket', 'authService', service.oauth]
 		.config ['$stateProvider', ctrl.state]
 		.controller 'MenuCtrl', ['$scope', 'resource', ctrl.menu]

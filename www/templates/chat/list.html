@@ -2,12 +2,12 @@
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
     <h1 class='title'>
-    	<icon ng-src="chat.photoUrl"
+    	<icon class="header" ng-src="chat.photoUrl"
 			aria-label="{{chat.fullname}}"
 			otherwise="icon ion-android-person"
 			ng-if="type == 'chat'">
 		</icon>
-		<icon ng-src="chat.photoUrl"
+		<icon class="header" ng-src="chat.photoUrl"
 			aria-label="{{chat.name}}"
 			otherwise="icon ion-android-people"
 			ng-if="type != 'chat'">
@@ -22,13 +22,16 @@
 	</label>
 </div>
 <ion-content class='has-subheader'>
-	<div class="card" ng-repeat="model in collection.models |msgFilter:searchText |orderBy:'-createdAt'" ng-class="model.from == me.jid ? 'left' : 'right'">
+	<div class="card" 
+		ng-repeat="model in collection.models |msgFilter:searchText |orderBy:'-createdAt'" 
+		ng-class="model.from == me.jid ? 'left' : 'right'"
+		on-hold="copy(model)">
 		<div class="item item-text-wrap">
 			{{model.body}}
 		</div>
 		<div class="item item-divider">
-			<span ng-if="type == 'groupchat'">{{model.from}}</span>
 			<span>{{model.createdAt.toLocaleString()}}</span>
+			<span ng-if="type == 'groupchat'">{{model.from}}</span>
 		</div>
 	</div>
 	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">

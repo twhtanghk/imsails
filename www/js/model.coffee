@@ -1,7 +1,10 @@
 env = require './env.coffee'
 require 'PageableAR'
 _ = require 'lodash'
-
+sails =
+	services:
+		group:	require '../../api/services/group.coffee'
+		
 iconUrl = (type) ->
 	icon = 
 		"text/directory":				"img/dir.png"
@@ -82,6 +85,9 @@ resource = ($rootScope, pageableAR) ->
 	
 		@instance: ->
 			_instance ?= new Users()
+			if _instance.state.count == 0
+				_instance.$fetch()
+			return _instance			
 
 	class Group extends pageableAR.Model
 		@type:
@@ -112,6 +118,34 @@ resource = ($rootScope, pageableAR) ->
 					
 			return ret
 	
+		isOwner: (user) ->
+			sails.services.group.isOwner(@, user)
+			
+		isModerator: (user) ->
+			sails.services.group.isModerator(@, user)
+				
+		isMember: (user) ->
+			sails.services.group.isMember(@, user)
+			
+		isVisitor: (user) ->
+			sails.services.group.isVisitor(@, user)
+
+		# check if user is authorized to enter the chatroom
+		canEnter: (user) ->
+			sails.services.group.canEnter(@, user)
+			
+		# check if user is authorized to send message to the chatroom
+		canVoice: (user) ->
+			sails.services.group.canVoice(@, user)
+			
+		# check if user is authorized to edit the group settings
+		canEdit: (user) ->
+			sails.services.group.canEdit(@, user)
+		
+		# check if user is authorized to remove this group
+		canRemove: (user) ->
+			sails.services.group.canRemove(@, user)
+		
 	# public groups
 	class Groups extends pageableAR.PageableCollection
 		_instance = null

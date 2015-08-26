@@ -1,4 +1,4 @@
-lib = require './lib.coffee'
+env = require '../env.coffee'
 
 domain =
 	state: ($stateProvider) ->
@@ -33,12 +33,12 @@ domain =
 			onExit: (resource, chat) ->
 				# clear roster newmsg counter
 				item = _.findWhere resource.Roster.instance().models, jid: chat.jid
-				item?.$save(newmsg: 0).catch alert			
+				item?.$save(newmsg: 0)			
 				
 				# no more listen to those registered events
 				io.socket.removeAllListeners 'msg'
 			
-	list: ($scope, $ionicScrollDelegate, $location, type, chat, me, collection, resource) ->
+	list: ($scope, $cordovaClipboard, $cordovaToast, $ionicScrollDelegate, $location, type, chat, me, collection, resource) ->
 		_.extend $scope,
 			type: type
 			chat: chat
@@ -56,6 +56,12 @@ domain =
 					msg = new resource.Msg type: type, to: chat.jid, body: $scope.msg
 					msg.$save().catch alert
 					$scope.msg = ''
+			copy: (msg) ->
+				if env.isNative()
+					$cordovaClipboard.copy(msg.body)
+						.then ->
+							$cordovaToast.showShortCenter("Message copied")
+						.catch alert
 		
 		# reload collection once reconnected
 		io.socket.on 'connect', (event) ->
@@ -87,5 +93,5 @@ filter =
 module.exports = (angularModule) ->
 	angularModule
 		.config ['$stateProvider', domain.state]
-		.controller 'ChatCtrl', ['$scope', '$ionicScrollDelegate', '$location', 'type', 'chat', 'me', 'collection', 'resource', domain.list]
+		.controller 'ChatCtrl', ['$scope', '$cordovaClipboard', '$cordovaToast', '$ionicScrollDelegate', '$location', 'type', 'chat', 'me', 'collection', 'resource', domain.list]
 		.filter 'msgFilter', filter.list

@@ -1,11 +1,8 @@
+<form name="groupCreate">
 <ion-header-bar class="item-input-inset">
 	<button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
 	<h1 class='title'>
-		<icon ng-src="model.photoUrl"
-			aria-label="{{model.name}}"
-			otherwise="icon ion-android-people">
-		</icon>
 		Group Create
 	</h1>
 	<a class="button button-clear" ng-click="save()">Save</a>
@@ -23,9 +20,15 @@
 			</icon>
 		</div>
 		<div class="col">
-			<label class="item item-input">
-				<input type="text" ng-model="model.name" placeholder="Name" required>
+			<label class="item item-input" ng-class="{'has-error': groupCreate.name.$invalid}">
+				<input type="text" name="name" ng-model="model.name" placeholder="Name" required>
 			</label>
+			<div ng-messages="groupCreate.name.$error"
+				role="alert" 
+				ng-show="groupCreate.name.$error">
+				<div class="form-error" ng-if="groupCreate.name.$error.required">This field is required</div>
+				<div class="form-error" ng-if="groupCreate.name.$error.server">{{groupCreate.name.$error.server}}</div>
+			</div>
 			<fancy-select
 				template-url='templates/user/select.html'
 				ng-selected="model.type"
@@ -72,3 +75,4 @@
 		</ion-list>
 	</div>
 </ion-content>
+</form>
