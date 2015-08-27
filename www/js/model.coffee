@@ -76,6 +76,9 @@ resource = ($rootScope, pageableAR) ->
 					ret[field] = new Date Date.parse ret[field]				
 			return ret
 			
+		$save: (values, opts) ->
+			@promise = super(values, opts)
+			
 	class Users extends pageableAR.PageableCollection
 		_instance = null
 		
@@ -158,7 +161,7 @@ resource = ($rootScope, pageableAR) ->
 			_instance ?= new Groups()
 	
 	# membersOnly groups
-	class GroupsPrivate extends pageableAR.Collection
+	class GroupsPrivate extends pageableAR.PageableCollection
 		_instance = null
 		
 		$urlRoot: "#{env.server.app.url}/api/group/membersOnly"

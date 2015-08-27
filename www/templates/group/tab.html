@@ -2,7 +2,7 @@
 	<ion-content>
 		<ion-list>
 			<ion-item class="item-avatar" 
-				ng-repeat="model in collection.models | groupFilter:searchText"
+				ng-repeat="model in collection.models | groupFilter:searchText | orderBy:'+name'"
 				ng-controller="GroupCtrl"
 				ng-class="model.selected ? 'selected' : ''"
 				href="#/chat/groupchat/{{model.id}}">
