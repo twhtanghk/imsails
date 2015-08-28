@@ -83,6 +83,9 @@ i.avatar {
 
 i.photo {
 	font-size: 200px;
+	@media only screen and (max-width: 600px) {
+		font-size: 33vw;
+	}
 }
 
 .photo {
@@ -91,7 +94,7 @@ i.photo {
 	max-width: 200px;
 	max-height: 200px;
 	@media only screen and (max-width: 600px) {
-		font-size: 33vw;
+		width: 33vw;
 	}
 }
 

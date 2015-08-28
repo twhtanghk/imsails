@@ -1,9 +1,8 @@
 env = require './env.coffee'
 
-io.sails.url = env.server.app.urlRoot
 io.sails.path = "#{env.path}/socket.io"
 io.sails.useCORSRouteToGetCookie = false
-	
+
 window.Promise = require 'promise'
 window._ = require 'lodash'
 window.$ = require 'jquery'

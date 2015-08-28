@@ -26,7 +26,7 @@
     "sails-auth": "*",
     "jq-postmessage": "*",
     "PageableAR": "*",
-    "sails.io.js": "~0.11.5"
+    "sails.io.js": "https://github.com/twhtanghk/sails.io.js.git#~0.11.6"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.0.1"

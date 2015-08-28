@@ -65,7 +65,7 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/twhtang/imsails.git"
+    "url": "git://github.com/twhtanghk/imsails.git"
   },
   "author": "twhtang",
   "license": "",
