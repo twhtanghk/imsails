@@ -1,13 +1,18 @@
 env = require './env.coffee'
 
-angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon'])
+angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon', 'templates'])
 	
-	.config ($urlRouterProvider, $ionicConfigProvider) ->
+	.config ($urlRouterProvider, $ionicConfigProvider, $provide) ->
 		$urlRouterProvider.otherwise('/roster/list')
 		
 		$ionicConfigProvider.tabs.style 'standard'
 		$ionicConfigProvider.tabs.position 'bottom'
-	
+
+		$provide.decorator '$templateFactory', ($delegate, $templateCache) ->
+			$delegate.fromUrl = (url, params) ->
+				$templateCache.get(url)
+			return $delegate
+			
 	.run ($ionicPlatform, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, OAuthService, ErrorService, resource) ->
 		window.alert = ErrorService.alert
 		

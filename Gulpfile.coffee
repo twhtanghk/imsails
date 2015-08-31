@@ -8,6 +8,11 @@ sh = require 'shelljs'
 browserify = require 'browserify'
 bower = require 'gulp-bower'
 source = require 'vinyl-source-stream'
+uglify = require 'gulp-uglify'
+gulpif = require 'gulp-if'
+templateCache = require 'gulp-angular-templatecache'
+
+prod = argv.prod || false
 
 paths = sass: ['./scss/**/*.scss']
 
@@ -28,7 +33,7 @@ gulp.task 'copy', ->
     .pipe(rename('env.coffee'))
     .pipe(gulp.dest('./www/js/'))
 	   
-gulp.task 'coffee', ['copy'],  ->
+gulp.task 'coffee', ['copy', 'template'],  ->
   browserify(entries: ['./www/js/index.coffee'])
   	.transform('coffeeify')
     .transform('debowerify')
@@ -36,6 +41,11 @@ gulp.task 'coffee', ['copy'],  ->
     .pipe(source('index.js'))
     .pipe(gulp.dest('./www/js/'))
 	
+gulp.task 'template', ->
+  gulp.src('./www/templates/**/*.html')
+  	.pipe(templateCache(root: 'templates', standalone: true))
+  	.pipe(gulp.dest('./www/js/'))
+  	  
 gulp.task 'package', ['plugin', 'sass', 'coffee'], ->
   sh.exec "ionic run"
 
