@@ -8,19 +8,38 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 		$ionicConfigProvider.tabs.style 'standard'
 		$ionicConfigProvider.tabs.position 'bottom'
 
+		# reference templateCache instead of loading templates from server
 		$provide.decorator '$templateFactory', ($delegate, $templateCache) ->
 			$delegate.fromUrl = (url, params) ->
 				$templateCache.get(url)
 			return $delegate
 			
+		$provide.decorator '$sailsSocketBackend', ($delegate, $injector) ->
+			# socket connect
+			io.sails.url = env.server.app.urlRoot
+			io.sails.path = "#{env.path}/socket.io"
+			io.sails.useCORSRouteToGetCookie = false
+			
+			# update status of current login user once connected
+			io.socket.on 'connect', (event) ->
+				resource = $injector.get('resource')
+				resource.User.me().$save
+					online:	true
+					status:	resource.User.type.status[0]
+			
+			return $delegate
+		
+		$provide.decorator '$ionicPlatform', ($delegate) ->
+			ready = $delegate.ready
+			$delegate.ready = ->
+				if env.isNative()
+					cordova.plugins.Keyboard?.hideKeyboardAccessoryBar(true)
+					platform.pushRegister()
+				ready()
+			return $delegate
+		
 	.run ($ionicPlatform, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, OAuthService, ErrorService, resource) ->
 		window.alert = ErrorService.alert
-		
-		$ionicPlatform.ready ->
-			if env.isNative()
-				cordova.plugins.Keyboard?.hideKeyboardAccessoryBar(true)
-				StatusBar?.styleDefault()
-				platform.pushRegister()
 				
 		# listen if access granted or denied in child window
 		$.receiveMessage (event) ->
@@ -37,12 +56,6 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 		reject = (err) ->
 			$.postMessage err, url
 		OAuthService.matchUrl $location.absUrl(), resolve, reject
-		
-		# update status of current login user once connected
-		io.socket.on 'connect', (event) ->
-			resource.User.me().$save
-				online:	true
-				status:	resource.User.type.status[0]
 		
 		$rootScope.$on '$stateChangeError', (evt, toState, toParams, fromState, fromParams, error) ->
 			window.alert error
