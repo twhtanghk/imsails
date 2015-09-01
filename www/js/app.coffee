@@ -1,6 +1,6 @@
 env = require './env.coffee'
 
-angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http-auth-interceptor', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon', 'templates'])
+angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'auth', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon', 'templates'])
 	
 	.config ($urlRouterProvider, $ionicConfigProvider, $provide) ->
 		$urlRouterProvider.otherwise('/roster/list')
@@ -14,49 +14,54 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'http
 				$templateCache.get(url)
 			return $delegate
 			
-		$provide.decorator '$sailsSocketBackend', ($delegate, $injector) ->
+		$provide.decorator '$sailsSocketBackend', ($delegate, $injector, $log) ->
 			# socket connect
 			io.sails.url = env.server.app.urlRoot
 			io.sails.path = "#{env.path}/socket.io"
 			io.sails.useCORSRouteToGetCookie = false
+			socket = null
+			p = new Promise (fulfill, reject) ->
+				socket = io.sails.connect()
+				socket.on 'connect', ->
+					resource = $injector.get('resource')
+					resource.User.me().$save
+						online:	true
+						status:	resource.User.type.status[0]
+					fulfill()
+				socket.on 'connect_error', ->
+					reject()
+				socket.on 'connect_timeout', ->
+					reject()
+					
+			(method, url, post, callback, headers, timeout, withCredentials, responseType) ->
+				p
+					.then ->
+						io.socket = socket
+						opts = 
+							method: 	method.toLowerCase()
+							url: 		url
+							data:		if typeof post == 'string' then JSON.parse(post) else post
+							headers:	headers
+						socket.request opts, (body, jwr) ->
+							callback jwr.statusCode, body
+					.catch $log.error
 			
-			# update status of current login user once connected
-			io.socket.on 'connect', (event) ->
-				resource = $injector.get('resource')
-				resource.User.me().$save
-					online:	true
-					status:	resource.User.type.status[0]
-			
-			return $delegate
-		
-		$provide.decorator '$ionicPlatform', ($delegate) ->
-			ready = $delegate.ready
-			$delegate.ready = ->
-				if env.isNative()
-					cordova.plugins.Keyboard?.hideKeyboardAccessoryBar(true)
-					platform.pushRegister()
-				ready()
-			return $delegate
-		
-	.run ($ionicPlatform, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, OAuthService, ErrorService, resource) ->
+	.run ($ionicPlatform, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, authService, ErrorService, resource) ->
 		window.alert = ErrorService.alert
+				
+		$ionicPlatform.ready ->
+			if env.isNative()
+				cordova.plugins.Keyboard?.hideKeyboardAccessoryBar(true)
+				platform.pushRegister()
 				
 		# listen if access granted or denied in child window
 		$.receiveMessage (event) ->
 			data = $.deparam event.data
 			if data.error
-				OAuthService.loginCancelled null, data.error
+				authService.loginCancelled null, data.error
 			else
-				OAuthService.loginConfirmed data
+				authService.loginConfirmed data
 					
-		# notify parent window if access_token is available or access denied
-		url = $location.absUrl()
-		resolve = (data) ->
-			$.postMessage data, url
-		reject = (err) ->
-			$.postMessage err, url
-		OAuthService.matchUrl $location.absUrl(), resolve, reject
-		
 		$rootScope.$on '$stateChangeError', (evt, toState, toParams, fromState, fromParams, error) ->
 			window.alert error
 	

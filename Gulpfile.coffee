@@ -40,6 +40,12 @@ gulp.task 'coffee', ['copy', 'template'],  ->
     .bundle()
     .pipe(source('index.js'))
     .pipe(gulp.dest('./www/js/'))
+  browserify(entries: ['./www/js/callback.coffee'])
+  	.transform('coffeeify')
+    .transform('debowerify')
+    .bundle()
+    .pipe(source('callback.js'))
+    .pipe(gulp.dest('./www/js/'))
 	
 gulp.task 'template', ->
   gulp.src('./www/templates/**/*.html')

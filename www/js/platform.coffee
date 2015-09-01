@@ -1,7 +1,7 @@
 env = require './env.coffee'
 Promise = require 'promise'
 
-platform = ($rootScope, $cordovaInAppBrowser, $cordovaPush, $location, $http, $ionicModal, OAuthService) ->
+platform = ($rootScope, $cordovaInAppBrowser, $cordovaPush, $location, $http, $ionicModal, authService) ->
 	# register for push notification
 	pushRegister = ->
 		if env.platform() == 'mobile'
@@ -19,7 +19,7 @@ platform = ($rootScope, $cordovaInAppBrowser, $cordovaPush, $location, $http, $i
 						$cordovaInAppBrowser.open url, '_blank'
 					
 					$rootScope.$on '$cordovaInAppBrowser:loadstart', (e, event) ->
-						OAuthService.matchUrl event.url, fulfill, reject
+						authService.matchUrl event.url, fulfill, reject
 					
 					$rootScope.$on '$cordovaInAppBrowser:exit', (e, event) ->
 						reject("The sign in flow was canceled")
@@ -27,10 +27,10 @@ platform = ($rootScope, $cordovaInAppBrowser, $cordovaPush, $location, $http, $i
 				p
 					.then (data) ->
 						$cordovaInAppBrowser.close()
-						OAuthService.loginConfirmed data
+						authService.loginConfirmed data
 					.catch (err) ->
 						$cordovaInAppBrowser.close()
-						OAuthService.loginCancelled null, err.error
+						authService.loginCancelled null, err.error
 				
 			browser: ->
 				templateStr = """
@@ -115,4 +115,4 @@ angular.module('platform', ['ionic', 'ngCordova', 'starter.controller'])
 
 	.config ['$cordovaInAppBrowserProvider', config]
 
-	.factory 'platform', ['$rootScope', '$cordovaInAppBrowser', '$cordovaPush', '$location', '$http', '$ionicModal', 'OAuthService', platform]
+	.factory 'platform', ['$rootScope', '$cordovaInAppBrowser', '$cordovaPush', '$location', '$http', '$ionicModal', 'authService', platform]
