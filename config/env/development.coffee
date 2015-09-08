@@ -1,4 +1,5 @@
 path = '/im.app'
+uuid = require 'node-uuid'
 
 module.exports =
 	path:			path
@@ -41,6 +42,17 @@ module.exports =
 		db:			'im'
 		username:	'imrw'
 		password:	'password'
+	file:
+		opts:
+			adapter:	require 'skipper-gridfs'
+			host:		'localhost'
+			port:		27017
+			dbname:		'im'
+			username:	'imrw'
+			password:	'password'
+			maxBytes:	10240000	# 10MB
+			saveAs:		(stream, next) ->
+				next(null, "#{uuid.v4()}/#{stream.filename}")
 	sockets:
 		path:	"#{path}/socket.io"
 	log:

@@ -1,14 +1,12 @@
-_ = require 'lodash'
 actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 
 # check if authenticated user is allowed to enter the room  
 module.exports = (req, res, next) ->
 	
 	values = actionUtil.parseValues(req)
-	type = values.type
 	to = values.to
 	
-	if type == 'chat'
+	if not sails.services.jid.isMuc to
 		sails.models.user
 			.findOne jid: to
 			.then (user) ->
@@ -23,7 +21,7 @@ module.exports = (req, res, next) ->
 			.populateAll()
 			.then (group) ->
 				if group
-					if group.canEnter req.user
+					if req.user.canEnter group
 						return next()
 					else
 						return res.serverError msg: "Not authorized to enter room #{group.name}"

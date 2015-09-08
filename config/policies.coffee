@@ -17,11 +17,13 @@ module.exports =
 			find:		['isAuth', 'group/publicOnly']
 			findOne:	['isAuth']
 			create:		['isAuth', 'setOwner', 'group/setJid']
-			update:		['isAuth', 'group/canEdit', 'omitId', 'group/exclude']
-			destroy:	['isAuth', 'group/canRemove']
+			update:		['isAuth', 'user/canEdit', 'omitId', 'group/exclude']
+			destroy:	['isAuth', 'user/canRemove']
 			membersOnly:['isAuth']
 			getPhoto:	true
 		MsgController:
 			'*':		false
-			'find':		['isAuth', 'msg/canEnter', 'msg/filterByRoom']
-			'create':	['isAuth', 'msg/canVoice', 'setOwner', 'msg/setFrom']	
+			'find':		['isAuth', 'user/canEnter', 'msg/filterByRoom']
+			'create':	['isAuth', 'user/canVoice', 'setOwner', 'msg/setFrom']
+			'putFile':	['isAuth', 'user/canVoice', 'setOwner', 'msg/setFrom']
+			'getFile':	['isAuth', 'user/canRead']

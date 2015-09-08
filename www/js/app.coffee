@@ -8,12 +8,6 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'auth
 		$ionicConfigProvider.tabs.style 'standard'
 		$ionicConfigProvider.tabs.position 'bottom'
 
-		# reference templateCache instead of loading templates from server
-		$provide.decorator '$templateFactory', ($delegate, $templateCache) ->
-			$delegate.fromUrl = (url, params) ->
-				$templateCache.get(url)
-			return $delegate
-			
 		$provide.decorator '$sailsSocketBackend', ($delegate, $injector, $log) ->
 			# socket connect
 			io.sails.url = env.server.app.urlRoot

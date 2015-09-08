@@ -55,6 +55,20 @@ $input-height: 49px;
 	}
 }
 
+.file {
+	display: table;
+	text-align: center;
+	
+	.file-icon {
+		display: inline-block;
+	}
+	
+	.file-name {
+		display: table-row;
+		font-size: smaller;
+	}
+}
+
 img {
 	border-radius: 50%;
 }
@@ -230,12 +244,12 @@ ion-nav-view[name=chatContent] {
 	}
 	
 	.bar-footer {
-		form {
+		textarea {
 			width: 100%;
-			
-			input {
-				width: 100% !important;
-			}
-		} 
+			background-color: inherit;
+			resize: none;
+			overflow-y: hidden;
+			margin-right: .2em;
+		}
 	}
 }	

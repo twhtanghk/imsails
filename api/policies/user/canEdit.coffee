@@ -6,8 +6,7 @@ module.exports = (req, res, next) ->
 		.findOne pk
 		.populateAll()
 		.then (group) ->
-			if group?.canRemove(req.user) 
-				next()
-			else
-				res.notFound pk
+			if group and req.user.canEdit(group) 
+				return next()
+			res.notFound pk
 		.catch res.serverError

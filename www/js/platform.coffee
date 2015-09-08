@@ -1,7 +1,7 @@
 env = require './env.coffee'
 Promise = require 'promise'
 
-platform = ($rootScope, $cordovaInAppBrowser, $cordovaPush, $location, $http, $ionicModal, authService) ->
+platform = ($rootScope, $cordovaInAppBrowser, $cordovaPush, $location, $http, $ionicModal, authService, $cordovaFileOpener2) ->
 	# register for push notification
 	pushRegister = ->
 		if env.platform() == 'mobile'
@@ -45,58 +45,18 @@ platform = ($rootScope, $cordovaInAppBrowser, $cordovaPush, $location, $http, $i
 			
 		func[env.platform()]()
 		
-	# open model.file
-	open = (file) ->
+	# open local file resided on the mobile device, return promise for file open
+	open = (localfile, type) ->
 		func =
 			mobile: ->
-				fserr = (err) ->
-					msg = []
-					msg[FileError.ENCODING_ERR] = 'ENCODING_ERR'
-					msg[FileError.INVALID_MODIFICATION_ERR] = 'INVALID_MODIFICATION_ERR'
-					msg[FileError.INVALID_STATE_ERR] = 'INVALID_STATE_ERR'
-					msg[FileError.NO_MODIFICATION_ALLOWED_ERR] = 'NO_MODIFICATION_ALLOWED_ERR'
-					msg[FileError.NOT_FOUND_ERR] = 'NOT_FOUND_ERR'
-					msg[FileError.NOT_READABLE_ERR] = 'NOT_READABLE_ERR'
-					msg[FileError.PATH_EXISTS_ERR] = 'PATH_EXISTS_ERR'
-					msg[FileError.QUOTA_EXCEEDED_ERR] = 'QUOTA_EXCEEDED_ERR'
-					msg[FileError.SECURITY_ERR] = 'SECURITY_ERR'
-					msg[FileError.TYPE_MISMATCH_ERR] = 'TYPE_MISMATCH_ERR'
-					alert msg[err.code]
-				transferErr = (err) ->
-					msg = []
-					msg[FileTransferError.FILE_NOT_FOUND_ERR] = 'FILE_NOT_FOUND_ERR'
-					msg[FileTransferError.INVALID_URL_ERR] = 'INVALID_URL_ERR'
-					msg[FileTransferError.CONNECTION_ERR] = 'CONNECTION_ERR'
-					msg[FileTransferError.ABORT_ERR] = 'ABORT_ERR'
-					msg[FileTransferError.NOT_MODIFIED_ERR] = 'NOT_MODIFIED_ERR'
-					alert msg[err.code]
-				fs = (type, size) ->
-					new Promise (fulfill, reject) ->
-						window.requestFileSystem type, size, fulfill, reject	
-				download = (remote, local, trustAllHosts, opts) ->
-					new Promise (fulfill, reject) ->
-						fileTransfer = new FileTransfer()
-						fileTransfer.download encodeURI(remote), local, fulfill, reject, trustAllHosts, opts 
-				open = (local, trustAllCertificates) ->
-					new Promise (fulfill, reject) ->
-						cordova.plugins.bridge.open local, fulfill, reject, trustAllCertificates
+				$cordovaFileOpener2.open(localfile, type)
 				
-				fs(window.PERSISTENT, 0).then (fs) ->
-					local = "#{fs.root.toURL()}#{file.path}"
-					download(file.url, local, false, headers: $http.defaults.headers.common).then ->
-						open(local).catch alert
-					.catch transferErr
-				.catch fserr
-			
 			browser: ->
-				window.open file.url, '_blank'
-				return true
+				new Promise (fulfill, reject) ->
+					fulfill()
 				
-		if file.contentType == "text/directory"
-			$location.url("file/file?path=#{file.path}")
-		else
-			func[env.platform()]()
-			
+		func[env.platform()]()
+		
 	pushRegister:	pushRegister
 	auth: 			auth
 	open: 			open
@@ -115,4 +75,4 @@ angular.module('platform', ['ionic', 'ngCordova', 'starter.controller'])
 
 	.config ['$cordovaInAppBrowserProvider', config]
 
-	.factory 'platform', ['$rootScope', '$cordovaInAppBrowser', '$cordovaPush', '$location', '$http', '$ionicModal', 'authService', platform]
+	.factory 'platform', ['$rootScope', '$cordovaInAppBrowser', '$cordovaPush', '$location', '$http', '$ionicModal', 'authService', '$cordovaFileOpener2', platform]

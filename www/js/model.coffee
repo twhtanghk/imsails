@@ -1,9 +1,10 @@
 env = require './env.coffee'
 require 'PageableAR'
 _ = require 'lodash'
+path = require 'path'
 sails =
 	services:
-		group:	require '../../api/services/group.coffee'
+		user:	require '../../api/services/user.coffee'
 		
 iconUrl = (type) ->
 	icon = 
@@ -20,7 +21,7 @@ iconUrl = (type) ->
 		"image/jpeg":					"img/jpg.png"
 	return if type of icon then icon[type] else "img/unknown.png"
 		
-resource = ($rootScope, pageableAR) ->
+resource = ($rootScope, pageableAR, Upload) ->
 	
 	class RosterItem extends pageableAR.Model
 		$urlRoot: "#{env.server.app.url}/api/roster"
@@ -79,6 +80,34 @@ resource = ($rootScope, pageableAR) ->
 		$save: (values, opts) ->
 			@promise = super(values, opts)
 			
+		isOwner: (group) ->
+			sails.services.user.isOwner(@, group)
+			
+		isModerator: (group) ->
+			sails.services.user.isModerator(@, group)
+				
+		isMember: (group) ->
+			sails.services.user.isMember(@, group)
+			
+		isVisitor: (group) ->
+			sails.services.user.isVisitor(@, group)
+
+		# check if user is authorized to enter the chatroom
+		canEnter: (group) ->
+			sails.services.user.canEnter(@, group)
+			
+		# check if user is authorized to send message to the chatroom
+		canVoice: (group) ->
+			sails.services.user.canVoice(@, group)
+			
+		# check if user is authorized to edit the group settings
+		canEdit: (group) ->
+			sails.services.user.canEdit(@, group)
+		
+		# check if user is authorized to remove this group
+		canRemove: (group) ->
+			sails.services.user.canRemove(@, group)
+		
 	class Users extends pageableAR.PageableCollection
 		_instance = null
 		
@@ -120,34 +149,6 @@ resource = ($rootScope, pageableAR) ->
 					new User user
 					
 			return ret
-	
-		isOwner: (user) ->
-			sails.services.group.isOwner(@, user)
-			
-		isModerator: (user) ->
-			sails.services.group.isModerator(@, user)
-				
-		isMember: (user) ->
-			sails.services.group.isMember(@, user)
-			
-		isVisitor: (user) ->
-			sails.services.group.isVisitor(@, user)
-
-		# check if user is authorized to enter the chatroom
-		canEnter: (user) ->
-			sails.services.group.canEnter(@, user)
-			
-		# check if user is authorized to send message to the chatroom
-		canVoice: (user) ->
-			sails.services.group.canVoice(@, user)
-			
-		# check if user is authorized to edit the group settings
-		canEdit: (user) ->
-			sails.services.group.canEdit(@, user)
-		
-		# check if user is authorized to remove this group
-		canRemove: (user) ->
-			sails.services.group.canRemove(@, user)
 		
 	# public groups
 	class Groups extends pageableAR.PageableCollection
@@ -177,9 +178,43 @@ resource = ($rootScope, pageableAR) ->
 		$parse: (data, opts) ->
 			ret = super(data, opts)
 			_.each ['updatedAt', 'createdAt'], (field) ->
-				ret[field] = new Date Date.parse ret[field]				
+				ret[field] = new Date Date.parse ret[field]
+			if ret.file and typeof ret.file == 'string'
+				ret.file =
+					org:	ret.file
+					base:	path.basename ret.file 
+					ext:	path.extname(ret.file)[1..]
 			return ret
 		
+	class Attachment extends pageableAR.Model
+		$urlRoot: "#{env.server.app.url}/api/msg/file"
+		
+		$save: (values = {}, opts = {}) ->
+			_.extend @, values
+			data = 
+				url: 	@$url()
+				fields:	_.pick @, 'to', 'type'
+				file:	@file
+			new Promise (fulfill, reject) ->
+				Upload
+					.upload(data)
+					.progress (event) ->
+						return
+					.success fulfill
+					.error reject
+					
+		$fetch: (opts = {}) ->
+			opts = _.defaults opts, 
+				responseType: 'blob'
+			new Promise (fulfill, reject) =>
+				@$sync('read', @, opts)
+					.then (res) ->
+						fulfill res
+					.catch reject
+					
+		$sync: (op, model, opts) ->
+			@restsync(op, model, opts)
+
 	class Msgs extends pageableAR.PageableCollection
 		$urlRoot: "#{env.server.app.url}/api/msg"
 		
@@ -200,9 +235,10 @@ resource = ($rootScope, pageableAR) ->
 	RosterItem:		RosterItem
 	Roster:			Roster
 	Msg:			Msg
+	Attachment:		Attachment
 	Msgs:			Msgs
 	Device:			Device
 
-angular.module('starter.model', ['ionic', 'PageableAR'])
+angular.module('starter.model', ['ionic', 'PageableAR', 'ngFileUpload'])
 	.value 'server', env.server.app
-	.factory 'resource', ['$rootScope', 'pageableAR', resource]
+	.factory 'resource', ['$rootScope', 'pageableAR', 'Upload', resource]

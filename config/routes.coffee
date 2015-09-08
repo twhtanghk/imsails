@@ -18,6 +18,12 @@ module.exports =
 			action:			'find'
 			sort:			
 				createdAt:	'desc'
+		'POST /api/msg/file':
+			controller:		'MsgController'
+			action:			'putFile'
+		'GET /api/msg/file/:id':
+			controller:		'MsgController'
+			action:			'getFile'
 		'GET /api/roster':
 			controller:		'RosterController'
 			action:			'find'

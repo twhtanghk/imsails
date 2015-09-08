@@ -4,6 +4,7 @@ window.Promise = require 'promise'
 window._ = require 'lodash'
 window.$ = require 'jquery'
 window.$.deparam = require 'jquery-deparam'
+window.saveAs = require('file-saver.js').saveAs
 if env.isNative()
 	window.$.getScript 'cordova.js'
 		

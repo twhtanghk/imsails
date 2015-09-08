@@ -43,34 +43,6 @@ module.exports =
 			type:		'string'
 			required:	true
 		
-		isOwner: (user) ->
-			sails.services.group.isOwner(@, user)
-			
-		isModerator: (user) ->
-			sails.services.group.isModerator(@, user)
-				
-		isMember: (user) ->
-			sails.services.group.isMember(@, user)
-			
-		isVisitor: (user) ->
-			sails.services.group.isVisitor(@, user)
-
-		# check if user is authorized to enter the chatroom
-		canEnter: (user) ->
-			sails.services.group.canEnter(@, user)
-			
-		# check if user is authorized to send message to the chatroom
-		canVoice: (user) ->
-			sails.services.group.canVoice(@, user)
-			
-		# check if user is authorized to edit the group settings
-		canEdit: (user) ->
-			sails.services.group.canEdit(@, user)
-		
-		# check if user is authorized to remove this group
-		canRemove: (user) ->
-			sails.services.group.canRemove(@, user)
-			
 		_photoUrl: ->
 			return if @photo then "#{sails.config.url}/group/photo/#{@id}?m=#{@updatedAt}" else null
 			

@@ -26,9 +26,7 @@
 		ng-repeat="model in collection.models |msgFilter:searchText |orderBy:'-createdAt'" 
 		ng-class="model.from == me.jid ? 'left' : 'right'"
 		on-hold="copy(model)">
-		<div class="item item-text-wrap">
-			{{model.body}}
-		</div>
+		<div class="item item-text-wrap" ng-include="'templates/chat/item.html'"></div>
 		<div class="item item-divider">
 			<span>{{model.createdAt.toLocaleString()}}</span>
 			<span ng-if="type == 'groupchat'">{{model.from}}</span>
@@ -38,10 +36,11 @@
 	</ion-infinite-scroll>
 </ion-content>
 <ion-footer-bar class="item-input-inset">
-	<form ng-submit="send()">
-	    <label class="item-input-wrapper">
-			<i class="icon ion-email placeholder-icon"></i>
-		    <input type="text" ng-model="msg">
-		</label>
-	</form>
+    <label class="item-input-wrapper">
+		<textarea rows='1' ng-model="msg"></textarea>
+	</label>
+	<div class="buttons">
+	    <button class="button button-icon icon ion-email" ng-click="send()"></button>
+	    <button class="button button-icon icon ion-paperclip" ngf-select="putfile($files)"></button>
+    </div>
 </ion-footer-bar>

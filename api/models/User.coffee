@@ -111,6 +111,38 @@ module.exports =
 			
 		photoUrl: ->
 			photoUrl(@)
+		
+		isOwner: (group) ->
+			sails.services.user.isOwner(@, group)
+			
+		isModerator: (group) ->
+			sails.services.user.isModerator(@, group)
+				
+		isMember: (group) ->
+			sails.services.user.isMember(@, group)
+			
+		isVisitor: (group) ->
+			sails.services.user.isVisitor(@, group)
+
+		# check if user is authorized to enter the specified group
+		canEnter: (group) ->
+			sails.services.user.canEnter(@, group)
+			
+		# check if user is authorized to send message to the specified group
+		canVoice: (group) ->
+			sails.services.user.canVoice(@, group)
+			
+		# check if user is authorized to edit the specified group
+		canEdit: (group) ->
+			sails.services.user.canEdit(@, group)
+		
+		# check if user is authorized to remove the specified group
+		canRemove: (group) ->
+			sails.services.user.canRemove(@, group)
+			
+		# check if user is authorized to read the specified message
+		canRead: (msg) ->
+			sails.services.user.canRead(@, msg)
 				
 		toJSON: ->
 			@phone = @phone || []

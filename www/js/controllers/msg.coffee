@@ -38,7 +38,7 @@ domain =
 				# no more listen to those registered events
 				io.socket.removeAllListeners 'msg'
 			
-	list: ($scope, $cordovaClipboard, $cordovaToast, $ionicScrollDelegate, $location, type, chat, me, collection, resource) ->
+	list: ($scope, $cordovaClipboard, $cordovaToast, $ionicScrollDelegate, $location, type, chat, me, collection, resource, platform) ->
 		_.extend $scope,
 			type: type
 			chat: chat
@@ -56,6 +56,18 @@ domain =
 					msg = new resource.Msg type: type, to: chat.jid, body: $scope.msg
 					msg.$save().catch alert
 					$scope.msg = ''
+			putfile: ($files) ->
+				if $files.length != 0
+					attachment = new resource.Attachment type: type, to: chat.jid, file: $files[0]
+					attachment.$save().catch alert
+			getfile: (msg) ->
+				attachment = new resource.Attachment id: msg.id
+				attachment.$fetch()
+					.then (res) =>
+						contentType = res.headers('Content-type')
+						saveAs new Blob([res.data], type: contentType), msg.file.base
+						# platform.open(msg.file.base, contentType)
+					.catch alert
 			copy: (msg) ->
 				if env.isNative()
 					$cordovaClipboard.copy(msg.body)
@@ -93,5 +105,5 @@ filter =
 module.exports = (angularModule) ->
 	angularModule
 		.config ['$stateProvider', domain.state]
-		.controller 'ChatCtrl', ['$scope', '$cordovaClipboard', '$cordovaToast', '$ionicScrollDelegate', '$location', 'type', 'chat', 'me', 'collection', 'resource', domain.list]
+		.controller 'ChatCtrl', ['$scope', '$cordovaClipboard', '$cordovaToast', '$ionicScrollDelegate', '$location', 'type', 'chat', 'me', 'collection', 'resource', 'platform', domain.list]
 		.filter 'msgFilter', filter.list
