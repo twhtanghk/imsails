@@ -1,4 +1,4 @@
-angular.module('locale', ['pascalprecht.translate', 'ngCookies'])
+angular.module('locale', ['pascalprecht.translate'])
 	
 	.config ($translateProvider) ->
 		$translateProvider
