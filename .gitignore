@@ -117,5 +117,7 @@ nbproject
 .idea
 .node_history
 /.project
+/.gradle
 /plugins/
 /platforms/
+/?/

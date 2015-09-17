@@ -1,14 +1,17 @@
+url = 'http://localhost:3000'
+path = 'im.app'
+
 module.exports =
-	path: '/im.app'		
+	path: "/#{path}"		
 	server:
 		app:
-			type:		'io'						# for model to interface with server (io or rest)
-			url:		''							# for model urlRoot
-			urlRoot:	'http://localhost:3000'		# for socket.io to establish connection
+			type:		'io'				# api type (io or rest)
+			url:		url					# server url
+			urlRoot:	"#{url}/#{path}"	# api url
 		auth:
-			url:	'https://mob.myvnc.com/org'
+			urlRoot:	'https://mob.myvnc.com/org'
 		mobile:
-			url:	'https://mob.myvnc.com/mobile'
+			urlRoot:	'https://mob.myvnc.com/mobile'
 	isMobile: ->
 		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 	isNative: ->
@@ -16,7 +19,7 @@ module.exports =
 	platform: ->
 		if @isNative() then 'mobile' else 'browser'
 	oauth2: ->
-		authUrl: "#{@server.auth.url}/oauth2/authorize/"
+		authUrl: "#{@server.auth.urlRoot}/oauth2/authorize/"
 		opts:
 			response_type:	"token"
 			scope:			"https://mob.myvnc.com/org/users https://mob.myvnc.com/xmpp https://mob.myvnc.com/mobile"

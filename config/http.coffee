@@ -7,7 +7,7 @@ prefix = (req, res, next) ->
 module.exports = 
 	http:
 		middleware:
-			static: express.static('www')
+			static: express.static('platforms/browser/www')
 			prefix: prefix
 			order: [
 				'startRequestTimer'

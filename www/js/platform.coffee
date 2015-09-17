@@ -4,7 +4,7 @@ Promise = require 'promise'
 platform = ($rootScope, $cordovaInAppBrowser, $cordovaPush, $location, $http, $ionicModal, authService, $cordovaFileOpener2) ->
 	# register for push notification
 	pushRegister = ->
-		if env.platform() == 'mobile'
+		if env.isNative()
 			$cordovaPush.register env.push.gcm
 				.catch alert
 		
@@ -70,7 +70,9 @@ config =  ($cordovaInAppBrowserProvider) ->
 		
 	document.addEventListener 'deviceready', ->
 		$cordovaInAppBrowserProvider.setDefaultOptions(opts)
-
+		cordova?.plugins.Keyboard.hideKeyboardAccessoryBar(true)
+		cordova?.plugins.autoStart.enable()
+		
 angular.module('platform', ['ionic', 'ngCordova', 'starter.controller'])
 
 	.config ['$cordovaInAppBrowserProvider', config]

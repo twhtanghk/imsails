@@ -21,10 +21,13 @@ iconUrl = (type) ->
 		"image/jpeg":					"img/jpg.png"
 	return if type of icon then icon[type] else "img/unknown.png"
 		
+urlRoot = (root, url, type = env.server.app.type) ->
+	if type == 'io' then "/#{url}" else "#{root}/#{url}"
+		
 resource = ($rootScope, pageableAR, Upload) ->
 	
 	class RosterItem extends pageableAR.Model
-		$urlRoot: "/api/roster"
+		$urlRoot: urlRoot(env.server.app.urlRoot, "api/roster") 
 		
 		$parse: (data, opts) ->
 			ret = super(data, opts)
@@ -44,7 +47,7 @@ resource = ($rootScope, pageableAR, Upload) ->
 	class Roster extends pageableAR.PageableCollection
 		_instance = null
 		
-		$urlRoot: "/api/roster"
+		$urlRoot: urlRoot(env.server.app.urlRoot, "api/roster")
 		
 		model: RosterItem
 
@@ -59,13 +62,13 @@ resource = ($rootScope, pageableAR, Upload) ->
 				address:	'Address'
 			values:
 				phone:		['Mobile', 'Office', 'Home', 'Other']
-				otherEmail:	['Office', 'Home', 'Other']
+				otherEmail:	['Office', 'Personal', 'Other']
 				address:	['Office', 'Home', 'Other']
 			status:		['Available', 'Meeting', 'Busy', 'Vacation', 'Sick', 'Training', 'Home', 'Other']
 			
 		_me = null
 		
-		$urlRoot: "/api/user"
+		$urlRoot: urlRoot(env.server.app.urlRoot, "api/user")
 		
 		@me: ->
 			_me ?= new User id: 'me'
@@ -111,7 +114,7 @@ resource = ($rootScope, pageableAR, Upload) ->
 	class Users extends pageableAR.PageableCollection
 		_instance = null
 		
-		$urlRoot: "/api/user"
+		$urlRoot: urlRoot(env.server.app.urlRoot, "api/user")
 		
 		model: User
 	
@@ -129,7 +132,7 @@ resource = ($rootScope, pageableAR, Upload) ->
 				visitors:	'Visitors'
 			values: ['Members-Only', 'Unmoderated', 'Moderated']
 		
-		$urlRoot: "/api/group"
+		$urlRoot: urlRoot(env.server.app.urlRoot, "api/group")
 		
 		$defaults:
 			type:		'Members-Only'
@@ -154,7 +157,7 @@ resource = ($rootScope, pageableAR, Upload) ->
 	class Groups extends pageableAR.PageableCollection
 		_instance = null
 		
-		$urlRoot: "/api/group"
+		$urlRoot: urlRoot(env.server.app.urlRoot, "api/group")
 		
 		model: Group
 		
@@ -165,7 +168,7 @@ resource = ($rootScope, pageableAR, Upload) ->
 	class GroupsPrivate extends pageableAR.PageableCollection
 		_instance = null
 		
-		$urlRoot: "/api/group/membersOnly"
+		$urlRoot: urlRoot(env.server.app.urlRoot, "api/group/membersOnly")
 		
 		model: Group
 		
@@ -173,7 +176,7 @@ resource = ($rootScope, pageableAR, Upload) ->
 			_instance ?= new GroupsPrivate()
 	
 	class Msg extends pageableAR.Model
-		$urlRoot: "/api/msg"
+		$urlRoot: urlRoot(env.server.app.urlRoot, "api/msg")
 		
 		$parse: (data, opts) ->
 			ret = super(data, opts)
@@ -187,7 +190,7 @@ resource = ($rootScope, pageableAR, Upload) ->
 			return ret
 		
 	class Attachment extends pageableAR.Model
-		$urlRoot: "api/msg/file"
+		$urlRoot: urlRoot(env.server.app.urlRoot, "api/msg/file", 'rest')
 		
 		$save: (values = {}, opts = {}) ->
 			_.extend @, values
@@ -216,16 +219,15 @@ resource = ($rootScope, pageableAR, Upload) ->
 			@restsync(op, model, opts)
 
 	class Msgs extends pageableAR.PageableCollection
-		$urlRoot: "/api/msg"
+		$urlRoot: urlRoot(env.server.app.urlRoot, "api/msg")
 		
 		model: Msg
 		
 	class Device extends pageableAR.Model
-		$urlRoot: "#{env.server.mobile.url}/api/device"
+		$urlRoot: urlRoot(env.server.mobile.urlRoot, "api/device", 'rest')
 	
 		$sync: (op, model, opts) ->
 			@restsync(op, model, opts)
-
 	
 	User:			User
 	Users:			Users

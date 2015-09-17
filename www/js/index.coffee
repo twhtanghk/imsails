@@ -5,11 +5,11 @@ window._ = require 'lodash'
 window.$ = require 'jquery'
 window.$.deparam = require 'jquery-deparam'
 window.saveAs = require('file-saver.js').saveAs
-if env.isNative()
-	window.$.getScript 'cordova.js'
-		
+
 require 'ngCordova'
 require 'angular-activerecord'
+require 'angular-translate'
+require 'angular-translate-loader-static-files'
 require 'sails-auth'
 require 'angular-touch'
 require 'ng-file-upload'
@@ -22,3 +22,4 @@ require './controllers/index.coffee'
 require './model.coffee'
 require './platform.coffee'
 require './auth.coffee'
+require './locale.coffee'

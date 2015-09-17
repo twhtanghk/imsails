@@ -9,14 +9,24 @@
     </author>
   <content src="index.html"/>
   <access origin="*"/>
+  <access origin="https://mob.myvnc.com/*" launch-external="yes"/>
+  <access origin="tel:*" launch-external="yes"/>
+  <access origin="mailto:*" launch-external="yes"/>
+  <access origin="sms:*" launch-external="yes"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="BackupWebStorage" value="none"/>
   <preference name="SplashScreen" value="screen"/>
-  <preference name="SplashScreenDelay" value="3000"/>
+  <preference name="SplashScreenDelay" value="5000"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
+  </feature>
+  <feature name="SplashScreen">
+    <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen"/>
+  </feature>
+  <feature name="SplashScreen">
+    <param name="ios-package" value="CDVSplashScreen"/>
   </feature>
   <platform name="android">
     <icon src="resources/android/icon/drawable-ldpi-icon.png" density="ldpi"/>
@@ -38,8 +48,10 @@
     <splash src="resources/android/splash/drawable-port-xxhdpi-screen.png" density="port-xxhdpi"/>
     <splash src="resources/android/splash/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
   </platform>
+  <platform name="browser">
+    <preference name="ShowSplashScreen" value="false"/>
+  </platform>
   <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
-  <access origin="tel:*" launch-external="yes"/>
-  <access origin="mailto:*" launch-external="yes"/>
-  <access origin="sms:*" launch-external="yes"/>
+  <allow-navigation href="*://mob.myvnc.com/*"/>
+  <allow-intent href="*://mob.myvnc.com/*"/>
 </widget>

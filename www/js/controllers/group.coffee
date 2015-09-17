@@ -61,7 +61,7 @@ domain =
 			onExit: ->
 				# no more listen to those registered events
 				_.each ['connect', 'group'], (event) ->
-					io.socket.removeAllListeners event
+					io.socket?.removeAllListeners event
 					
 		$stateProvider.state 'app.group.list.private',
 			cache:	false
@@ -76,7 +76,7 @@ domain =
 					resource.GroupsPrivate.instance().$fetch reset: true
 			onExit: ->
 				_.each ['connect', 'group'], (event) ->
-					io.socket.removeAllListeners event
+					io.socket?.removeAllListeners event
 
 	item: ($rootScope, $scope, $location, resource) ->
 		_.extend $scope,
@@ -91,7 +91,7 @@ domain =
 				item.$save()
 					
 		# listen if user status is updated
-		io.socket.on "group", (event) ->
+		io.socket?.on "group", (event) ->
 			if event.verb == 'updated' and event.id == $scope.model.id
 				_.extend $scope.model, event.data
 				$scope.$apply 'model'
@@ -108,7 +108,7 @@ domain =
 				return @
 				
 		# reload collection once reconnected
-		io.socket.on 'connect', (event) ->
+		io.socket?.on 'connect', (event) ->
 			if $location.url().indexOf('/group/list') != -1
 				$scope.collection.$fetch reset: true
 	

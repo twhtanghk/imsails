@@ -39,8 +39,7 @@
     "sails-hook-requestlogger-file": "^1.1.0",
     "sails-mongo": "^0.11.2",
     "shortid": "^2.2.2",
-    "skipper-gridfs": "https://github.com/willhuang85/skipper-gridfs.git",
-    "stanza.io": "^7.2.0"
+    "skipper-gridfs": "https://github.com/willhuang85/skipper-gridfs.git"
   },
   "devDependencies": {
     "bower": "^1.3.3",
@@ -80,11 +79,14 @@
     "cordova-plugin-camera",
     "cordova-plugin-inappbrowser",
     "cordova-plugin-file",
-    "https://github.com/phonegap-build/PushPlugin.git#2.4.0",
+    "https://github.com/phonegap-build/PushPlugin.git",
     "https://github.com/katzer/cordova-plugin-local-notifications.git",
     "https://github.com/VersoSolutions/CordovaClipboard.git",
     "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
-    "https://github.com/pwlin/cordova-plugin-file-opener2.git"
+    "https://github.com/pwlin/cordova-plugin-file-opener2.git",
+    "https://github.com/ToniKorin/cordova-plugin-autostart.git",
+    "https://github.com/apache/cordova-plugin-whitelist.git",
+    "https://github.com/apache/cordova-plugin-splashscreen.git"
   ],
   "cordovaPlatforms": [
     "android"

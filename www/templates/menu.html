@@ -5,21 +5,21 @@
 
   <ion-side-menu side="left" ng-controller="MenuCtrl">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Menu</h1>
+      <h1 class="title">{{'Menu' | translate}}</h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
         <ion-item nav-clear menu-close href="#/roster/list">
-          Roster
+          {{'Roster' | translate}}
         </ion-item>
         <ion-item nav-clear menu-close href="#/user/list">
-          User
+          {{'User' | translate}}
         </ion-item>
         <ion-item nav-clear menu-close href="#/group/list/public">
-          Group
+          {{'Group' | translate}}
         </ion-item>
         <ion-item nav-clear menu-close href="#/user/update">
-          Personal Info
+          {{'Personal Info' | translate}}
         </ion-item>
         <fancy-select
 			template-url='templates/user/status.html'
@@ -28,7 +28,7 @@
 			title="Select">
 		</fancy-select>
         <ion-item nav-clear menu-close ng-if="env.isNative()" ng-click="exit()">
-          Exit
+          {{'Quit' | translate}}
         </ion-item>
       </ion-list>
     </ion-content>

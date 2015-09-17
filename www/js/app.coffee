@@ -1,6 +1,6 @@
 env = require './env.coffee'
 
-angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'auth', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon', 'templates'])
+angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'locale', 'auth', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon', 'templates'])
 	
 	.config ($urlRouterProvider, $ionicConfigProvider, $provide) ->
 		$urlRouterProvider.otherwise('/roster/list')
@@ -10,7 +10,7 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'auth
 
 		$provide.decorator '$sailsSocketBackend', ($delegate, $injector, $log) ->
 			# socket connect
-			io.sails.url = env.server.app.urlRoot
+			io.sails.url = env.server.app.url
 			io.sails.path = "#{env.path}/socket.io"
 			io.sails.useCORSRouteToGetCookie = false
 			socket = null
@@ -40,14 +40,12 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'auth
 							callback jwr.statusCode, body
 					.catch $log.error
 			
-	.run ($ionicPlatform, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, authService, ErrorService, resource) ->
+	.run ($cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, authService, ErrorService, resource) ->
 		window.alert = ErrorService.alert
-				
-		$ionicPlatform.ready ->
-			if env.isNative()
-				cordova.plugins.Keyboard?.hideKeyboardAccessoryBar(true)
-				platform.pushRegister()
-				
+			
+		document.addEventListener 'deviceready', ->
+			platform.pushRegister()
+			
 		# listen if access granted or denied in child window
 		$.receiveMessage (event) ->
 			data = $.deparam event.data

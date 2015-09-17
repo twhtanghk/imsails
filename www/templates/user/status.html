@@ -1,5 +1,5 @@
 <a class="item item-icon-right" ng-click="click()">
-	{{selectedTitle()}}
+	{{selectedTitle() | translate}}
 	<i class="icon ion-ios-arrow-right"></i>
 	
 	<script id="fancy-select.html" type="text/ng-template">
@@ -21,7 +21,7 @@
 	                      ng-change="select(model)"
 	                      ng-init="model = {label: item, selected: selected.indexOf(item) != -1}"
 	                      class="item item-text-wrap">
-	            {{model.label}}
+	            {{model.label | translate}}
 	          </ion-toggle>
 	
 	          <!-- Single select -->
@@ -30,7 +30,7 @@
 	                 ng-if="!multiple"
 	                 ng-click="select({label: item, selected: true})"
 	                 class="item item-text-wrap">
-	            {{item}}
+	            {{item | translate}}
 	          </label>
 	        </div>
 	      </ion-content>

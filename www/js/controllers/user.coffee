@@ -23,7 +23,7 @@ domain =
 			onExit: ->
 				# no more listen to those registered events
 				_.each ['connect', 'user'], (event) ->
-					io.socket.removeAllListeners event
+					io.socket?.removeAllListeners event
 				
 		$stateProvider.state 'app.user.update',
 			url: '/update'
@@ -63,7 +63,7 @@ domain =
 				item.$save()
 	
 		# listen if user status is updated
-		io.socket.on "user", (event) ->
+		io.socket?.on "user", (event) ->
 			if event.verb == 'updated' and event.id == $scope.model.id
 				_.extend $scope.model, event.data
 				$scope.$apply 'model'
@@ -81,7 +81,7 @@ domain =
 				return @
 				
 		# reload collection once reconnected
-		io.socket.on 'connect', (event) ->
+		io.socket?.on 'connect', (event) ->
 			if $location.url().indexOf('/user/list') != -1
 				$scope.collection.$fetch reset: true
 				

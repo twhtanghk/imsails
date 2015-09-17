@@ -4,7 +4,7 @@
     <h1 class='title'>
     	<span>{{model.fullname}}</span>
     </h1>
-    <a class="button button-clear" ng-click="save()">Save</a>  
+    <a class="button button-clear" ng-click="save()">{{'Save' | translate}}</a>  
 </ion-header-bar>
 <ion-content>
 	<div class="row">
@@ -40,14 +40,14 @@
 	<!-- phone, otherEmail, address -->
 	<div ng-repeat="attr in ['phone', 'otherEmail', 'address']">
 		<ion-item class="item-divider">
-			{{resource.User.type.placeholder[attr]}}
+			{{resource.User.type.placeholder[attr] | translate}}
 		</ion-item>
 		
 		<!-- model existing value -->
 		<div class="row" ng-repeat="item in model[attr]">
 			<div class="col col-33">
 				<fancy-select
-					template-url='lib/tagDirective/select.html'
+					template-url='templates/user/status.html'
 					ng-selected="item.type"
 					ng-model="resource.User.type.values[attr]"
 					title="Select">
@@ -69,7 +69,7 @@
 		<div class="row" ng-init="item = {type: resource.User.type.values[attr][0], value: ''}">
 			<div class="col col-33">
 				<fancy-select
-					template-url='lib/tagDirective/select.html'
+					template-url='templates/user/status.html'
 					ng-selected="item.type"
 					ng-model="resource.User.type.values[attr]"
 					title="Select">

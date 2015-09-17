@@ -36,7 +36,7 @@ domain =
 				item?.$save(newmsg: 0)			
 				
 				# no more listen to those registered events
-				io.socket.removeAllListeners 'msg'
+				io.socket?.removeAllListeners 'msg'
 			
 	list: ($scope, $cordovaClipboard, $cordovaToast, $ionicScrollDelegate, $location, type, chat, me, collection, resource, platform) ->
 		_.extend $scope,
@@ -76,7 +76,7 @@ domain =
 						.catch alert
 		
 		# reload collection once reconnected
-		io.socket.on 'connect', (event) ->
+		io.socket?.on 'connect', (event) ->
 			if $location.url().indexOf('/chat') != -1
 				$scope.collection.$fetch  params: {type: type, to: chat.jid, sort: 'createdAt DESC'}, reset: true 
 		
@@ -86,7 +86,7 @@ domain =
 				return (msg.from == chat.jid and msg.to == me.jid) or (msg.to == chat.jid and msg.from == me.jid)
 			else
 				return msg.to == chat.jid
-		io.socket.on "msg", (event) ->
+		io.socket?.on "msg", (event) ->
 			if event.verb == 'created'
 				if isValid(event.data) 
 					collection.add new resource.Msg event.data

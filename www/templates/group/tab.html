@@ -17,9 +17,9 @@
 				<p>
 					{{model.jid}}
 				</p>
-				<ion-option-button class="button button-balanced icon-left ion-plus-round" on-tap="addRoster()">Roster</ion-option-button>
-				<ion-option-button class="button button-positive icon-left ion-edit" on-tap="edit()" ng-if="me.canEdit(model)">Edit</ion-option-button>
-				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="remove()" ng-if="me.canRemove(model)">Delete</ion-option-button>
+				<ion-option-button class="button button-balanced icon-left ion-plus-round" on-tap="addRoster()">{{'Roster' | translate}}</ion-option-button>
+				<ion-option-button class="button button-positive icon-left ion-edit" on-tap="edit()" ng-if="me.canEdit(model)">{{'Edit' | translate}}</ion-option-button>
+				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="remove()" ng-if="me.canRemove(model)">{{'Delete' | translate}}</ion-option-button>
 			</ion-item>
 		</ion-list>
 		<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="controller.loadMore()">
