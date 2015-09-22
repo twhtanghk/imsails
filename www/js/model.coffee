@@ -24,7 +24,7 @@ iconUrl = (type) ->
 urlRoot = (root, url, type = env.server.app.type) ->
 	if type == 'io' then "/#{url}" else "#{root}/#{url}"
 		
-resource = ($rootScope, pageableAR, Upload) ->
+resource = ($rootScope, pageableAR, Upload, $cordovaFileTransfer, $http) ->
 	
 	class RosterItem extends pageableAR.Model
 		$urlRoot: urlRoot(env.server.app.urlRoot, "api/roster") 
@@ -208,13 +208,21 @@ resource = ($rootScope, pageableAR, Upload) ->
 					
 		$fetch: (opts = {}) ->
 			opts = _.defaults opts, 
-				responseType: 'blob'
-			new Promise (fulfill, reject) =>
-				@$sync('read', @, opts)
-					.then (res) ->
-						fulfill res
-					.catch reject
-					
+				responseType: 	'blob'
+				headers: 		$http.defaults.headers.common
+			switch device.platform
+				when 'browser'
+					new Promise (fulfill, reject) =>
+						@$sync('read', @, opts)
+							.then (res) ->
+								contentType = res.headers('Content-type')
+								saveAs new Blob([res.data], type: contentType), opts.target
+								fulfill(res)
+							.catch reject
+				when 'Android'
+					$cordovaFileTransfer
+						.download @$url(), opts.target, opts, true
+
 		$sync: (op, model, opts) ->
 			@restsync(op, model, opts)
 
@@ -243,4 +251,4 @@ resource = ($rootScope, pageableAR, Upload) ->
 
 angular.module('starter.model', ['ionic', 'PageableAR', 'ngFileUpload'])
 	.value 'server', env.server.app
-	.factory 'resource', ['$rootScope', 'pageableAR', 'Upload', resource]
+	.factory 'resource', ['$rootScope', 'pageableAR', 'Upload', '$cordovaFileTransfer', '$http', resource]

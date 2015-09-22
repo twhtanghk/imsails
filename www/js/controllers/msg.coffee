@@ -1,4 +1,5 @@
 env = require '../env.coffee'
+mime = require 'mime-types/index.js'
 
 domain =
 	state: ($stateProvider) ->
@@ -62,11 +63,12 @@ domain =
 					attachment.$save().catch alert
 			getfile: (msg) ->
 				attachment = new resource.Attachment id: msg.id
-				attachment.$fetch()
+				target = env.file.target(msg.file.base)
+				attachment.$fetch(target: target)
 					.then (res) =>
-						contentType = res.headers('Content-type')
-						saveAs new Blob([res.data], type: contentType), msg.file.base
-						# platform.open(msg.file.base, contentType)
+						platform
+							.open(target, mime.lookup(target))
+							.catch alert
 					.catch alert
 			copy: (msg) ->
 				if env.isNative()

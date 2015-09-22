@@ -27,3 +27,10 @@ module.exports =
 	push:
 		gcm:
 			senderID:	'1027958128694'
+	file:
+		target: (file) ->
+			switch device.platform
+				when 'browser'
+					file
+				when 'Android'
+					cordova.file.externalCacheDirectory + file
