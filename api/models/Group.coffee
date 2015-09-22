@@ -63,7 +63,7 @@ module.exports =
 			.then (group) ->
 				if not group
 					return res.notFound "Group #{values.name} not found"
-				users = _.uniq _.union(group.moderators, group.members), 'id'
+				users = _.uniq _.union([group.createdBy], group.moderators, group.members), 'id'
 				Promise
 					.all _.map users, (item) ->
 						sails.models.roster.create
