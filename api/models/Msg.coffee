@@ -35,6 +35,8 @@ module.exports =
 			required:	true
 			
 	broadcast: (roomName, eventName, data, socketToOmit) ->
+		to = data.data.to
+		from = data.data.from
 		msg = sails.models.msg.findOne(data.id)
 		grp = sails.models.group.findOne(jid: to).populateAll()
 		emit = (sockets) ->
@@ -46,13 +48,11 @@ module.exports =
 		
 		# filter if socket.user is authorized to listen the created msg
 		sockets = _.map sails.sockets.subscribers(roomName)
-		to = data.data.to
-		from = data.data.from
 		if sails.services.jid.isMuc to
 			grp
 				.then (group) ->
 					ret = _.filter sockets, (id) ->
-						group?.canEnter sails.sockets.get(id).user
+						sails.sockets.get(id).user.canEnter group
 					emit(ret)
 				.catch sails.log.error
 		else
