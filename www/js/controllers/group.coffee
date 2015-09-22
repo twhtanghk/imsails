@@ -164,7 +164,8 @@ filter =
 		(collection, search) ->
 			if search
 				return _.filter collection, (item) ->
-					item.name.indexOf(search) > -1
+					r = new RegExp(search, 'i')
+					r.test(item.name) or r.test(item.jid)
 			else
 				return collection
 			

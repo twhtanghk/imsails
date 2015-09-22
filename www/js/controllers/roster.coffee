@@ -72,10 +72,8 @@ filter =
 		(roster, search) ->
 			if search
 				return _.filter roster, (item) ->
-					item.user?.jid.indexOf(search) > -1 or
-					item.user?.fullname.indexOf(search) > -1 or
-					item.group?.jid.indexOf(search) > -1 or
-					item.group?.name.indexOf(search) > -1
+					r = new RegExp(search, 'i')
+					r.test(item.user?.jid) or r.test(item.user?.fullname) or r.test(item.group?.jid) or r.test(item.group?.name)
 			else
 				return roster
 		

@@ -105,7 +105,8 @@ filter =
 		(msgs, search) ->
 			if search
 				return _.filter msgs, (msg) ->
-					msg.body.indexOf(search) > -1
+					r = new RegExp(search, 'i')
+					r.test(msg.body) or r.test(msg.file?.base)
 			else
 				return msgs
 		

@@ -140,7 +140,8 @@ filter =
 		(collection, search) ->
 			if search
 				return _.filter collection, (item) ->
-					item.fullname.indexOf(search) > -1 or item.post.indexOf(search) > -1
+					r = new RegExp(search, 'i')
+					r.test(item.fullname) or r.test(item.post)
 			else
 				return collection
 		
