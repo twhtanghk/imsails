@@ -52,11 +52,16 @@ domain =
 						$scope.$broadcast('scroll.infiniteScrollComplete')
 					.catch alert
 				return @
+			row: (msg) ->
+				rows = if msg == '' then 1 else Math.min(3, msg.split('\n').length)
+				$('textarea').attr('rows', rows).css('overflow-y', if rows == 1 then 'hidden' else 'scroll') 
+				return false
 			send: ->
 				if $scope.msg != ''
 					msg = new resource.Msg type: type, to: chat.jid, body: $scope.msg
 					msg.$save().catch alert
 					$scope.msg = ''
+					$scope.row('')
 			putfile: ($files) ->
 				if $files.length != 0
 					attachment = new resource.Attachment type: type, to: chat.jid, file: $files[0]

@@ -37,10 +37,14 @@
 </ion-content>
 <ion-footer-bar class="item-input-inset">
     <label class="item-input-wrapper">
-		<textarea rows='1' ng-model="msg"></textarea>
+		<textarea rows='1' ng-model="msg" ng-change="row(msg)"></textarea>
 	</label>
 	<div class="buttons">
-	    <button class="button button-icon icon ion-email" ng-click="send()"></button>
-	    <button class="button button-icon icon ion-paperclip" ngf-select="putfile($files)"></button>
+	    <button class="button" ng-click="send()" ng-if="msg != ''">
+	    	<i class="icon ion-android-send"></i>
+	    </button>
+	    <button class="button" ngf-select="putfile($files)" ng-if="msg == ''">
+	    	<i class="icon ion-paperclip"></i>
+	    </button>
     </div>
 </ion-footer-bar>

@@ -244,12 +244,24 @@ ion-nav-view[name=chatContent] {
 	}
 	
 	.bar-footer {
-		textarea {
-			width: 100%;
-			background-color: inherit;
-			resize: none;
-			overflow-y: hidden;
-			margin-right: .2em;
+		label {
+			margin-right: .4em;
+			textarea {
+				width: 100%;
+				background-color: inherit;
+				resize: none;
+				overflow-y: hidden;
+				overflow-x: hidden;
+			}
+		}
+		button {
+			background: $positive !important;
+			border: none;
+			border-radius: 50%;
+			width: 35px;
+			i {
+				color: white;
+			}
 		}
 	}
 }	
