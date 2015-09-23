@@ -22,7 +22,7 @@ module.exports =
 		authUrl: "#{@server.auth.urlRoot}/oauth2/authorize/"
 		opts:
 			response_type:	"token"
-			scope:			"https://mob.myvnc.com/org/users https://mob.myvnc.com/xmpp https://mob.myvnc.com/mobile"
+			scope:			"https://mob.myvnc.com/org/users https://mob.myvnc.com/mobile"
 			client_id:		if @isNative() then 'imappDEV' else 'imDEV'
 	push:
 		gcm:
