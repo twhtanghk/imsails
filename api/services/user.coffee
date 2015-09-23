@@ -35,9 +35,10 @@ module.exports =
 			if sails.services.jid.isMuc(msg.to)
 				sails.models.group
 					.findOne(jid: msg.to)
+					.populateAll()
 					.then (group) ->
 						if group
-							return fulfill(group.canEnter(user))
+							return fulfill(user.canEnter(group))
 						sails.log.error "No record found with the specified group #{msg.to}."
 						reject(false)
 					.catch sails.log.error
