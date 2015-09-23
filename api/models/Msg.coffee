@@ -78,16 +78,18 @@ module.exports =
 				.populate('group')
 		query
 			.then (roster) ->
-				# update roster newmsg counter
+				# for all target recipients other than message sender
 				_.each roster, (item) ->
-					item.newmsg ?= 0
-					item.newmsg = item.newmsg + 1
-					item.save()
-						.then ->
-							# send push notification
-							sails.services.rest
-								.push req.user.token, item, values
-								.then sails.log.verbose
-								.catch sails.log.error
-						.catch sails.log.error
+					if item.createdBy.jid != values.from
+						# update roster newmsg counter
+						# and send push notification
+						item.newmsg ?= 0
+						item.newmsg = item.newmsg + 1
+						Promise
+							.all [
+								item.save()
+								sails.services.rest
+									.push req.user.token, item, values
+							]
+							.catch sails.log.error
 			.catch sails.log.error

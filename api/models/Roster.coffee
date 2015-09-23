@@ -44,7 +44,7 @@ module.exports =
 		
 	broadcast: (roomName, eventName, data, socketToOmit) ->
 		# filter to broadcast data update event to roster owner only 
-		sockets = _.map sails.sockets.subscribers(roomName)
+		sockets = sails.sockets.subscribers(roomName)
 		sails.models.roster.findOne(data.id)
 			.then (roster) ->
 				ret = _.filter sockets, (id) ->
