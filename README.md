@@ -5,59 +5,65 @@ Instant messaging app to interface server with sailsjs rest or socket.io API
 
 Server API
 ---------------------------------------------------------
-*   user
+## user
 
-```
-attributes:
+* attributes
+
 	see [api/models/User.coffee](https://github.com/twhtanghk/imsails/blob/master/api/models/User.coffee)
 		
-api:
+* api
+
+	```
 	get /api/user - list users for the specified pagination/sorting parameters skip, limit, sort
     get /api/user/:id - read user attributes of the specified id
     get /user/photo/:id - get user photo 
     get /api/user/me - read user attributes of current login user
     put /api/user/me - update user attributes of current login user excluding attribute id, jid, photoUrl 
-```
+	```
 
-*   group
+## group
 
-```
-attributes:
+* attributes
+	
 	see [api/models/Group.coffee](https://github.com/twhtanghk/imsails/blob/master/api/models/Group.coffee)
 	
-api:
+* api
+	```
 	post /api/group - create group with the specified attributes excluding id, jid, photoUrl
     get /api/group - list public groups (moderated or unmoderated) for specified pagination/sorting parameters skip, limit, sort
     get /api/group/membersOnly - list private groups (members only) for specified pagination/sorting parameters skip, limit, sort
     get /group/photo/:id - get group photo
     put /api/group/:id - update group attributes of the specified id exlcuding id, jid, photoUrl
     del /api/group/:id - delete group of the specified id
-```
+	```
 
-*   roster
+## roster
    
-``` 
-attributes:
+* attributes
+
 	see [api/models/Roster.coffee](https://github.com/twhtanghk/imsails/blob/master/api/models/Roster.coffee)
-	
-api:
+
+* api
+
+	``` 
     post /api/roster - create a roster item with the specified attributes excluding id, jid
     get /api/roster - list all roster items for current login user
     del /api/roster/:id - delete roster item of the specified jid
-```
+	```
 
-*   msg
+## msg
 
-```
-attributes:
+* attributes
+	
 	see [api/models/Msg.coffee](https://github.com/twhtanghk/imsails/blob/master/api/models/Msg.coffee)
 
-api:
+* api
+	```
     get /api/msg - read message history for the specified chat type (type) and target user or group jid (to) (e.g. {type: 'chat', to: 'user@mob.myvnc.com'} or {type: 'groupchat', to: 'news@muc.mob.myvnc.com'})
     get /api/msg/file/:id - get file attachment for the specified message id
     post /api/msg - send message with the specified attributes
     post /api/msg/file - send file attachment with the specified attributes
-```
+	```
 
 Configuration
 =============
