@@ -88,7 +88,7 @@ domain =
 	select: ($scope, resource) ->
 		convert = (collection, selected) ->
 			_.map collection, (item) ->
-				label:		item.fullname
+				label:		item.fullname()
 				value:		item.id
 				selected:	not _.isUndefined _.findWhere selected, id: item.id
 		
@@ -132,7 +132,7 @@ filter =
 		(collection) ->
 			_.map collection, (item) ->
 				ret = {}
-				ret[item.fullname] = item.id
+				ret[item.fullname()] = item.id
 				ret['selected'] = false
 				return ret 
 			
@@ -141,7 +141,7 @@ filter =
 			if search
 				return _.filter collection, (item) ->
 					r = new RegExp(search, 'i')
-					r.test(item.fullname) or r.test(item.post)
+					r.test(item.fullname()) or r.test(item.post())
 			else
 				return collection
 		

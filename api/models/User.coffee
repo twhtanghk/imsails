@@ -9,18 +9,6 @@ pair = (array) ->
 		ret = ret && item.type? && item.value?
 	return ret
 		
-fullname = (user) ->
-	if user.name?.given or user.name?.middle or user.name?.family
-		"#{user.name?.given || ''} #{user.name?.middle || ''} #{user.name?.family || ''}"
-	else
-		user.email
-		
-post = (user) ->
-	if user.organization?.name or user.title
-		"#{user.organization?.name || ''}/#{user.title || ''}"
-	else
-		""
-		
 photoUrl = (user) ->
 	return if user.photo then "#{sails.config.url}/user/photo/#{user.id}?m=#{user.updatedAt}" else null
 	
@@ -63,8 +51,6 @@ module.exports =
 			required:	true
 		name:
 			type:		'json'
-		fullname:
-			type:		'string'
 		organization:
 			type:		'json'
 		title:
@@ -104,12 +90,15 @@ module.exports =
 			membersOnly = _.sortBy membersOnly, 'name'
 			_.uniq membersOnly, 'id'
 			
-		post: ->
-			post(@)
-			
 		photoUrl: ->
 			photoUrl(@)
 		
+		fullname: ->
+			sails.services.user.fullname(@)
+			
+		post: ->
+			sails.services.user.post(@)
+			
 		isOwner: (group) ->
 			sails.services.user.isOwner(@, group)
 			
@@ -146,14 +135,15 @@ module.exports =
 			@phone = @phone || []
 			@otherEmail = @otherEmail || []
 			@address = @address || []
-			ret = _.extend @toObject(), post: @post(), photoUrl: @photoUrl()
+			ret = _.extend @toObject(), photoUrl: @photoUrl()
 			delete ret.photo
+			delete ret.fullname
+			delete ret.post
 			return ret
 			
 	beforeValidate: (values, cb) ->
 		if values.username
 			values.jid = "#{values.username}@#{sails.config.xmpp.domain}"
-		values.fullname = fullname(values)
 		cb(null, values)
 		
 	afterCreate: (values, cb) ->
@@ -181,7 +171,6 @@ module.exports =
 			now = new Date()
 			_.extend changes, photoUrl: "#{sails.config.url}/user/photo/#{id}?m=#{now}"
 			delete changes.photo
-		_.extend changes, post: post(changes)
 	
 	broadcast: (roomName, eventName, data, socketToOmit) ->
 		# ignore socketToOmit to broadcast the event to sender also

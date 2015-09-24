@@ -34,7 +34,6 @@ domain =
 		# listen if user status is updated
 		io.socket?.on "user", (event) ->
 			if event.verb == 'updated' and event.id == $scope.model.user?.id
-				_.extend $scope.model, name: event.data.fullname
 				_.extend $scope.model.user, event.data
 				$scope.$apply 'model'
 		
@@ -70,10 +69,14 @@ domain =
 filter =		
 	list: ->
 		(roster, search) ->
+			r = new RegExp(search, 'i')
+			userSearch = (user) ->
+				r.test(user?.jid) or r.test(user?.email) or r.test(user?.fullname()) or r.test(user?.post())
+			grpSearch = (group) ->	
+				r.test(group?.jid) or r.test(group?.name)
 			if search
 				return _.filter roster, (item) ->
-					r = new RegExp(search, 'i')
-					r.test(item.user?.jid) or r.test(item.user?.fullname) or r.test(item.group?.jid) or r.test(item.group?.name)
+					userSearch(item.user) or grpSearch(item.group)
 			else
 				return roster
 		

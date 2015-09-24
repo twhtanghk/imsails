@@ -61,14 +61,14 @@
 				ng-controller="UserCtrl">
 				<icon class="avatar" 
 					ng-src="user.photoUrl"
-					aria-label="{{user.fullname}}"
+					aria-label="{{user.fullname()}}"
 					otherwise="icon ion-android-person">
 				</icon>
 				<h2>
-					<span>{{user.fullname}}</span>
+					<span>{{user.fullname()}}</span>
 				</h2>
 				<p>
-					{{user.post}}
+					{{user.post()}}
 				</p>
 				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="model[type].splice($index, 1)">Delete</ion-option-button>
 			</ion-item>

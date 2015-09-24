@@ -3,7 +3,7 @@
     </button>
     <h1 class='title'>
     	<icon class="header" ng-src="chat.photoUrl"
-			aria-label="{{chat.fullname}}"
+			aria-label="{{chat.fullname()}}"
 			otherwise="icon ion-android-person"
 			ng-if="type == 'chat'">
 		</icon>
@@ -12,7 +12,7 @@
 			otherwise="icon ion-android-people"
 			ng-if="type != 'chat'">
 		</icon>
-    	<span>{{chat.fullname || chat.name}}</span>
+    	<span>{{chat.name}}</span>
     </h1>  
 </ion-header-bar>
 <div class="bar item-input-inset">

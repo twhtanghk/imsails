@@ -34,7 +34,10 @@ module.exports =
 			controller:		'UserController'
 			action:			'find'
 			sort:			
-				fullname:	'asc'
+				'name.given':	'asc'
+				'name.middle':	'asc'
+				'name.family':	'asc'
+				email:			'asc'
 		'GET /user/photo/:id':
 			controller:		'UserController'
 			action:			'getPhoto'

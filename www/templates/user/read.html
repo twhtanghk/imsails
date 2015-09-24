@@ -2,7 +2,7 @@
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
     <h1 class='title'>
-    	<span>{{model.fullname}}</span>
+    	<span>{{model.fullname()}}</span>
     </h1>  
 </ion-header-bar>
 <ion-content>
@@ -10,16 +10,16 @@
 		<div class="col col-33">
 			<icon class="photo" 
 				ng-src="model.photoUrl"
-				aria-label="{{model.fullname}}"
+				aria-label="{{model.fullname()}}"
 				otherwise="icon ion-android-person">
 			</icon>
 		</div>
 		<div class="col col-center">
 			<div style="font-weight: bold; font-size: large; margin: 1em">
-				{{model.fullname}}
+				{{model.fullname()}}
 			</div>
-			<div style="font-weight: bold; font-size: large; margin: 1em" ng-if="model.post != ''">
-				{{model.post}}
+			<div style="font-weight: bold; font-size: large; margin: 1em" ng-if="model.post() != ''">
+				{{model.post()}}
 			</div>
 		</div>
 	</div>

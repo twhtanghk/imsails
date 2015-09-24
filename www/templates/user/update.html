@@ -2,7 +2,7 @@
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
     <h1 class='title'>
-    	<span>{{model.fullname}}</span>
+    	<span>{{model.fullname()}}</span>
     </h1>
     <a class="button button-clear" ng-click="save()">{{'Save' | translate}}</a>  
 </ion-header-bar>
@@ -14,7 +14,7 @@
 				ngf-select ngf-multiple='false' 
 				ngf-change="select($files)" 
 				ngf-accept="'image/*'"
-				aria-label="{{model.fullname}}"
+				aria-label="{{model.fullname()}}"
 				otherwise="icon ion-android-person">
 			</icon>
 		</div>

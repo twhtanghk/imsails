@@ -77,11 +77,17 @@ resource = ($rootScope, pageableAR, Upload, $cordovaFileTransfer, $http) ->
 			ret = super(data, opts)
 			_.each ['updatedAt', 'createdAt'], (field) ->
 				if ret[field]
-					ret[field] = new Date Date.parse ret[field]				
+					ret[field] = new Date Date.parse ret[field]
 			return ret
 			
 		$save: (values, opts) ->
 			@promise = super(values, opts)
+			
+		post: ->
+			sails.services.user.post(@)
+			
+		fullname: ->
+			sails.services.user.fullname(@)
 			
 		isOwner: (group) ->
 			sails.services.user.isOwner(@, group)

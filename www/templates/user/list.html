@@ -13,7 +13,7 @@
 	<ion-list>
 		<ion-item class="item-avatar"
 			ng-class="model.online ? '' : 'offline'" 
-			ng-repeat="model in collection.models | UserSearchFilter:searchText | orderBy:'+fullname'"
+			ng-repeat="model in collection.models | UserSearchFilter:searchText | orderBy:['name.given', 'name.middle', 'name.family', 'email']"
 			ng-controller="UserCtrl"
 			ng-class="model.selected ? 'selected' : ''"
 			href="#/user/{{model.id}}">
@@ -23,11 +23,11 @@
 				otherwise="icon ion-android-person">
 			</icon>
 			<h2>
-				<span>{{model.fullname}}</span>
+				<span>{{model.fullname()}}</span>
 				<span class='status'>{{model.status}}</span>
 			</h2>
 			<p>
-				{{model.post}}
+				{{model.post()}}
 			</p>
 			<ion-option-button class="button button-balanced icon-left ion-plus-round" on-tap="addRoster()" ng-if="model.jid != resource.User.me().jid">{{'Roster' | translate}}</ion-option-button>
 		</ion-item>

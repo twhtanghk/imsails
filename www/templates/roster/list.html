@@ -19,7 +19,7 @@
 			href="#/chat/{{model.type}}/{{model.user.id || model.group.id}}">
 			<icon 
 				ng-src="model.user.photoUrl"
-				aria-label="{{model.user.fullname}}"
+				aria-label="{{model.user.fullname()}}"
 				otherwise="icon ion-android-person"
 				ng-if="model.type == 'chat'">
 			</icon>
@@ -30,7 +30,7 @@
 				ng-if="model.type != 'chat'">
 			</icon>
 			<h2>
-				<span>{{model.user.fullname || model.group.name}}</span>
+				<span>{{model.user.fullname() || model.group.name}}</span>
 				<span class='status' ng-if="model.type == 'chat'">{{model.user.status}}</span>
 			</h2>
 			<p>
