@@ -31,6 +31,7 @@ module.exports =
 			defaultsTo:	0
 		lastmsgAt:
 			type:		'datetime'
+			defaultsTo:	new Date(0)
 		createdBy:
 			model:		'user'
 			required:	true
