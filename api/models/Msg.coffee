@@ -61,35 +61,52 @@ module.exports =
 				from == sails.sockets.get(id)?.user.jid
 			emit(ret)
 			
+	afterCreate: (values, cb) ->
+		# update sender corresponding roster item lastmsgAt timestamp
+		sails.models.roster
+			.find()
+			.where(jid: values.to)
+			.populateAll()
+			.then (roster) ->
+				_.each roster, (item) ->
+					if item.createdBy.jid == values.from
+						item.lastmsgAt = values.createdAt
+						item.save().catch sails.log.error
+		cb null, values
+		
 	afterPublishCreate: (values, req) ->
-		# update all subscribed parties (jid exists in roster)
-		query = null
+		# update all target recipients corresponding roster items, and send push notification
+		# update roster newmsg counter
+		newmsg = (item) ->
+			item.newmsg ?= 0
+			item.newmsg = item.newmsg + 1
+		
 		if sails.services.jid.isMuc(values.to)
-			query = sails.models.roster
+			# update all subscribed parties (jid exists in roster)
+			sails.models.roster
 				.find()
 				.where(jid: values.to)
 				.populateAll()
+				.then (roster) ->
+					_.each roster, (item) ->
+						item.lastmsgAt = values.createdAt
+						if item.createdBy.jid != values.from
+							newmsg(item)
+							sails.services.rest
+								.push req.user.token, item, values
+								.catch sails.log.error
+						item.save().catch sails.log.error
 		else
-			query = sails.models.roster
+			sails.models.roster
 				.find()
 				.where(jid: values.from)
-				.populate('createdBy', where: jid: values.to)
-				.populate('user')
-				.populate('group')
-		query
-			.then (roster) ->
-				# for all target recipients other than message sender
-				_.each roster, (item) ->
-					if item.createdBy.jid != values.from
-						# update roster newmsg counter
-						# and send push notification
-						item.newmsg ?= 0
-						item.newmsg = item.newmsg + 1
-						Promise
-							.all [
-								item.save()
-								sails.services.rest
-									.push req.user.token, item, values
-							]
-							.catch sails.log.error
-			.catch sails.log.error
+				.populateAll()
+				.then (roster) ->
+					_.each roster, (item) ->
+						if item.createdBy.jid == values.to
+							item.lastmsgAt = values.createdAt
+							newmsg(item)
+							item.save().catch sails.log.error
+							sails.services.rest
+								.push req.user.token, item, values
+								.catch sails.log.error

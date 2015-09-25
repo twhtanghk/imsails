@@ -27,9 +27,8 @@ module.exports =
 		'GET /api/roster':
 			controller:		'RosterController'
 			action:			'find'
-			sort:			
-				updatedAt:	'desc'
-				jid:		'asc'
+			sort:		
+				lastmsgAt:	'desc'
 		'GET /api/user':
 			controller:		'UserController'
 			action:			'find'

@@ -93,7 +93,7 @@ domain =
 		# listen if user status is updated
 		io.socket?.on "group", (event) ->
 			if event.verb == 'updated' and event.id == $scope.model.id
-				_.extend $scope.model, event.data
+				_.extend $scope.model, new resource.Group event.data
 				$scope.$apply 'model'
 		
 	list: ($scope, $location, resource, collection) ->

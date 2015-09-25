@@ -29,6 +29,8 @@ module.exports =
 		newmsg:
 			type:		'integer'
 			defaultsTo:	0
+		lastmsgAt:
+			type:		'datetime'
 		createdBy:
 			model:		'user'
 			required:	true

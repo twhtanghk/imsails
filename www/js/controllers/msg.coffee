@@ -12,7 +12,9 @@ domain =
 					
 		$stateProvider.state 'app.chat.list',
 			cache: false
+			
 			url: "/:type/:id"
+			
 			views:
 				chatContent:
 					templateUrl: 'templates/chat/list.html'
@@ -31,11 +33,13 @@ domain =
 				collection: (type, chat, resource) ->
 					ret = new resource.Msgs()
 					ret.$fetch params: {type: type, to: chat.jid, sort: 'createdAt DESC'}
-			onExit: (resource, chat) ->
+					
+			onEnter: (resource, chat) ->
 				# clear roster newmsg counter
 				item = _.findWhere resource.Roster.instance().models, jid: chat.jid
 				item?.$save(newmsg: 0)			
-				
+				 
+			onExit: ->
 				# no more listen to those registered events
 				io.socket?.removeAllListeners 'msg'
 			
@@ -52,6 +56,7 @@ domain =
 						$scope.$broadcast('scroll.infiniteScrollComplete')
 					.catch alert
 				return @
+			# to control no of rows required for the input textarea
 			row: (msg) ->
 				rows = if msg == '' then 1 else Math.min(3, msg.split('\n').length)
 				$('textarea').attr('rows', rows).css('overflow-y', if rows == 1 then 'hidden' else 'scroll') 

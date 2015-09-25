@@ -32,7 +32,7 @@ resource = ($rootScope, pageableAR, Upload, $cordovaFileTransfer, $http) ->
 		$parse: (data, opts) ->
 			ret = super(data, opts)
 			
-			_.each ['updatedAt', 'createdAt'], (field) ->
+			_.each ['updatedAt', 'createdAt', 'lastmsgAt'], (field) ->
 				if ret[field]
 					ret[field] = new Date Date.parse ret[field]
 			

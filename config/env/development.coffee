@@ -14,7 +14,7 @@ module.exports =
 	push:
 		url:		"https://mob.myvnc.com/mobile/api/push"
 		data:
-			url:		"/roster/list"
+			url:		"/roster/chat/<%=roster.type%>/<%=roster.id%>"
 			title:		"<%=roster.name()%>"
 			message:	"<%=roster.newmsg%> new message(s)"	
 	oauth2:
