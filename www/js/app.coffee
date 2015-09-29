@@ -1,6 +1,6 @@
 env = require './env.coffee'
 
-angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'locale', 'auth', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon', 'templates'])
+angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'locale', 'auth', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon', 'templates', 'ionic-press-again-to-exit'])
 	
 	.config ($urlRouterProvider, $ionicConfigProvider, $provide) ->
 		$urlRouterProvider.otherwise('/roster/list')
@@ -40,7 +40,13 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 							callback jwr.statusCode, body
 					.catch $log.error
 			
-	.run ($cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, authService, ErrorService, resource) ->
+	.run ($translate, $ionicPressAgainToExit, $cordovaToast, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, authService, ErrorService, resource) ->
+		
+		$ionicPressAgainToExit ->
+			$translate 'Press again to exit'
+				.then (text) ->
+					$cordovaToast.show text, 'short', 'center'
+    		
 		window.alert = ErrorService.alert
 			
 		document.addEventListener 'deviceready', ->

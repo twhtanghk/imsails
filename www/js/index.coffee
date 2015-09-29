@@ -7,6 +7,7 @@ window.$.deparam = require 'jquery-deparam'
 window.saveAs = require('file-saver.js').saveAs
 
 require 'ngCordova'
+require 'ionic-press-again-to-exit'
 require 'angular-activerecord'
 require 'angular-translate'
 require 'angular-translate-loader-static-files'

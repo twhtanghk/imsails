@@ -26,5 +26,6 @@
 	"Edit":				"Edit",
 	"Delete":			"Delete",
 	"Quit":				"Quit",
-	"Select":			"Select"
+	"Select":			"Select",
+	"Press again to exit": "Press again to exit"
 }
