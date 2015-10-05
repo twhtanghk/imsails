@@ -24,7 +24,7 @@ iconUrl = (type) ->
 urlRoot = (root, url, type = env.server.app.type) ->
 	if type == 'io' then "/#{url}" else "#{root}/#{url}"
 		
-resource = ($rootScope, pageableAR, Upload, $cordovaFileTransfer, $http) ->
+resource = ($rootScope, pageableAR, $http, fileService) ->
 	
 	class RosterItem extends pageableAR.Model
 		$urlRoot: urlRoot(env.server.app.urlRoot, "api/roster") 
@@ -136,7 +136,7 @@ resource = ($rootScope, pageableAR, Upload, $cordovaFileTransfer, $http) ->
 				moderators:	'Moderators'
 				members:	'Members'
 				visitors:	'Visitors'
-			values: ['Members-Only', 'Unmoderated', 'Moderated']
+			values: ['Members-Only', 'Moderated', 'Unmoderated']
 		
 		$urlRoot: urlRoot(env.server.app.urlRoot, "api/group")
 		
@@ -200,35 +200,16 @@ resource = ($rootScope, pageableAR, Upload, $cordovaFileTransfer, $http) ->
 		
 		$save: (values = {}, opts = {}) ->
 			_.extend @, values
-			data = 
-				url: 	@$url()
-				fields:	_.pick @, 'to', 'type'
-				file:	@file
-			new Promise (fulfill, reject) ->
-				Upload
-					.upload(data)
-					.progress (event) ->
-						return
-					.success fulfill
-					.error reject
+			_.extend opts, data: _.pick(@, 'to', 'type')
+			transfer = new fileService.FileTransfer @local, @$url()
+			transfer.upload(opts)
 					
 		$fetch: (opts = {}) ->
 			opts = _.defaults opts, 
 				responseType: 	'blob'
-				headers: 		$http.defaults.headers.common
-			switch device.platform
-				when 'browser'
-					new Promise (fulfill, reject) =>
-						@$sync('read', @, opts)
-							.then (res) ->
-								contentType = res.headers('Content-type')
-								saveAs new Blob([res.data], type: contentType), opts.target
-								fulfill(res)
-							.catch reject
-				when 'Android'
-					$cordovaFileTransfer
-						.download @$url(), opts.target, opts, true
-
+			transfer = new fileService.FileTransfer	@local, @$url()
+			transfer.download(opts)
+			
 		$sync: (op, model, opts) ->
 			@restsync(op, model, opts)
 
@@ -255,6 +236,6 @@ resource = ($rootScope, pageableAR, Upload, $cordovaFileTransfer, $http) ->
 	Msgs:			Msgs
 	Device:			Device
 
-angular.module('starter.model', ['ionic', 'PageableAR', 'ngFileUpload'])
+angular.module('starter.model', ['ionic', 'PageableAR', 'fileService'])
 	.value 'server', env.server.app
-	.factory 'resource', ['$rootScope', 'pageableAR', 'Upload', '$cordovaFileTransfer', '$http', resource]
+	.factory 'resource', ['$rootScope', 'pageableAR', '$http', 'fileService', resource]

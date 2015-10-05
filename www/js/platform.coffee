@@ -45,21 +45,8 @@ platform = ($rootScope, $cordovaInAppBrowser, $cordovaPush, $location, $http, $i
 			
 		func[env.platform()]()
 		
-	# open local file resided on the mobile device, return promise for file open
-	open = (localfile, type) ->
-		func =
-			mobile: ->
-				$cordovaFileOpener2.open(localfile, type)
-				
-			browser: ->
-				new Promise (fulfill, reject) ->
-					fulfill()
-				
-		func[env.platform()]()
-		
 	pushRegister:	pushRegister
 	auth: 			auth
-	open: 			open
 	
 config =  ($cordovaInAppBrowserProvider) ->
 	opts = 

@@ -23,13 +23,14 @@
     "jquery": "2.0.3",
     "jquery-deparam": "~0.3.0",
     "mime-types": "~2.1.7",
-    "ng-file-upload": "~4.2.4",
+    "ng-file-upload": "~8.0.1",
     "ngCordova": "~0.1.14-alpha",
     "ngImgCrop": "~0.3.2",
     "sails-auth": "*",
     "sails.io.js": "git://github.com/twhtanghk/sails.io.js.git#3de3fdcf7868132f288f5ab6cc905932025486b6",
     "tagDirective": "*",
-    "ionic-press-again-to-exit": "*"
+    "ionic-press-again-to-exit": "*",
+    "AngularJS-Toaster": "angularjs-toaster#~0.4.15"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.0.1"

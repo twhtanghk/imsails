@@ -1,5 +1,4 @@
 env = require '../env.coffee'
-mime = require 'mime-types/index.js'
 
 domain =
 	state: ($stateProvider) ->
@@ -68,18 +67,12 @@ domain =
 					$scope.msg = ''
 					$scope.row('')
 			putfile: ($files) ->
-				if $files.length != 0
-					attachment = new resource.Attachment type: type, to: chat.jid, file: $files[0]
+				if $files and $files.length != 0
+					attachment = new resource.Attachment type: type, to: chat.jid, local: $files[0]
 					attachment.$save().catch alert
 			getfile: (msg) ->
-				attachment = new resource.Attachment id: msg.id
-				target = env.file.target(msg.file.base)
-				attachment.$fetch(target: target)
-					.then (res) =>
-						platform
-							.open(target, mime.lookup(target))
-							.catch alert
-					.catch alert
+				attachment = new resource.Attachment id: msg.id, local: env.file.target(msg.file.base) 
+				attachment.$fetch().catch alert
 			copy: (msg) ->
 				if env.isNative()
 					$cordovaClipboard.copy(msg.body)

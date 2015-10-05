@@ -7,6 +7,7 @@ window.$.deparam = require 'jquery-deparam'
 window.saveAs = require('file-saver.js').saveAs
 
 require 'ngCordova'
+require 'AngularJS-Toaster'
 require 'ionic-press-again-to-exit'
 require 'angular-activerecord'
 require 'angular-translate'
@@ -24,3 +25,4 @@ require './model.coffee'
 require './platform.coffee'
 require './auth.coffee'
 require './locale.coffee'
+require './file.coffee'
