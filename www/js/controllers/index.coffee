@@ -1,5 +1,5 @@
 angularModule =
-	angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-interceptor', 'starter.model', 'platform', 'PageableAR'])
+	angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-interceptor', 'starter.model', 'platform', 'PageableAR', 'toaster'])
 	
 require("./common.coffee")(angularModule)
 require("./user.coffee")(angularModule)

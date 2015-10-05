@@ -42,7 +42,7 @@ domain =
 				# no more listen to those registered events
 				io.socket?.removeAllListeners 'msg'
 			
-	list: ($scope, $cordovaClipboard, $cordovaToast, $ionicScrollDelegate, $location, type, chat, me, collection, resource, platform) ->
+	list: ($scope, $cordovaClipboard, toaster, $ionicScrollDelegate, $location, type, chat, me, collection, resource, platform) ->
 		_.extend $scope,
 			type: type
 			chat: chat
@@ -77,7 +77,10 @@ domain =
 				if env.isNative()
 					$cordovaClipboard.copy(msg.body)
 						.then ->
-							$cordovaToast.showShortCenter("Message copied")
+							toaster.pop
+								type:	'info'
+								body:	'Message copied'
+								bodyOutputType: 'trustedHtml'
 						.catch alert
 		
 		# reload collection once reconnected
@@ -111,5 +114,5 @@ filter =
 module.exports = (angularModule) ->
 	angularModule
 		.config ['$stateProvider', domain.state]
-		.controller 'ChatCtrl', ['$scope', '$cordovaClipboard', '$cordovaToast', '$ionicScrollDelegate', '$location', 'type', 'chat', 'me', 'collection', 'resource', 'platform', domain.list]
+		.controller 'ChatCtrl', ['$scope', '$cordovaClipboard', 'toaster', '$ionicScrollDelegate', '$location', 'type', 'chat', 'me', 'collection', 'resource', 'platform', domain.list]
 		.filter 'msgFilter', filter.list
