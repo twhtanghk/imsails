@@ -27,10 +27,7 @@ ctrl =
 			env: env
 			resource: resource
 			model: resource.User.me()
-			exit: ->
-				io.socket.disconnect()
-				navigator.app.exitApp()
-		
+			
 		resource.User.me().promise.then ->		
 			$scope.$watch 'model.status', (newvalue, oldvalue) ->
 				if newvalue != oldvalue
