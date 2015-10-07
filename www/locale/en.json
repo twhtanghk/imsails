@@ -29,5 +29,9 @@
 	"Press again to exit": "Press again to exit",
 	"Info":				"Info",
 	"Exit":				"Exit",
-	"Cancel":			"Cancel"
+	"Cancel":			"Cancel",
+	"Type":				"Type",
+	"Owner":			"Owner",
+	"Moderators":		"Moderators",
+	"Members":			"Members"
 }

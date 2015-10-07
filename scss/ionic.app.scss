@@ -265,4 +265,15 @@ ion-nav-view[name=chatContent] {
 			}
 		}
 	}
-}	
+}
+
+.platform-android {
+	.action-sheet {
+		.button {
+			text-align: center;
+			border-color: rgb(209, 211, 214);
+			font-size: 21px;
+			color: #007aff;
+		}
+	}
+}

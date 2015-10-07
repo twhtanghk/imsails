@@ -2,52 +2,66 @@
 	<button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
 	<h1 class='title'>
+		<icon class="header" ng-src="model.photoUrl"
+			aria-label="{{model.name}}"
+			otherwise="icon ion-android-people">
+		</icon>
 		<span>{{model.name}}</span>
 	</h1>
 </ion-header-bar>
 <ion-content>
-	<div class="row">
-		<div class="col col-33">
-			<icon class="photo edit" 
-				ng-src="model.photoUrl"
-				aria-label="{{model.name}}"
-				otherwise="icon ion-android-people">
+	<!-- type -->
+	<ion-list>
+		<ion-item class="item-divider">
+			{{'Type' | translate}}
+		</ion-item>
+		<ion-item class="item-avatar">
+			<h2>
+				{{model.type}}	
+			</h2>
+		</ion-item>
+	</ion-list>
+	
+	<!-- owner -->
+	<ion-list>
+		<ion-item class="item-divider">
+			{{'Owner' | translate}}
+		</ion-item>
+		<ion-item class="item-avatar">
+			<icon class="avatar" 
+				ng-src="model.createdBy.photoUrl"
+				aria-label="{{model.createdBy.fullname()}"
+				otherwise="icon ion-android-person">
 			</icon>
-		</div>
-		<div class="col">
-			<ion-list>
-				<ion-item class="item-divider">
-					{{'Type' | translate}}
-				</ion-item>
-				<ion-item class="item-avatar">
-					<h2>
-						{{model.type}}	
-					</h2>
-				</ion-item>
-			</ion-list>
-			<div ng-repeat="type in ['moderators', 'members']">
-				<ion-list>
-					<ion-item class="item-divider" ng-if="model[type].length > 0">
-						{{resource.Group.type.placeholder[type]}}
-					</ion-item>
-				
-					<ion-item class="item-avatar"
-						ng-repeat="user in model[type]"
-						ng-controller="UserCtrl">
-						<icon class="avatar" 
-							ng-src="user.photoUrl"
-							aria-label="{{user.fullname()}"
-							otherwise="icon ion-android-person">
-						</icon>
-						<h2>
-							<span>{{user.fullname()}}</span>
-						</h2>
-						<p>
-							{{user.post()}}
-						</p>
-					</ion-item>
-				</ion-list>
-			</div>
-		</div>
-	</div>
+			<h2>
+				<span>{{model.createdBy.fullname()}}</span>
+			</h2>
+			<p>
+				{{model.createdBy.post()}}
+			</p>
+		</ion-item>
+	</ion-list>
+	
+	<!-- moderator and member -->
+	<ion-list ng-repeat="type in ['moderators', 'members']" ng-if="model[type].length > 0">
+		<ion-item class="item-divider">
+			{{resource.Group.type.placeholder[type] | translate}}
+		</ion-item>
+	
+		<ion-item class="item-avatar"
+			ng-repeat="user in model[type]"
+			ng-controller="UserCtrl">
+			<icon class="avatar" 
+				ng-src="user.photoUrl"
+				aria-label="{{user.fullname()}"
+				otherwise="icon ion-android-person">
+			</icon>
+			<h2>
+				<span>{{user.fullname()}}</span>
+			</h2>
+			<p>
+				{{user.post()}}
+			</p>
+		</ion-item>
+	</ion-list>
 </ion-content>

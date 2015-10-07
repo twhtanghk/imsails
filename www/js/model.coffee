@@ -161,10 +161,17 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 				if ret[field]
 					ret[field] = new Date Date.parse ret[field]
 			
+			if ret.moderators
+				ret.moderators = _.map ret.moderators, (user) ->
+					new User user
+					
 			if ret.members
 				ret.members = _.map ret.members, (user) ->
 					new User user
 					
+			if ret.createdBy
+				ret.createdBy = new User ret.createdBy
+				
 			return ret
 		
 		exit: ->

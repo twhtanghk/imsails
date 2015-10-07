@@ -3,6 +3,7 @@
  # @description :: TODO: You might write a short summary of how this model works and what it represents here.
  # @docs        :: http://sailsjs.org/#!documentation/models
 Promise = require 'promise'
+gfs = require('skipper-gridfs')(sails.config.file.opts)
 
 module.exports =
 
@@ -73,6 +74,14 @@ module.exports =
 						item.lastmsgAt = values.createdAt
 						item.save().catch sails.log.error
 		cb null, values
+		
+	afterDestroy: (values, cb) ->
+		_.each values, (msg) ->
+			if msg.file
+				gfs.rm msg.file, (err) ->
+					if err
+						sails.log.error err
+		cb()
 		
 	afterPublishCreate: (values, req) ->
 		# update all target recipients corresponding roster items, and send push notification

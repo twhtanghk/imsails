@@ -12,18 +12,18 @@ module.exports =
 			""
 		
 	isOwner: (user, group) ->
-		group.createdBy.id == user?.id
+		group?.createdBy.id == user?.id
 		
 	isModerator: (user, group) ->
-		_.any group.moderators, (item) ->
+		_.any group?.moderators, (item) ->
 			item.id == user?.id
 			
 	isMember: (user, group) ->
-		group.type == 'Unmoderated' or _.any group.members, (item) ->
+		group?.type == 'Unmoderated' or _.any group?.members, (item) ->
 			item.id == user?.id
 			
 	isVisitor: (user, group) ->
-		group.type == 'Moderated'
+		group?.type == 'Moderated'
 
 	# check if user is authorized to enter the chatroom
 	canEnter: (user, group) ->

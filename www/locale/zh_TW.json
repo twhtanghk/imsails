@@ -29,5 +29,9 @@
 	"Press again to exit": "再次按下退出",
 	"Info":				"詳細資料",
 	"Exit":				"退出",
-	"Cancel":			"取消"
+	"Cancel":			"取消",
+	"Type":				"分類",
+	"Owner":			"擁有人",
+	"Moderators":		"管理员",
+	"Members":			"成员"
 }
