@@ -5,7 +5,6 @@ module.exports =
 	path: "/#{path}"		
 	server:
 		app:
-			type:		'io'				# api type (io or rest)
 			url:		url					# server url
 			urlRoot:	"#{url}/#{path}"	# api url
 		auth:

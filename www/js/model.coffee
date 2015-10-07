@@ -21,13 +21,16 @@ iconUrl = (type) ->
 		"image/jpeg":					"img/jpg.png"
 	return if type of icon then icon[type] else "img/unknown.png"
 		
-urlRoot = (root, url, type = env.server.app.type) ->
-	if type == 'io' then "/#{url}" else "#{root}/#{url}"
+urlRoot = (model, url, root = env.server.app.urlRoot) ->
+	if model.transport() == 'io' then "#{url}" else "#{root}#{url}"
 		
 resource = ($rootScope, pageableAR, $http, fileService) ->
 	
+	pageableAR.Model.sync = pageableAR.Model.iosync
+	
 	class RosterItem extends pageableAR.Model
-		$urlRoot: urlRoot(env.server.app.urlRoot, "api/roster") 
+		$urlRoot: ->
+			urlRoot(@, "/api/roster") 
 		
 		$parse: (data, opts) ->
 			ret = super(data, opts)
@@ -41,13 +44,15 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 			
 			if ret.group
 				ret.group = new Group ret.group
+				ret.group.$fetch(reset: true).catch alert
 					
 			return ret
 			
 	class Roster extends pageableAR.PageableCollection
 		_instance = null
 		
-		$urlRoot: urlRoot(env.server.app.urlRoot, "api/roster")
+		$urlRoot: ->
+			urlRoot(@, "/api/roster")
 		
 		model: RosterItem
 
@@ -68,7 +73,8 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 			
 		_me = null
 		
-		$urlRoot: urlRoot(env.server.app.urlRoot, "api/user")
+		$urlRoot: ->
+			urlRoot(@, "/api/user")
 		
 		@me: ->
 			_me ?= new User id: 'me'
@@ -120,7 +126,8 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 	class Users extends pageableAR.PageableCollection
 		_instance = null
 		
-		$urlRoot: urlRoot(env.server.app.urlRoot, "api/user")
+		$urlRoot: ->
+			urlRoot(@, "/api/user")
 		
 		model: User
 	
@@ -138,7 +145,8 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 				visitors:	'Visitors'
 			values: ['Members-Only', 'Moderated', 'Unmoderated']
 		
-		$urlRoot: urlRoot(env.server.app.urlRoot, "api/group")
+		$urlRoot: ->
+			urlRoot(@, "/api/group")
 		
 		$defaults:
 			type:		'Members-Only'
@@ -159,11 +167,15 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 					
 			return ret
 		
+		exit: ->
+			@$save {}, url: "#{@$url()}/exit"
+			
 	# public groups
 	class Groups extends pageableAR.PageableCollection
 		_instance = null
 		
-		$urlRoot: urlRoot(env.server.app.urlRoot, "api/group")
+		$urlRoot: ->
+			urlRoot(@, "/api/group")
 		
 		model: Group
 		
@@ -174,7 +186,8 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 	class GroupsPrivate extends pageableAR.PageableCollection
 		_instance = null
 		
-		$urlRoot: urlRoot(env.server.app.urlRoot, "api/group/membersOnly")
+		$urlRoot: ->
+			urlRoot(@, "/api/group/membersOnly")
 		
 		model: Group
 		
@@ -182,7 +195,8 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 			_instance ?= new GroupsPrivate()
 	
 	class Msg extends pageableAR.Model
-		$urlRoot: urlRoot(env.server.app.urlRoot, "api/msg")
+		$urlRoot: ->
+			urlRoot(@, "/api/msg")
 		
 		$parse: (data, opts) ->
 			ret = super(data, opts)
@@ -196,7 +210,8 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 			return ret
 		
 	class Attachment extends pageableAR.Model
-		$urlRoot: urlRoot(env.server.app.urlRoot, "api/msg/file", 'rest')
+		$urlRoot: ->
+			urlRoot(@, "/api/msg/file")
 		
 		$save: (values = {}, opts = {}) ->
 			_.extend @, values
@@ -210,19 +225,19 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 			transfer = new fileService.FileTransfer	@local, @$url()
 			transfer.download(opts)
 			
-		$sync: (op, model, opts) ->
-			@restsync(op, model, opts)
+		@sync: pageableAR.Model.restsync
 
 	class Msgs extends pageableAR.PageableCollection
-		$urlRoot: urlRoot(env.server.app.urlRoot, "api/msg")
+		$urlRoot: ->
+			urlRoot(@, "/api/msg")
 		
 		model: Msg
 		
 	class Device extends pageableAR.Model
-		$urlRoot: urlRoot(env.server.mobile.urlRoot, "api/device", 'rest')
+		$urlRoot: ->
+			urlRoot(@, "/api/device", env.server.mobile.urlRoot)
 	
-		$sync: (op, model, opts) ->
-			@restsync(op, model, opts)
+		@sync: pageableAR.Model.restsync
 	
 	User:			User
 	Users:			Users
@@ -237,5 +252,4 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 	Device:			Device
 
 angular.module('starter.model', ['ionic', 'PageableAR', 'fileService'])
-	.value 'server', env.server.app
 	.factory 'resource', ['$rootScope', 'pageableAR', '$http', 'fileService', resource]

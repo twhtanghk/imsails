@@ -44,3 +44,15 @@ module.exports =
 						count:		data[0]
 						results:	data[1]
 				.catch reject
+				
+	_findOrCreate: (req, Model, cond, data) ->
+		new Promise (fulfill, reject) ->
+			Model.findOrCreate(cond, data)
+				.then (newInstance) ->
+					if req._sails.hooks.pubsub
+						if req.isSocket
+							Model.subscribe(req, newInstance)
+							Model.introduce(newInstance)
+						Model.publishCreate(newInstance, !req.options.mirror && req)
+					fulfill(newInstance)
+				.catch reject

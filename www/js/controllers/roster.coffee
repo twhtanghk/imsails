@@ -30,7 +30,13 @@ domain =
 		_.extend $scope,
 			remove: ->
 				$scope.collection.remove $scope.model
-		
+			select: ->
+				roster = $scope.model
+				if roster.type == 'groupchat'
+					$rootScope.$broadcast "group:select", roster.group, roster
+				else
+					$rootScope.$broadcast "user:select", roster.user, roster
+				
 		# listen if user status is updated
 		io.socket?.on "user", (event) ->
 			if event.verb == 'updated' and event.id == $scope.model.user?.id

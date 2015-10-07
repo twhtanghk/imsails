@@ -39,7 +39,38 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 						socket.request opts, (body, jwr) ->
 							callback jwr.statusCode, body
 					.catch $log.error
-			
+	
+	.config ($provide) ->
+		$provide.decorator '$ionicActionSheet', ($delegate) ->
+			###
+				opts:
+					titleText:	'action title'
+					action: [
+						{type: 'button', text: 'button label', cb: func, show: true|false}
+						...
+						{type: 'destructive', text: 'Delete', cb: func, show: true|false}
+						{type: 'cancel', text': 'Cancel', cb: func, show true|false}
+					]
+			###
+			$delegate.showAction = (opts) ->
+				newopts = _.extend {}, _.pick(opts, 'titleText')
+				buttons = _.where(opts.action, type: 'button', show: true)
+				newopts.buttons = _.map buttons, (button) ->
+					_.pick button, 'text'
+				newopts.buttonClicked = (index) ->
+					buttons[index]?.cb()
+				destructive = _.find(opts.action, type: 'destructive', show: true)
+				if not _.isUndefined(destructive)
+					newopts.destructiveText = destructive.text
+					newopts.destructiveButtonClicked = destructive.cb
+				cancel = _.find(opts.action, type: 'cancel', show: true)
+				if not _.isUndefined(cancel)
+					newopts.cancelText = cancel.text
+					newopts.cancel = cancel.cb
+				$delegate.show newopts
+				
+			return $delegate
+					
 	.run ($translate, $ionicPressAgainToExit, toaster, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, authService, ErrorService, resource) ->
 		
 		$ionicPressAgainToExit ->

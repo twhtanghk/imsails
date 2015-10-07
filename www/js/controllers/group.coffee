@@ -78,6 +78,21 @@ domain =
 				_.each ['connect', 'group'], (event) ->
 					io.socket?.removeAllListeners event
 
+		$stateProvider.state 'app.group.read',
+			cache: false
+			url: "/:id"
+			views:
+				groupContent:
+					templateUrl: 'templates/group/read.html'
+					controller: 'GroupReadCtrl'
+			resolve:
+				id: ($stateParams) ->
+					$stateParams.id
+				resource: 'resource'
+				model: (resource, id) ->
+					ret = new resource.Group id: id
+					ret.$fetch()
+					
 	item: ($rootScope, $scope, $location, resource) ->
 		_.extend $scope,
 			edit: ->
@@ -89,6 +104,8 @@ domain =
 					type: 'groupchat'
 					group: $scope.model
 				item.$save()
+			select: ->
+				$rootScope.$broadcast 'group:select', $scope.model
 					
 		# listen if user status is updated
 		io.socket?.on "group", (event) ->
@@ -137,7 +154,7 @@ domain =
 		
 	update: ($scope, $state, resource, model) ->
 		_.extend $scope,
-			resource: resource
+			resource:	resource
 			model: 		model
 			users:		resource.Users.instance()
 			select: (files) ->
@@ -177,3 +194,53 @@ module.exports = (angularModule) ->
 		.controller 'GroupCreateCtrl', ['$scope', '$state', 'resource', 'model', 'ErrorService', domain.create]
 		.controller 'GroupUpdateCtrl', ['$scope', '$state', 'resource', 'model', domain.update]
 		.filter 'groupFilter', filter.list
+		
+		.run ($rootScope, $ionicActionSheet, $translate, $location, $ionicHistory, resource) ->
+			$rootScope.$on 'group:select', (event, group, rosterItem) ->
+				$translate ['Info', 'Exit', 'Edit', 'Delete', 'Cancel']
+					.then (translations) -> 
+						info =
+							type:	'button'
+							text:	translations['Info']
+							show:	true
+							cb:		->
+								$location.path("/group/#{group.id}")
+						exit =
+							type:	'button'
+							text:	translations['Exit']
+							show:	resource.User.me().isModerator(group) or resource.User.me().isMember(group)
+							cb:		->
+								group.exit()
+									.then ->
+										if rosterItem
+											resource.Roster.instance().remove rosterItem
+										close()
+									.catch alert 
+						edit =
+							type:	'button'
+							text:	translations['Edit']
+							show:	resource.User.me().canEdit(group)
+							cb:		->
+								$location.path("/group/update/#{group.id}")
+						del =
+							type:	'destructive'
+							text:	translations['Delete']
+							show:	resource.User.me().canRemove(group)
+							cb:		->
+								if rosterItem
+									resource.Roster.instance().remove rosterItem
+								else 
+									collection = if group.type == 'Members-Only' then resource.GroupsPrivate else resource.Groups
+									collection.instance().remove group
+								close()
+						cancel =
+							type:	'cancel'
+							text:	translations['Cancel']
+							show:	true
+						close = $ionicActionSheet.showAction
+							action: [info, exit, edit, del, cancel] 
+		
+		.controller 'GroupReadCtrl', ($scope, resource, model) ->
+			_.extend $scope,
+				resource:	resource
+				model:		model

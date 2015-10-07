@@ -54,14 +54,16 @@ domain =
 	detail: ($scope, model) ->
 		$scope.model = model
 	
-	item: ($scope, pageableAR, resource) ->
+	item: ($rootScope, $scope, pageableAR, resource) ->
 		_.extend $scope,
 			addRoster: ->
 				item = new resource.RosterItem
 					type: 'chat'
 					user: $scope.model
 				item.$save()
-	
+			select: ->
+				$rootScope.$broadcast 'user:select', $scope.model		
+		
 		# listen if user status is updated
 		io.socket?.on "user", (event) ->
 			if event.verb == 'updated' and event.id == $scope.model.id
@@ -149,9 +151,38 @@ module.exports = (angularModule) ->
 	angularModule
 		.config ['$stateProvider', domain.state]
 		.controller 'UserDetailCtrl', ['$scope', 'model', domain.detail]
-		.controller 'UserCtrl', ['$scope', 'pageableAR', 'resource', domain.item]
+		.controller 'UserCtrl', ['$rootScope', '$scope', 'pageableAR', 'resource', domain.item]
 		.controller 'UsersCtrl', ['$scope', '$location', 'pageableAR', 'resource', 'collection', domain.list]
 		.controller 'UserUpdateCtrl', ['$scope', '$state', 'resource', 'model', domain.update]
 		.controller 'UserSelectCtrl', ['$scope', 'resource', domain.select]
 		.filter 'UserSelectFilter', filter.select
 		.filter 'UserSearchFilter', filter.search
+		
+		.filter 'excludeMe', (resource) ->
+			(collection) ->
+				_.filter collection, (user) ->
+					user.id != resource.User.me().id
+			
+		.run ($rootScope, $ionicActionSheet, $translate, $location, $ionicHistory, resource) ->
+			$rootScope.$on 'user:select', (event, user, roster = null) ->
+				$translate ['Info', 'Delete', 'Cancel']
+					.then (translations) -> 
+						info =
+							type:	'button'
+							text:	translations['Info']
+							show:	true
+							cb:		->
+								$location.path("/user/#{user.id}")
+						del =
+							type:	'destructive'
+							text:	translations['Delete']
+							show:	roster?
+							cb:		->
+								resource.Roster.instance().remove roster
+								close()
+						cancel =
+							type:	'cancel'
+							text:	translations['Cancel']
+							show:	true
+						close = $ionicActionSheet.showAction
+							action: [info, del, cancel] 

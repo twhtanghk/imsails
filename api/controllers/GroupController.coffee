@@ -45,3 +45,24 @@ module.exports =
 					code:	err.originalError.code
 					fields:
 						name: "Duplicate name '#{data.name}'"
+						
+	exit: (req, res) ->
+		pk = actionUtil.requirePk(req)
+		Model = actionUtil.parseModel(req)
+		req.user.moderatorGrps.remove pk
+		req.user.memberGrps.remove pk
+		req.user
+			.save()
+			.then (user) ->
+				Model
+					.findOne()
+					.where({id: pk, name: '!': sails.config.authGrp}) # exclude authGrp from user to leave the group
+      				.populateAll()
+      				.then (group) ->
+      					if !group
+      						return res.notFound()
+      					if sails.hooks.pubsub
+      						Model.publishRemove(pk, 'moderators', req.user.id, !sails.config.blueprints.mirror && req)
+      						Model.publishRemove(pk, 'members', req.user.id, !sails.config.blueprints.mirror && req)
+      					return res.ok(group)
+      				.catch res.serverError

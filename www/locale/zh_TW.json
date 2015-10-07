@@ -26,5 +26,8 @@
 	"Edit":				"編輯",
 	"Delete":			"刪除",
 	"Select":			"選擇",
-	"Press again to exit": "再次按下退出"
+	"Press again to exit": "再次按下退出",
+	"Info":				"詳細資料",
+	"Exit":				"退出",
+	"Cancel":			"取消"
 }

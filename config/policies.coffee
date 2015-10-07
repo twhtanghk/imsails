@@ -21,9 +21,10 @@ module.exports =
 			destroy:	['isAuth', 'user/canRemove']
 			membersOnly:['isAuth']
 			getPhoto:	true
+			exit:		['isAuth', 'omitId', 'group/exclude']
 		MsgController:
 			'*':		false
-			'find':		['isAuth', 'user/canEnter', 'msg/filterByRoom']
+			'find':		['isAuth', 'user/canEnter', 'roster/findOrCreate', 'msg/filterByRoom']
 			'create':	['isAuth', 'user/canVoice', 'setOwner', 'msg/setFrom']
 			'putFile':	['isAuth', 'user/canVoice', 'setOwner', 'msg/setFrom']
 			'getFile':	['isAuth', 'user/canRead']

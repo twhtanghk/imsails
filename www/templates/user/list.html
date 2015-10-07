@@ -13,10 +13,11 @@
 	<ion-list>
 		<ion-item class="item-avatar"
 			ng-class="model.online ? '' : 'offline'" 
-			ng-repeat="model in collection.models | UserSearchFilter:searchText | orderBy:['name.given', 'name.middle', 'name.family', 'email']"
+			ng-repeat="model in collection.models | excludeMe | UserSearchFilter:searchText | orderBy:['name.given', 'name.middle', 'name.family', 'email']"
 			ng-controller="UserCtrl"
 			ng-class="model.selected ? 'selected' : ''"
-			href="#/user/{{model.id}}">
+			href="#/chat/chat/{{model.id}}"
+			on-hold="select()">
 			<icon class="avatar" 
 				ng-src="model.photoUrl"
 				aria-label="{{model.name}}"
@@ -29,7 +30,6 @@
 			<p>
 				{{model.post()}}
 			</p>
-			<ion-option-button class="button button-balanced icon-left ion-plus-round" on-tap="addRoster()" ng-if="model.jid != resource.User.me().jid">{{'Roster' | translate}}</ion-option-button>
 		</ion-item>
 	</ion-list>
 	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">

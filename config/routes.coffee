@@ -13,6 +13,9 @@ module.exports =
 		'GET /group/photo/:id':
 			controller:		'GroupController'
 			action:			'getPhoto'
+		'PUT /api/group/:id/exit':
+			controller:		'GroupController'
+			action:			'exit'
 		'GET /api/msg':
 			controller:		'MsgController'
 			action:			'find'

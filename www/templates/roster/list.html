@@ -16,7 +16,8 @@
 			ng-repeat="model in collection.models | rosterFilter:searchText | orderBy:'-lastmsgAt'"
 			ng-controller="RosterItemCtrl"
 			ng-class="model.selected ? 'selected' : ''"
-			href="#/chat/{{model.type}}/{{model.user.id || model.group.id}}">
+			href="#/chat/{{model.type}}/{{model.user.id || model.group.id}}"
+			on-hold="select()">
 			<icon 
 				ng-src="model.user.photoUrl"
 				aria-label="{{model.user.fullname()}}"
