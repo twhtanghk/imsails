@@ -5,7 +5,7 @@ util = require 'util'
 service = 
 	error: ($ionicPopup, $timeout, $log) ->
 		alert: (err) ->
-			$log.error util.inspect(err.data.msg)
+			$log.error util.inspect(err)
 			popup = $ionicPopup.alert template: err.data.msg
 			popup.then ->
 				return

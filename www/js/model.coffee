@@ -26,7 +26,7 @@ urlRoot = (model, url, root = env.server.app.urlRoot) ->
 		
 resource = ($rootScope, pageableAR, $http, fileService) ->
 	
-	pageableAR.Model.sync = pageableAR.Model.iosync
+	pageableAR.setTransport(pageableAR.Model.iosync)
 	
 	class RosterItem extends pageableAR.Model
 		$urlRoot: ->
@@ -169,7 +169,7 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 				ret.members = _.map ret.members, (user) ->
 					new User user
 					
-			if ret.createdBy
+			if ret.createdBy and typeof ret.createdBy == 'object'
 				ret.createdBy = new User ret.createdBy
 				
 			return ret
