@@ -71,7 +71,7 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 				
 			return $delegate
 					
-	.run ($translate, $ionicPressAgainToExit, toaster, $cordovaDevice, $cordovaLocalNotification, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, authService, ErrorService, resource) ->
+	.run ($translate, $ionicPressAgainToExit, toaster, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, authService, ErrorService, resource) ->
 		
 		$ionicPressAgainToExit ->
 			$translate 'Press again to exit'
@@ -83,9 +83,6 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 						timeout:		2000
 					
 		window.alert = ErrorService.alert
-			
-		document.addEventListener 'deviceready', ->
-			platform.pushRegister()
 			
 		# listen if access granted or denied in child window
 		$.receiveMessage (event) ->
@@ -125,6 +122,13 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 					modal.show()
 					$rootScope.modal = modal
 					
+	# push notification
+	.run ($rootScope, $cordovaPush, $cordovaLocalNotification, $cordovaDevice, resource) ->
+		document.addEventListener 'deviceready', ->
+			if $cordovaDevice.getPlatform() != 'browser'
+				$cordovaPush.register env.push.gcm
+					.catch alert
+		
 		$rootScope.$on '$cordovaPush:notificationReceived', (event, notification) ->
 			switch notification.event
 				when 'registered'
@@ -137,3 +141,12 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 					$cordovaLocalNotification.schedule notification.payload
 				else
 					alert notification
+
+	# local notifiction
+	.run ($rootScope) ->
+		$rootScope.$on '$cordovaLocalNotification:click', (event, notification, state) ->
+			try 
+				data = JSON.parse notification.data
+				location.hash = data.url
+			catch err
+				alert err
