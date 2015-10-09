@@ -2,12 +2,17 @@ env = require './env.coffee'
 
 angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'locale', 'auth', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon', 'templates', 'ionic-press-again-to-exit', 'toaster'])
 	
-	.config ($urlRouterProvider, $ionicConfigProvider, $provide) ->
+	# default page url
+	.config ($urlRouterProvider) ->
 		$urlRouterProvider.otherwise('/roster/list')
 		
+	# ionic default settings
+	.config ($ionicConfigProvider) ->
 		$ionicConfigProvider.tabs.style 'standard'
 		$ionicConfigProvider.tabs.position 'bottom'
 
+	# define sails socket backend setting and initialie the backend
+	.config ($provide) ->
 		$provide.decorator '$sailsSocketBackend', ($delegate, $injector, $log) ->
 			# socket connect
 			io.sails.url = env.server.app.url
@@ -40,6 +45,7 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 							callback jwr.statusCode, body
 					.catch $log.error
 	
+	# define showAction method for ionic action sheet 
 	.config ($provide) ->
 		$provide.decorator '$ionicActionSheet', ($delegate) ->
 			###
@@ -71,8 +77,8 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 				
 			return $delegate
 					
-	.run ($translate, $ionicPressAgainToExit, toaster, $location, $http, $sailsSocket, $rootScope, $ionicModal, platform, authService, ErrorService, resource) ->
-		
+	# press again to exit
+	.run ($translate, $ionicPressAgainToExit, toaster) ->
 		$ionicPressAgainToExit ->
 			$translate 'Press again to exit'
 				.then (text) ->
@@ -82,8 +88,8 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 						bodyOutputType: 'trustedHtml'
 						timeout:		2000
 					
-		window.alert = ErrorService.alert
-			
+	# auth
+	.run ($rootScope, platform, authService) ->
 		# listen if access granted or denied in child window
 		$.receiveMessage (event) ->
 			data = $.deparam event.data
@@ -109,6 +115,8 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 			auth = _.once platform.auth
 			$rootScope.modal?.remove()
 		
+	# image crop
+	.run ($rootScope, $ionicModal) ->
 		$rootScope.$on 'cropImg', (event, inImg) ->
 			_.extend $rootScope,
 				model: 

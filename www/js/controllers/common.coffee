@@ -39,3 +39,5 @@ module.exports = (angularModule) ->
 		.factory 'ErrorService', ['$ionicPopup', '$timeout', '$log', service.error]
 		.config ['$stateProvider', ctrl.state]
 		.controller 'MenuCtrl', ['$scope', 'resource', ctrl.menu]
+		.run (ErrorService) ->
+			window.alert = ErrorService.alert
