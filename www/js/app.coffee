@@ -1,6 +1,26 @@
 env = require './env.coffee'
 
-angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'locale', 'auth', 'ngTagEditor', 'ActiveRecord', 'ngFileUpload', 'ngTouch', 'ngImgCrop', 'ngFancySelect', 'ngIcon', 'templates', 'ionic-press-again-to-exit', 'toaster'])
+modules = [
+	'ionic'
+	'starter.controller'
+	'starter.model'
+	'locale'
+	'auth'
+	'ngTagEditor'
+	'ActiveRecord'
+	'ngFileUpload'
+	'ngTouch'
+	'ngImgCrop'
+	'ngFancySelect'
+	'ngIcon'
+	'templates'
+	'ionic-press-again-to-exit'
+	'toaster'
+	'ngCordova'
+	'ngCordovaOauth'
+]
+
+angular.module('starter', modules)
 	
 	# default page url
 	.config ($urlRouterProvider) ->
@@ -89,31 +109,32 @@ angular.module('starter', ['ionic', 'starter.controller', 'starter.model', 'loca
 						timeout:		2000
 					
 	# auth
-	.run ($rootScope, platform, authService) ->
-		# listen if access granted or denied in child window
-		$.receiveMessage (event) ->
-			data = $.deparam event.data
-			if data.error
-				authService.loginCancelled null, data.error
-			else
-				authService.loginConfirmed data
-					
+	.run ($rootScope, authService, $cordovaOauth) ->
 		$rootScope.$on '$stateChangeError', (evt, toState, toParams, fromState, fromParams, error) ->
 			window.alert error
 	
-		auth = _.once platform.auth
+		opts = env.oauth2().opts
+		auth = ->
+			$cordovaOauth.mob(opts.client_id, opts.scope)
+		once = _.once auth  
 		$rootScope.$on 'event:auth-forbidden', ->
-			auth()
+			once()
+				.then (data) ->
+					authService.loginConfirmed data
+				.catch (err) ->
+					authService.loginCancelled null, err
 		$rootScope.$on 'event:auth-loginRequired', ->
-			auth()
+			once()
+				.then (data) ->
+					authService.loginConfirmed data
+				.catch (err) ->
+					authService.loginCancelled null, err
 		$rootScope.$on 'event:auth-loginConfirmed', ->
 			# auth is successfully called once, new auth process for token expiry
-			auth = _.once platform.auth
-			$rootScope.modal?.remove()
+			once = _.once auth
 		$rootScope.$on 'event:auth-loginCancelled', ->
 			# auth is successfully called once, new auth process for token expiry
-			auth = _.once platform.auth
-			$rootScope.modal?.remove()
+			once = _.once auth
 		
 	# image crop
 	.run ($rootScope, $ionicModal) ->

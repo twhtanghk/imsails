@@ -6,18 +6,7 @@
     <title>Instant Messaging</title>
 
 	<link rel="icon" type="image/png" href="img/icon.png" />
-    
-    <!-- ionic/angularjs js -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>
-    
-    <!-- your app's js -->
-    <script src="lib/sails.io.js/dist/sails.io.js"></script>
-    <script type="text/javascript">
-		io.sails.autoConnect = false;
-	</script>
-    <script src="js/callback.js"></script>
   </head>
-  <body ng-app="starter">
-    <ion-nav-view></ion-nav-view>
+  <body onload="window.parent.postMessage(location.href, location.origin)">
   </body>
 </html>

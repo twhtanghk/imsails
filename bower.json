@@ -30,7 +30,8 @@
     "sails.io.js": "git://github.com/twhtanghk/sails.io.js.git#3de3fdcf7868132f288f5ab6cc905932025486b6",
     "tagDirective": "*",
     "ionic-press-again-to-exit": "*",
-    "AngularJS-Toaster": "angularjs-toaster#~0.4.15"
+    "AngularJS-Toaster": "angularjs-toaster#~0.4.15",
+    "ng-cordova-oauth": "git://github.com/twhtanghk/ng-cordova-oauth.git#10e3ed3a2493e54bec04e1c3eaa62682a954e1eb"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.0.1"
