@@ -30,7 +30,7 @@ angular.module('starter', modules)
 		$ionicConfigProvider.tabs.style 'standard'
 		$ionicConfigProvider.tabs.position 'bottom'
 
-	# define sails socket backend setting and initialie the backend
+	# define sails socket backend setting and initialize the backend
 	.config ($provide) ->
 		$provide.decorator '$sailsSocketBackend', ($delegate, $injector, $log) ->
 			# socket connect
@@ -38,7 +38,7 @@ angular.module('starter', modules)
 			io.sails.path = "#{env.path}/socket.io"
 			io.sails.useCORSRouteToGetCookie = false
 			socket = null
-			p = new Promise (fulfill, reject) ->
+			backend = new Promise (fulfill, reject) ->
 				socket = io.sails.connect()
 				socket.on 'connect', ->
 					resource = $injector.get('resource')
@@ -50,9 +50,16 @@ angular.module('starter', modules)
 					reject()
 				socket.on 'connect_timeout', ->
 					reject()
-					
+			
+			# power saving or reduce network traffic		
+			document.addEventListener 'pause', ->
+				socket._raw.disconnect()
+				
+			document.addEventListener 'resume', ->
+				socket._raw.connect()
+			
 			(method, url, post, callback, headers, timeout, withCredentials, responseType) ->
-				p
+				backend
 					.then ->
 						io.socket = socket
 						opts = 
@@ -157,10 +164,3 @@ angular.module('starter', modules)
 						location.hash = data.additionalData.data.url
 				
 				push.on 'error', alert
-				
-	# event for activity change
-	.run ($document, $rootScope, $log) ->
-		_.each ['pause', 'resume'], (event) -> 
-			document.addEventListener event, ->
-				$log.debug event
-				$rootScope.$broadcast event
