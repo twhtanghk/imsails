@@ -17,7 +17,6 @@ modules = [
 	'ionic-press-again-to-exit'
 	'toaster'
 	'ngCordova'
-	'ngCordovaOauth'
 ]
 
 angular.module('starter', modules)
@@ -108,34 +107,11 @@ angular.module('starter', modules)
 						bodyOutputType: 'trustedHtml'
 						timeout:		2000
 					
-	# auth
-	.run ($rootScope, authService, $cordovaOauth) ->
+	# state change error
+	.run ($rootScope) ->
 		$rootScope.$on '$stateChangeError', (evt, toState, toParams, fromState, fromParams, error) ->
 			window.alert error
 	
-		opts = env.oauth2().opts
-		auth = ->
-			$cordovaOauth.mob(opts.client_id, opts.scope)
-		once = _.once auth  
-		$rootScope.$on 'event:auth-forbidden', ->
-			once()
-				.then (data) ->
-					authService.loginConfirmed data
-				.catch (err) ->
-					authService.loginCancelled null, err
-		$rootScope.$on 'event:auth-loginRequired', ->
-			once()
-				.then (data) ->
-					authService.loginConfirmed data
-				.catch (err) ->
-					authService.loginCancelled null, err
-		$rootScope.$on 'event:auth-loginConfirmed', ->
-			# auth is successfully called once, new auth process for token expiry
-			once = _.once auth
-		$rootScope.$on 'event:auth-loginCancelled', ->
-			# auth is successfully called once, new auth process for token expiry
-			once = _.once auth
-		
 	# image crop
 	.run ($rootScope, $ionicModal) ->
 		$rootScope.$on 'cropImg', (event, inImg) ->
@@ -152,7 +128,7 @@ angular.module('starter', modules)
 					$rootScope.modal = modal
 					
 	# push notification
-	.run ($rootScope, $cordovaPush, $cordovaLocalNotification, $cordovaDevice, resource) ->
+	.run ($rootScope, $cordovaPush, $cordovaDevice, $log, resource) ->
 		document.addEventListener 'deviceready', ->
 			if $cordovaDevice.getPlatform() != 'browser'
 				$cordovaPush.register env.push.gcm
@@ -167,15 +143,13 @@ angular.module('starter', modules)
 						version:	$cordovaDevice.getVersion()
 					device.$save().catch alert
 				when 'message'
-					$cordovaLocalNotification.schedule notification.payload
+					location.hash = notification.payload.data.url
 				else
 					alert notification
-
-	# local notifiction
-	.run ($rootScope) ->
-		$rootScope.$on '$cordovaLocalNotification:click', (event, notification, state) ->
-			try 
-				data = JSON.parse notification.data
-				location.hash = data.url
-			catch err
-				alert err
+				
+	# event for activity change
+	.run ($document, $rootScope, $log) ->
+		_.each ['pause', 'resume'], (event) -> 
+			document.addEventListener event, ->
+				$log.debug event
+				$rootScope.$broadcast event

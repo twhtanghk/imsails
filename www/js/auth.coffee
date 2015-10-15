@@ -1,6 +1,7 @@
-urlparser = require 'url'
+env = require './env.coffee'
 
-angular.module('auth', ['http-auth-interceptor'])
+angular.module('auth', ['ng', 'http-auth-interceptor', 'ngCordovaOauth'])
+	
 	.config ($provide) ->
 		$provide.decorator 'authService', ($delegate, $log, $http, $sailsSocket) ->
 			loginConfirmed = $delegate.loginConfirmed
@@ -13,9 +14,22 @@ angular.module('auth', ['http-auth-interceptor'])
 						config.headers = _.omit config.headers, 'Authorization'
 						return config
 				
-			loginCancelled = $delegate.loginCancelled
-			$delegate.loginCancelled = (data, reason) ->
-				$log.error reason
-				loginCancelled(data, reason)
-							
 			return $delegate
+			
+	.run ($rootScope, authService, $cordovaOauth) ->
+		opts = env.oauth2().opts
+		auth = ->
+			$cordovaOauth.mob(opts.client_id, opts.scope)
+				.then (data) ->
+					authService.loginConfirmed data
+				.catch (err) ->
+					authService.loginCancelled null, err
+		once = _.once auth  
+		$rootScope.$on 'event:auth-forbidden', once
+		$rootScope.$on 'event:auth-loginRequired', once
+		$rootScope.$on 'event:auth-loginConfirmed', ->
+			# auth is successfully called once, new auth process for token expiry
+			once = _.once auth
+		$rootScope.$on 'event:auth-loginCancelled', ->
+			# auth is successfully called once, new auth process for token expiry
+			once = _.once auth
