@@ -80,13 +80,14 @@
     "cordova-plugin-inappbrowser",
     "https://github.com/twhtanghk/cordova-plugin-file",
     "https://github.com/apache/cordova-plugin-file-transfer",
-    "https://github.com/phonegap-build/PushPlugin.git",
-    "https://github.com/katzer/cordova-plugin-local-notifications.git",
+    "https://github.com/phonegap/phonegap-plugin-push.git",
     "https://github.com/VersoSolutions/CordovaClipboard.git",
     "https://github.com/pwlin/cordova-plugin-file-opener2.git",
     "https://github.com/ToniKorin/cordova-plugin-autostart.git",
     "https://github.com/apache/cordova-plugin-whitelist.git",
-    "https://github.com/apache/cordova-plugin-splashscreen.git"
+    "https://github.com/apache/cordova-plugin-splashscreen.git",
+    "https://github.com/apache/cordova-plugin-vibration.git",
+    "https://github.com/apache/cordova-plugin-dialogs.git"
   ],
   "cordovaPlatforms": [
     "android"

@@ -25,7 +25,7 @@ module.exports =
 			client_id:		if @isNative() then 'imappDEV' else 'imDEV'
 	push:
 		gcm:
-			senderID:	'1027958128694'
+			senderID:	'sender ID here'
 	file:
 		target: (file) ->
 			switch device.platform

@@ -128,24 +128,35 @@ angular.module('starter', modules)
 					$rootScope.modal = modal
 					
 	# push notification
-	.run ($rootScope, $cordovaPush, $cordovaDevice, $log, resource) ->
+	.run ($cordovaDevice, $cordovaDialogs, $cordovaVibration, $log, resource) ->
 		document.addEventListener 'deviceready', ->
 			if $cordovaDevice.getPlatform() != 'browser'
-				$cordovaPush.register env.push.gcm
-					.catch alert
-		
-		$rootScope.$on '$cordovaPush:notificationReceived', (event, notification) ->
-			switch notification.event
-				when 'registered'
+				push = PushNotification.init
+					android: 
+						env.push.gcm
+					ios: 
+						alert: "true"
+						badge: "true"
+						sound: "true"
+					windows: 
+						{}
+	         			
+				push.on 'registration', (data) ->
 					device = new resource.Device
-						regid: 		notification.regid
+						regid: 		data.registrationId
 						model:		$cordovaDevice.getModel()
 						version:	$cordovaDevice.getVersion()
 					device.$save().catch alert
-				when 'message'
-					location.hash = notification.payload.data.url
-				else
-					alert notification
+						
+				push.on 'notification', (data) ->
+					if data.additionalData.foreground
+						$cordovaDialogs.beep(1)
+						$cordovaVibration.vibrate(1000)
+						location.hash = '/roster/list'
+					else
+						location.hash = data.additionalData.data.url
+				
+				push.on 'error', alert
 				
 	# event for activity change
 	.run ($document, $rootScope, $log) ->
