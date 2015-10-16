@@ -20,24 +20,28 @@ ctrl =
 		$stateProvider.state 'app',
 			url: ""
 			abstract: true
+			controller: 'MenuCtrl'
 			templateUrl: "templates/menu.html"
+			resolve: 
+				resource: 'resource'
+				model: (resource) ->
+					resource.User.me().$fetch()				
 	
-	menu: ($scope, resource) ->
+	menu: ($scope, resource, model) ->
 		_.extend $scope,
 			env: env
 			resource: resource
-			model: resource.User.me()
+			model: model
 			
-		resource.User.me().promise.then ->		
-			$scope.$watch 'model.status', (newvalue, oldvalue) ->
-				if newvalue != oldvalue
-					data = new resource.User id: $scope.model.id
-					data.$save(status: $scope.model.status).catch alert
+		$scope.$watch 'model.status', (newvalue, oldvalue) ->
+			if newvalue != oldvalue
+				data = new resource.User id: $scope.model.id
+				data.$save(status: $scope.model.status).catch alert
 	
 module.exports = (angularModule) ->
 	angularModule
 		.factory 'ErrorService', ['$ionicPopup', '$timeout', '$log', service.error]
 		.config ['$stateProvider', ctrl.state]
-		.controller 'MenuCtrl', ['$scope', 'resource', ctrl.menu]
+		.controller 'MenuCtrl', ['$scope', 'resource', 'model', ctrl.menu]
 		.run (ErrorService) ->
 			window.alert = ErrorService.alert

@@ -86,9 +86,6 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 					ret[field] = new Date Date.parse ret[field]
 			return ret
 			
-		$save: (values, opts) ->
-			@promise = super(values, opts)
-			
 		post: ->
 			sails.services.user.post(@)
 			

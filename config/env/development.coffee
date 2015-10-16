@@ -36,6 +36,7 @@ module.exports =
 			password:	'password'
 			database:	'im'
 	session:
+		secret: 	'41bfa8fb25bde0164c3e5b82f45dd27d'
 		adapter:	'mongo'
 		host: 		'localhost'
 		port: 		27017

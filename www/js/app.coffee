@@ -41,10 +41,6 @@ angular.module('starter', modules)
 			backend = new Promise (fulfill, reject) ->
 				socket = io.sails.connect()
 				socket.on 'connect', ->
-					resource = $injector.get('resource')
-					resource.User.me().$save
-						online:	true
-						status:	resource.User.type.status[0]
 					fulfill()
 				socket.on 'connect_error', ->
 					reject()

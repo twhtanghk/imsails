@@ -67,7 +67,8 @@ module.exports =
 			type:		'boolean'
 		status:
 			type:		'string'
-			
+			defaultsTo:	'Available'
+				
 		# relationship
 		ownerGrps:
 			collection:	'group'
