@@ -7,18 +7,7 @@
 				ng-class="model.selected ? 'selected' : ''"
 				href="#/chat/groupchat/{{model.id}}"
 				on-hold="select()">
-				<icon 
-					ng-src="model.photoUrl"
-					aria-label="{{model.name}}"
-					otherwise="icon ion-android-people">
-				</icon>
-				<h2>
-					<span>{{model.name}}</span>
-				</h2>
-				<p>
-					{{model.jid}}
-				</p>
-				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="remove()" ng-if="me.canRemove(model)">{{'Delete' | translate}}</ion-option-button>
+				<ng-include src="'templates/group/item.html'"></ng-include>
 			</ion-item>
 		</ion-list>
 		<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="controller.loadMore()">

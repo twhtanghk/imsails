@@ -1,0 +1,13 @@
+<ng-include 
+	src="'templates/user/item.html'" 
+	ng-init="model = $parent.model.user"
+	ng-controller="UserCtrl"
+	ng-if="$parent.model.type == 'chat'">
+</ng-include>
+<ng-include 
+	src="'templates/group/item.html'" 
+	ng-init="model = $parent.model.group"
+	ng-controller="GroupCtrl"
+	ng-if="$parent.model.type == 'groupchat'">
+</ng-include>
+<span class="badge badge-assertive" ng-if="model.newmsg > 0">{{model.newmsg}}</span>

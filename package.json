@@ -76,7 +76,6 @@
     "cordova-plugin-device",
     "cordova-plugin-console",
     "com.ionic.keyboard",
-    "cordova-plugin-camera",
     "cordova-plugin-inappbrowser",
     "https://github.com/twhtanghk/cordova-plugin-file",
     "https://github.com/apache/cordova-plugin-file-transfer",

@@ -27,18 +27,11 @@
 		<ion-item class="item-divider">
 			{{'Owner' | translate}}
 		</ion-item>
-		<ion-item class="item-avatar">
-			<icon class="avatar" 
-				ng-src="model.createdBy.photoUrl"
-				aria-label="{{model.createdBy.fullname()}"
-				otherwise="icon ion-android-person">
-			</icon>
-			<h2>
-				<span>{{model.createdBy.fullname()}}</span>
-			</h2>
-			<p>
-				{{model.createdBy.post()}}
-			</p>
+		<ion-item class="item-avatar user"
+			ng-init="model = $parent.model.createdBy"
+			ng-controller="UserCtrl"
+			ng-include="'templates/user/item.html'"
+			on-hold="select(model)">
 		</ion-item>
 	</ion-list>
 	
@@ -47,21 +40,11 @@
 		<ion-item class="item-divider">
 			{{resource.Group.type.placeholder[type] | translate}}
 		</ion-item>
-	
-		<ion-item class="item-avatar"
-			ng-repeat="user in model[type]"
-			ng-controller="UserCtrl">
-			<icon class="avatar" 
-				ng-src="user.photoUrl"
-				aria-label="{{user.fullname()}"
-				otherwise="icon ion-android-person">
-			</icon>
-			<h2>
-				<span>{{user.fullname()}}</span>
-			</h2>
-			<p>
-				{{user.post()}}
-			</p>
+		<ion-item class="item-avatar user"
+			ng-repeat="model in model[type]"
+			ng-controller="UserCtrl"
+			ng-include="'templates/user/item.html'"
+			on-hold="select(model)">
 		</ion-item>
 	</ion-list>
 </ion-content>

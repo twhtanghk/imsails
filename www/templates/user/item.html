@@ -1,0 +1,12 @@
+<icon class="avatar" 
+	ng-src="model.photoUrl"
+	aria-label="{{model.name}}"
+	otherwise="icon ion-android-person">
+</icon>
+<h2>
+	<span>{{model.fullname()}}</span>
+	<span class='status'>{{model.status}}</span>
+</h2>
+<p>
+	{{model.post()}}
+</p>

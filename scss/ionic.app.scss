@@ -39,10 +39,6 @@ $input-height: 49px;
 	color: red;
 }
 	
-.offline { 
-	opacity: 0.5;
-}
-
 .status {
 	font-size: smaller;
 	background-color: #FFAD33;
@@ -170,6 +166,9 @@ ion-nav-view[name=groupContent] {
 	}
 	[name=typeSelect] a {
 		@extend .disabled;
+	}
+	ion-item.item-avatar.user {
+		cursor: pointer;
 	}
 }
 
