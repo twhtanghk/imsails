@@ -188,60 +188,65 @@ ion-nav-view[name=userContent] {
 }
 
 ion-nav-view[name=chatContent] {
-	.card {
-		overflow: inherit !important;
-		width: 80%;
-		position: relative;
-		background-color: $msg-color;
-		margin-top: .6em;
-		margin-bottom: .6em;
+	.row {
+		display: inline-block;
+		padding: 0;
 		
-		div.item-divider:last-of-type {
-			padding: 5px;
-			font-size: smaller;
-			float: right;
-			max-width: 100%;
-		}
-		
-		div.item {
-			padding: 10px;
+		.card {
+			overflow: inherit !important;
+			max-width: 80%;
+			position: relative;
 			background-color: $msg-color;
-			border: none;
+			margin: .6em;
+			padding: .6em;
+			
+			div.item-divider:last-of-type {
+				padding: 5px;
+				font-size: smaller;
+				float: right;
+				max-width: 100%;
+			}
+			
+			div.item {
+				padding: 10px;
+				background-color: $msg-color;
+				border: none;
+			}
 		}
-	}
-	
-	.card.left {
-		float: left;
-		margin-left: $msg-arrow + 5px;
-	}
-	
-	.card.left:before {
-	    content: "";
-	    border-color: $msg-color transparent transparent transparent;
-	    border-style: solid;
-	    width: 0;
-	    height: 0;
-	    position: absolute;
-	    top: 0;
-	    left: -$msg-arrow;
-	    border-width: $msg-arrow;
-	}
-	
-	.card.right {
-		float: right;
-		margin-right: $msg-arrow + 5px;
-	}
-	
-	.card.right:before {
-	    content: "";
-	    border-color: $msg-color transparent transparent transparent;
-	    border-style: solid;
-	    width: 0;
-	    height: 0;
-	    position: absolute;
-	    top: 0;
-	    right: -$msg-arrow;
-	    border-width: $msg-arrow;
+		
+		.card.left {
+			float: left;
+			margin-left: $msg-arrow + 5px;
+		}
+		
+		.card.left:before {
+		    content: "";
+		    border-color: $msg-color transparent transparent transparent;
+		    border-style: solid;
+		    width: 0;
+		    height: 0;
+		    position: absolute;
+		    top: 0;
+		    left: -$msg-arrow;
+		    border-width: $msg-arrow;
+		}
+		
+		.card.right {
+			float: right;
+			margin-right: $msg-arrow + 5px;
+		}
+		
+		.card.right:before {
+		    content: "";
+		    border-color: $msg-color transparent transparent transparent;
+		    border-style: solid;
+		    width: 0;
+		    height: 0;
+		    position: absolute;
+		    top: 0;
+		    right: -$msg-arrow;
+		    border-width: $msg-arrow;
+		}
 	}
 	
 	.bar-footer {

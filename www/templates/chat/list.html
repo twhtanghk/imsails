@@ -22,15 +22,9 @@
 	</label>
 </div>
 <ion-content class='has-subheader'>
-	<div class="card" 
+	<div class="row" 
 		ng-repeat="model in collection.models |msgFilter:searchText |orderBy:'-createdAt'" 
-		ng-class="model.from == me.jid ? 'left' : 'right'"
-		on-hold="copy(model)">
-		<div class="item item-text-wrap" ng-include="'templates/chat/item.html'"></div>
-		<div class="item item-divider">
-			<span>{{model.createdAt.toLocaleString()}}</span>
-			<span ng-if="type == 'groupchat'">{{model.from}}</span>
-		</div>
+		ng-include="'templates/chat/item.html'">
 	</div>
 	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">
 	</ion-infinite-scroll>
