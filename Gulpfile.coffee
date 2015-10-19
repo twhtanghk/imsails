@@ -48,7 +48,7 @@ gulp.task 'pre-android', ->
   argv.prod = true
   sh.exec "cordova platform rm android"
   sh.exec "cordova platform add android"
-  sh.exec "ionic resources"
+  sh.exec "ionic resources android"
   
 gulp.task 'android', ['pre-android', 'plugin', 'sass', 'coffee'], ->
   sh.exec "cordova build android"
@@ -56,12 +56,17 @@ gulp.task 'android', ['pre-android', 'plugin', 'sass', 'coffee'], ->
 gulp.task 'pre-browser', ->
   sh.exec "cordova platform rm browser"
   sh.exec "cordova platform add browser"
-  sh.exec "ionic resources"
+  sh.exec "ionic resources browser"
   
-gulp.task 'browser', ['plugin', 'sass', 'coffee'], ->
+gulp.task 'browser', ['pre-browser', 'plugin', 'sass', 'coffee'], ->
   sh.exec "cordova build browser"
 
 gulp.task 'plugin', ->
   for plugin in require('./package.json').cordovaPlugins
   	sh.exec "cordova plugin add #{plugin}"
   sh.exec "rm platforms/android/libs/android-support-v4.jar"
+  
+gulp.task 'clean', ->
+  sh.exec "cordova platform rm browser"
+  sh.exec "cordova platform rm android"
+  sh.exec "rm -rf node_modules www/lib resources plugins"

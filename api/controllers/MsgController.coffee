@@ -38,6 +38,6 @@ module.exports =
 					.read matchingRecord.file, (err, data) ->
 						if err
 							return res.serverError(err)
-						res.attachment path.basename(matchingRecord.file)
+						res.attachment encodeURIComponent(path.basename(matchingRecord.file))
 						res.send data
 			.catch res.serverError
