@@ -1,25 +1,10 @@
 env = require './env.coffee'
 require 'PageableAR'
 _ = require 'lodash'
-path = require 'path'
 sails =
 	services:
 		user:	require '../../api/services/user.coffee'
-		
-iconUrl = (type) ->
-	icon = 
-		"text/directory":				"img/dir.png"
-		"text/plain":					"img/txt.png"
-		"text/html":					"img/html.png"
-		"application/javascript":		"img/js.png"
-		"application/octet-stream":		"img/dat.png"
-		"application/pdf":				"img/pdf.png"
-		"application/excel":			"img/xls.png"
-		"application/x-zip-compressed":	"img/zip.png"
-		"application/msword":			"img/doc.png"
-		"image/png":					"img/png.png"
-		"image/jpeg":					"img/jpg.png"
-	return if type of icon then icon[type] else "img/unknown.png"
+		file:	require '../../api/services/file.coffee'
 		
 urlRoot = (model, url, root = env.server.app.urlRoot) ->
 	if model.transport() == 'io' then "#{url}" else "#{root}#{url}"
@@ -201,22 +186,26 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 	class Msg extends pageableAR.Model
 		$urlRoot: ->
 			urlRoot(@, "/api/msg")
-		
+
+		msgType: ->
+			if @file
+				return if sails.services.file.isImg(@file.base) then 'img' else 'file'
+			else
+				return 'msg'
+				
 		$parse: (data, opts) ->
 			ret = super(data, opts)
 			_.each ['updatedAt', 'createdAt'], (field) ->
 				ret[field] = new Date Date.parse ret[field]
-			if ret.file and typeof ret.file == 'string'
-				ret.file =
-					org:	ret.file
-					base:	path.basename ret.file 
-					ext:	path.extname(ret.file)[1..]
 			return ret
 		
 	class Attachment extends pageableAR.Model
 		$urlRoot: ->
 			urlRoot(@, "/api/msg/file")
 		
+		isImg: ->
+			sails.services.file.isImg(@file)
+				
 		$save: (values = {}, opts = {}) ->
 			_.extend @, values
 			_.extend opts, data: _.pick(@, 'to', 'type')

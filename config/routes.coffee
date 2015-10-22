@@ -27,6 +27,9 @@ module.exports =
 		'GET /api/msg/file/:id':
 			controller:		'MsgController'
 			action:			'getFile'
+		'GET /api/msg/file/thumb/:id':
+			controller:		'MsgController'
+			action:			'getThumb'
 		'GET /api/roster':
 			controller:		'RosterController'
 			action:			'find'

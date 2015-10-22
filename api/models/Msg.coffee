@@ -4,6 +4,7 @@
  # @docs        :: http://sailsjs.org/#!documentation/models
 Promise = require 'promise'
 gfs = require('skipper-gridfs')(sails.config.file.opts)
+path = require 'path'
 
 module.exports =
 
@@ -34,6 +35,15 @@ module.exports =
 		createdBy:
 			model:		'user'
 			required:	true
+		toJSON: ->
+			ret = _.extend @toObject(), mime: @getMime()
+			if ret.file
+				ret.file = _.extend path.parse(ret.file), org: ret.file
+			return ret
+		getMime: ->
+			return if @file then sails.services.file.type(@file) else 'text/html'
+		isImg: ->
+			return if @file then sails.services.file.isImg(@file) else false
 			
 	broadcast: (roomName, eventName, data, socketToOmit) ->
 		to = data.data.to

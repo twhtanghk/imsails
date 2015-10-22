@@ -28,3 +28,4 @@ module.exports =
 			'create':	['isAuth', 'user/canVoice', 'setOwner', 'msg/setFrom']
 			'putFile':	['isAuth', 'user/canVoice', 'setOwner', 'msg/setFrom']
 			'getFile':	['isAuth', 'user/canRead']
+			'getThumb':	['isAuth', 'user/canRead']

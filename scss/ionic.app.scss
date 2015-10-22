@@ -199,6 +199,10 @@ ion-nav-view[name=chatContent] {
 			margin: .6em;
 			padding: .6em;
 			
+			img {
+				border-radius: .4em;
+			}
+			
 			div.item-divider:last-of-type {
 				padding: 5px;
 				font-size: smaller;

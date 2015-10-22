@@ -1,12 +1,11 @@
 <div class="card" 
 	ng-class="model.from == me.jid ? 'left' : 'right'"
 	on-hold="copy(model)">
-	<a class="file" href ng-click="getfile(model)" ng-if="model.file">
-		<span class="file-icon file-icon-default" data-type="{{model.file.ext}}">
-		</span>
-		<span class="file-name">{{model.file.base}}</span>
-	</a>
-	<pre ng-if="! model.file">{{model.body}}</pre>
+	<ng-include src="'templates/chat/file.html'" ng-if="model.msgType() == 'file'">
+	</ng-include>
+	<ng-include src="'templates/chat/img.html'" ng-if="model.msgType() == 'img'">
+	</ng-include>
+	<pre ng-if="model.msgType() == 'msg'">{{model.body}}</pre>
 	<div class="item item-divider">
 		<span>{{model.createdAt.toLocaleString()}}</span>
 		<span ng-if="type == 'groupchat'">{{model.from}}</span>

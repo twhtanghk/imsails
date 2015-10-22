@@ -54,6 +54,8 @@ module.exports =
 			maxBytes:	10240000	# 10MB
 			saveAs:		(stream, next) ->
 				next(null, "#{uuid.v4()}/#{stream.filename}")
+		img:
+			resize:		'25%'
 	sockets:
 		path:	"#{path}/socket.io"
 	log:

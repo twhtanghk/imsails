@@ -22,7 +22,6 @@
     "jq-postmessage": "*",
     "jquery": "2.0.3",
     "jquery-deparam": "~0.3.0",
-    "mime-types": "~2.1.7",
     "ng-file-upload": "~8.0.1",
     "ngCordova": "~0.1.14-alpha",
     "ngImgCrop": "~0.3.2",
