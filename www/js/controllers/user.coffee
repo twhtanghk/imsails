@@ -85,7 +85,7 @@ domain =
 		# reload collection once reconnected
 		io.socket?.on 'connect', (event) ->
 			if $location.url().indexOf('/user/list') != -1
-				$scope.collection.$fetch reset: true
+				$scope.collection.$refetch()
 				
 	select: ($scope, resource) ->
 		convert = (collection, selected) ->

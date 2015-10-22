@@ -86,7 +86,7 @@ domain =
 		# reload collection once reconnected
 		io.socket?.on 'connect', (event) ->
 			if $location.url().indexOf('/chat') != -1
-				$scope.collection.$fetch  params: {type: type, to: chat.jid, sort: 'createdAt DESC'}, reset: true 
+				$scope.collection.$refetch params: {type: type, to: chat.jid, sort: 'createdAt DESC'}
 		
 		# listen if msg is created on server
 		isValid = (msg) ->

@@ -69,7 +69,7 @@ domain =
 		# reload collection once reconnected
 		io.socket?.on 'connect', (event) ->
 			if $location.url().indexOf('/roster/list') != -1
-				$scope.collection.$fetch reset: true
+				$scope.collection.$refetch()
 
 filter =		
 	list: ->

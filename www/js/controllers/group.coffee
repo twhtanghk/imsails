@@ -127,8 +127,8 @@ domain =
 		# reload collection once reconnected
 		io.socket?.on 'connect', (event) ->
 			if $location.url().indexOf('/group/list') != -1
-				$scope.collection.$fetch reset: true
-	
+				$scope.collection.$refetch()
+				
 	create: ($scope, $state, resource, model, ErrorService) ->
 		_.extend $scope,
 			resource: resource
