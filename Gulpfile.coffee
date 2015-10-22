@@ -64,7 +64,6 @@ gulp.task 'browser', ['pre-browser', 'plugin', 'sass', 'coffee'], ->
 gulp.task 'plugin', ->
   for plugin in require('./package.json').cordovaPlugins
   	sh.exec "cordova plugin add #{plugin}"
-  sh.exec "rm platforms/android/libs/android-support-v4.jar"
   
 gulp.task 'clean', ->
   sh.exec "cordova platform rm browser"
