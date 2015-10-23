@@ -22,6 +22,7 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/AngularJS-Toaster/toaster.scss";
 @import "www/lib/ionic/scss/ionic";
 @import "www/lib/ngImgCrop/source/scss/ng-img-crop.scss";
+@import "www/lib/compass-css-arrow/stylesheets/compass-css-arrow/_css-arrow.scss";
 
 $select-color:	#bbd8ff;
 
@@ -193,7 +194,7 @@ ion-nav-view[name=chatContent] {
 		
 		.card {
 			overflow: inherit !important;
-			max-width: 80%;
+			max-width: 70%;
 			position: relative;
 			background-color: $msg-color;
 			margin: .6em;
@@ -221,35 +222,13 @@ ion-nav-view[name=chatContent] {
 		.card.left {
 			float: left;
 			margin-left: $msg-arrow + 5px;
-		}
-		
-		.card.left:before {
-		    content: "";
-		    border-color: $msg-color transparent transparent transparent;
-		    border-style: solid;
-		    width: 0;
-		    height: 0;
-		    position: absolute;
-		    top: 0;
-		    left: -$msg-arrow;
-		    border-width: $msg-arrow;
+			@include css-arrow(left, .7em, #f5f5f5, .1em, black, solid, 1em);
 		}
 		
 		.card.right {
 			float: right;
 			margin-right: $msg-arrow + 5px;
-		}
-		
-		.card.right:before {
-		    content: "";
-		    border-color: $msg-color transparent transparent transparent;
-		    border-style: solid;
-		    width: 0;
-		    height: 0;
-		    position: absolute;
-		    top: 0;
-		    right: -$msg-arrow;
-		    border-width: $msg-arrow;
+			@include css-arrow(right, .7em, #f5f5f5, .1em, black, solid, 1em);
 		}
 	}
 	
