@@ -61,5 +61,7 @@ module.exports =
 			resize:		'25%'
 	sockets:
 		path:	"#{path}/socket.io"
+	csp:
+		"Content-Security-Policy": "default-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' wss://localhost:3000; child-src 'self' https://mob.myvnc.com https://*.google.com; object-src 'none'; media-src 'self' data:; img-src 'self' data:"
 	log:
 		level:		'silly'
