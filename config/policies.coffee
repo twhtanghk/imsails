@@ -27,5 +27,5 @@ module.exports =
 			'find':		['isAuth', 'user/canEnter', 'roster/findOrCreate', 'msg/filterByRoom']
 			'create':	['isAuth', 'user/canVoice', 'setOwner', 'msg/setFrom']
 			'putFile':	['isAuth', 'user/canVoice', 'setOwner', 'msg/setFrom']
-			'getFile':	['isAuth', 'user/canRead']
-			'getThumb':	['isAuth', 'user/canRead']
+			'getFile':	['isAuthUrl', 'user/canRead']
+			'getThumb':	['isAuthUrl', 'user/canRead']

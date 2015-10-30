@@ -38,12 +38,18 @@ module.exports =
 		toJSON: ->
 			ret = _.extend @toObject(), mime: @getMime()
 			if ret.file
-				ret.file = _.extend path.parse(ret.file), org: ret.file
+				ret.file = _.extend path.parse(ret.file), 
+					org: ret.file
+					url: "api/msg/file/#{@id}"
+				if sails.services.file.isImg(@file) 
+					_.extend ret.file, thumbUrl: "api/msg/file/thumb/#{@id}"
 			return ret
 		getMime: ->
 			return if @file then sails.services.file.type(@file) else 'text/html'
 		isImg: ->
 			return if @file then sails.services.file.isImg(@file) else false
+		isAudio: ->
+			return if @file then sails.services.file.isAudio(@file) else false
 			
 	broadcast: (roomName, eventName, data, socketToOmit) ->
 		to = data.data.to

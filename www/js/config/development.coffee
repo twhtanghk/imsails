@@ -33,3 +33,4 @@ module.exports =
 					file
 				when 'Android'
 					cordova.file.externalCacheDirectory + file
+		audio:	'audio.wav'

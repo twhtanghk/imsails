@@ -189,7 +189,13 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 
 		msgType: ->
 			if @file
-				return if sails.services.file.isImg(@file.base) then 'img' else 'file'
+				switch true
+					when sails.services.file.isImg(@file.base)
+						return 'img'
+					when sails.services.file.isAudio(@file.base)
+						return 'audio' 
+					else 
+						return 'file'
 			else
 				return 'msg'
 				
