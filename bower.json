@@ -31,7 +31,8 @@
     "ionic-press-again-to-exit": "*",
     "AngularJS-Toaster": "angularjs-toaster#~0.4.15",
     "ng-cordova-oauth": "git://github.com/twhtanghk/ng-cordova-oauth.git#5e65f443d90555606824cc36f0624c57a23ae5c4",
-    "compass-css-arrow": "~0.0.5"
+    "compass-css-arrow": "~0.0.5",
+    "Wad": "wad#~2.2.3"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.0.1"
