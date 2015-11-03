@@ -109,14 +109,17 @@ module.exports = (angularModule) ->
 						$scope.$apply('collection.models')
 						$ionicScrollDelegate.scrollTop true
 			
-		.controller 'msgCtrl', ($scope, $http, $sce) ->
+		.controller 'msgCtrl', ($scope, $http, resource) ->
 			token =	$http.defaults.headers.common.Authorization.split(' ')[1]
 			_.extend $scope, 
 				url: ->
-					"#{$scope.model.file.url}?access_token=#{token}"
+					"#{env.server.app.urlRoot}/#{$scope.model.file.url}?access_token=#{token}"
 				thumbUrl: ->
-					"#{$scope.model.file.thumbUrl}?access_token=#{token}"
-			
+					"#{env.server.app.urlRoot}/#{$scope.model.file.thumbUrl}?access_token=#{token}"
+				getfile: (msg) ->
+					attachment = new resource.Attachment id: msg.id, local: env.file.target(msg.file.base) 
+					attachment.$fetch().catch alert
+				
 		.filter 'msgFilter', ->
 			(msgs, search) ->
 				if search

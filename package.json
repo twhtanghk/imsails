@@ -67,6 +67,7 @@
   "cordovaPlugins": [
     "cordova-plugin-device",
     "cordova-plugin-console",
+    "cordova-plugin-media",
     "com.ionic.keyboard",
     "cordova-plugin-inappbrowser",
     "https://github.com/twhtanghk/cordova-plugin-file",

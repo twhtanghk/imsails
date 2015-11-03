@@ -2,7 +2,6 @@ Promise = require 'promise'
 path = require 'path'
 mime = require 'mime-types/index.js'
 stream = require 'stream'
-im = require 'imagemagick-stream'
 base64 = require 'base64-stream'
 
 module.exports =
@@ -47,10 +46,10 @@ module.exports =
 				.then (file) ->
 					if not module.exports.isImg(file.name)
 						return reject 'Attachment is not an image file'
-					file.stream = file.stream.pipe(im().resize(sails.config.file.img.resize))
+					file.stream = sails.services.img.thumb file.stream
 					fulfill file
 				.catch reject
-				
+			
 	# convert input file stream {name: filename, stream: stream} to base64 encoding string
 	dataUrl: (file) ->
 		new Promise (fulfill, reject) ->

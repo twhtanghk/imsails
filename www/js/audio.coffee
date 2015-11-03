@@ -1,12 +1,15 @@
-Wad = require 'Wad/build/wad.js'
-
 angular.module('audioService', ['ngCordova'])
 	
+	.config ($sceDelegateProvider) ->
+		
+		$sceDelegateProvider.resourceUrlWhitelist ['self', 'https://mob.myvnc.com/im.app/api/msg/file/**']
+		
 	.factory 'audioService', ($cordovaDevice) ->
 	
 		class BrowserRecorder
 			
 			constructor: ->
+				Wad = require 'Wad/build/wad.js'
 				@media = new Wad.Poly 
 					recConfig: 
 						workerPath: 'lib/Wad/src/Recorderjs/recorderWorker.js'
