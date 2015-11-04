@@ -1,6 +1,6 @@
 require './device.coffee'
 
-angular.modulue 'starter', ['util.device']
+angular.module 'starter', ['util.device']
 	.config ->
 		origin = location.origin
 		document.addEventListener 'deviceready', ->
