@@ -31,14 +31,28 @@ module.exports =
 		pk = actionUtil.requirePk(req)
 		sails.services.file.content(Model, pk)
 			.then (file) ->
-				header = 'Accept-Ranges': 'bytes'
-				if file.size
+				# define default range of partial file to be sent
+				index =
+					start:	0
+					end:	file.size - 1
+				# update range if request for partial file content
+				if req.headers.range
+					range = req.headers.range
+					parts = range.replace(/bytes=/, "").split("-")
+					index.start = parseInt parts[0]
+					if parts[1]
+						index.end = parseInt parts[1]
+				
+					header = 'Accept-Ranges': 'bytes'
 					_.extend header,  
-					'Content-Length': file.size
-					'Content-Range': "bytes 0-#{file.size - 1}/#{file.size}"
+						'Content-Length': index.end - index.start + 1
+						'Content-Range': "bytes #{index.start}-#{index.end}/#{file.size}"
+					res.status 206
+				
 				res.set header
 				res.attachment encodeURIComponent(file.name)
-				file.stream.pipe(res)
+				partial = new sails.services.stream.Partial index.start, index.end
+				file.stream.pipe(partial).pipe(res)
 			.catch res.serverError
 			
 	# GET /msg/file/thumb/:id

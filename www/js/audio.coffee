@@ -2,7 +2,7 @@ angular.module('audioService', ['ngCordova'])
 	
 	.config ($sceDelegateProvider) ->
 		
-		$sceDelegateProvider.resourceUrlWhitelist ['self', 'https://mob.myvnc.com/im.app/api/msg/file/**']
+		$sceDelegateProvider.resourceUrlWhitelist ['self', 'https://mob.myvnc.com/**']
 		
 	.factory 'audioService', ($cordovaDevice) ->
 	

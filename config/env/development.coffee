@@ -1,4 +1,4 @@
-path = '/im.app'
+path = '/im.app2'
 uuid = require 'node-uuid'
 
 module.exports =

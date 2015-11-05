@@ -1,5 +1,5 @@
 url = 'http://localhost:3000'
-path = 'im.app'
+path = 'im.app2'
 
 module.exports =
 	path: "/#{path}"		
