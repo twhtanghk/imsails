@@ -37,19 +37,18 @@ module.exports =
 					end:	file.size - 1
 				# update range if request for partial file content
 				if req.headers.range
-					range = req.headers.range
-					parts = range.replace(/bytes=/, "").split("-")
-					index.start = parseInt parts[0]
-					if parts[1]
-						index.end = parseInt parts[1]
+					[range, unit, start, end] = req.headers.range.match /(.*)=(\d*)-(\d*)/
+					if start != ''
+						index.start = parseInt start
+					if end != ''
+						index.end = parseInt end
 				
 					header = 'Accept-Ranges': 'bytes'
 					_.extend header,  
-						'Content-Length': index.end - index.start + 1
-						'Content-Range': "bytes #{index.start}-#{index.end}/#{file.size}"
+						'Content-Length': 	index.end - index.start + 1
+						'Content-Range':	"bytes #{index.start}-#{index.end}/#{file.size}"
 					res.status 206
-				
-				res.set header
+					res.set header
 				res.attachment encodeURIComponent(file.name)
 				partial = new sails.services.stream.Partial index.start, index.end
 				file.stream.pipe(partial).pipe(res)

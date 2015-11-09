@@ -109,7 +109,7 @@ module.exports = (angularModule) ->
 						$scope.$apply('collection.models')
 						$ionicScrollDelegate.scrollTop true
 			
-		.controller 'msgCtrl', ($scope, $http, resource) ->
+		.controller 'msgCtrl', ($scope, $http, audioService, resource) ->
 			token =	$http.defaults.headers.common.Authorization.split(' ')[1]
 			_.extend $scope, 
 				url: ->
@@ -119,6 +119,10 @@ module.exports = (angularModule) ->
 				getfile: (msg) ->
 					attachment = new resource.Attachment id: msg.id, local: env.file.target(msg.file.base) 
 					attachment.$fetch().catch alert
+				start: ->
+					audioService.player.start $scope.model.url()
+				stop: ->
+					audioService.player.stop()
 				
 		.filter 'msgFilter', ->
 			(msgs, search) ->
