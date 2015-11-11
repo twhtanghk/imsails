@@ -14,7 +14,7 @@ options =
 module.exports =
 	get: (token, url) ->
 		new Promise (fulfill, reject) ->
-			opts = _.extend options,
+			opts = _.extend options, sails.config.http.opts,
 				headers:
 					Authorization:	"Bearer #{token}"
 			http.get url, opts, (err, res) ->
@@ -24,7 +24,7 @@ module.exports =
 				
 	post: (token, url, data) ->
 		new Promise (fulfill, reject) ->
-			opts = _.extend options,
+			opts = _.extend options, sails.config.http.opts,
 				headers:
 					Authorization:	"Bearer #{token}"
 			http.post url, data, opts, (err, res) ->
