@@ -60,6 +60,6 @@ module.exports =
 		pk = actionUtil.requirePk(req)
 		sails.services.file.thumb(Model, pk)
 			.then (file) ->
-				res.attachment encodeURIComponent(file.name)
+				res.attachment encodeURIComponent(sails.services.file.thumbName(file.name))
 				file.stream.pipe(res)
 			.catch res.serverError

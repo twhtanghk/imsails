@@ -221,11 +221,41 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 		$fetch: (opts = {}) ->
 			opts = _.defaults opts, 
 				responseType: 	'blob'
-			transfer = new fileService.FileTransfer	@local, @$url()
-			transfer.download(opts)
+			fileService.FileSystem.requestFileSystem()
+				.then (fs) =>
+					fs.create @file.org
+						.then (entry) =>
+							@local = entry
+							transfer = new fileService.FileTransfer	@local, @$url()
+							transfer.download(opts)
+			
+		$saveAs: ->
+			transfer = new fileService.FileTransfer	name: @file.base, @$url()
+			transfer.saveAs()
+			
+		localUrl: ->
+			@local?.toURL()
 			
 		@sync: pageableAR.Model.restsync
 
+	class Thumb extends Attachment
+		$urlRoot: ->
+			urlRoot(@, "/api/msg/file/thumb")
+
+		$save: ->
+			$log.error 'saving thumb image is not allowed'
+			
+		$fetch: (opts = {}) ->
+			opts = _.defaults opts, 
+				responseType: 	'blob'
+			fileService.FileSystem.requestFileSystem()
+				.then (fs) =>
+					fs.create sails.services.file.thumbName(@file.org)
+						.then (entry) =>
+							@local = entry
+							transfer = new fileService.FileTransfer	@local, @$url()
+							transfer.download(opts)
+							
 	class Msgs extends pageableAR.PageableCollection
 		$urlRoot: ->
 			urlRoot(@, "/api/msg")
@@ -247,8 +277,9 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 	Roster:			Roster
 	Msg:			Msg
 	Attachment:		Attachment
+	Thumb:			Thumb
 	Msgs:			Msgs
 	Device:			Device
 
-angular.module('starter.model', ['ionic', 'PageableAR', 'fileService'])
+angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 	.factory 'resource', ['$rootScope', 'pageableAR', '$http', 'fileService', resource]

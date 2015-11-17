@@ -2,9 +2,10 @@ Wad = require 'Wad/build/wad.js'
 				
 angular.module('audioService', ['ngCordova'])
 	
-	.config ($sceDelegateProvider) ->
+	.config ($sceDelegateProvider, $compileProvider) ->
 		
-		$sceDelegateProvider.resourceUrlWhitelist ['self', 'https://mob.myvnc.com/**']
+		$sceDelegateProvider.resourceUrlWhitelist ['self', 'https://mob.myvnc.com/**', 'filesystem:**']
+		$compileProvider.imgSrcSanitizationWhitelist /^\s*((https?|ftp|file|blob|filesystem):|data:image\/)/
 		
 	.factory 'audioService', ($cordovaDevice) ->
 	

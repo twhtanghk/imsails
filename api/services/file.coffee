@@ -68,3 +68,7 @@ module.exports =
 
 	isAudio: (name) ->
 		(/^audio/i).test module.exports.type(name)
+		
+	thumbName: (filename) ->
+		[fullname, name, ext] = filename.match /(.*)\.([^\.]*)/
+		"#{name}.thumb.#{ext}"

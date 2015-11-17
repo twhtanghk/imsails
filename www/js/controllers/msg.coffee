@@ -109,21 +109,28 @@ module.exports = (angularModule) ->
 						$scope.$apply('collection.models')
 						$ionicScrollDelegate.scrollTop true
 			
-		.controller 'msgCtrl', ($scope, $http, audioService, resource) ->
+		.controller 'msgCtrl', ($scope, $http, audioService, resource, fileService) ->
 			token =	$http.defaults.headers.common.Authorization.split(' ')[1]
+			switch $scope.model.msgType()
+				when 'img'
+					$scope.model.thumb = new resource.Thumb $scope.model
+					$scope.model.thumb.$fetch()
+						.catch alert
+				when 'audio'
+					$scope.model.audio = new resource.Attachment $scope.model
+					$scope.model.audio.$fetch()
+						.catch alert
+				when 'file'
+					break
+				when 'msg'
+					break
+				else
+					break
 			_.extend $scope, 
-				url: ->
-					"#{env.server.app.urlRoot}/#{$scope.model.file.url}?access_token=#{token}"
-				thumbUrl: ->
-					"#{env.server.app.urlRoot}/#{$scope.model.file.thumbUrl}?access_token=#{token}"
-				getfile: (msg) ->
-					attachment = new resource.Attachment id: msg.id, local: env.file.target(msg.file.base) 
-					attachment.$fetch().catch alert
-				start: ->
-					audioService.player.start $scope.model.url()
-				stop: ->
-					audioService.player.stop()
-				
+				getfile: ->
+					attachment = new resource.Attachment $scope.model
+					attachment.$saveAs()
+						
 		.filter 'msgFilter', ->
 			(msgs, search) ->
 				if search
