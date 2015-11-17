@@ -255,7 +255,12 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 							@local = entry
 							transfer = new fileService.FileTransfer	@local, @$url()
 							transfer.download(opts)
-							
+				
+	class Audio extends Attachment
+		$url: ->
+			token = $http.defaults.headers.common.Authorization.split(' ')[1]
+			"#{super()}?access_token=#{token}"
+						
 	class Msgs extends pageableAR.PageableCollection
 		$urlRoot: ->
 			urlRoot(@, "/api/msg")
@@ -278,6 +283,7 @@ resource = ($rootScope, pageableAR, $http, fileService) ->
 	Msg:			Msg
 	Attachment:		Attachment
 	Thumb:			Thumb
+	Audio:			Audio
 	Msgs:			Msgs
 	Device:			Device
 

@@ -117,9 +117,7 @@ module.exports = (angularModule) ->
 					$scope.model.thumb.$fetch()
 						.catch alert
 				when 'audio'
-					$scope.model.audio = new resource.Attachment $scope.model
-					$scope.model.audio.$fetch()
-						.catch alert
+					$scope.model.audio = new resource.Audio $scope.model
 				when 'file'
 					break
 				when 'msg'
@@ -130,6 +128,10 @@ module.exports = (angularModule) ->
 				getfile: ->
 					attachment = new resource.Attachment $scope.model
 					attachment.$saveAs()
+				start: ->
+					audioService.player.start $scope.model.audio.$url()
+				stop: ->
+					audioService.player.stop()
 						
 		.filter 'msgFilter', ->
 			(msgs, search) ->

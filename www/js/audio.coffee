@@ -51,11 +51,6 @@ angular.module('audioService', ['ngCordova'])
 
 		class Player
 		
-			reader = new FileReader()
-			
-			@buffer: (file) ->
-				reader.readAsArrayBuffer(file)
-				
 			start: (url) ->
 				@audio = new Wad source: url
 				@audio.play()
