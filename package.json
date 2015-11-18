@@ -69,6 +69,7 @@
     "cordova-plugin-console",
     "com.ionic.keyboard",
     "https://github.com/twhtanghk/cordova-plugin-file",
+    "https://github.com/apache/cordova-plugin-file-transfer",
     "https://github.com/phonegap/phonegap-plugin-push.git",
     "https://github.com/VersoSolutions/CordovaClipboard.git",
     "https://github.com/pwlin/cordova-plugin-file-opener2.git",
@@ -77,7 +78,8 @@
     "https://github.com/apache/cordova-plugin-splashscreen.git",
     "https://github.com/apache/cordova-plugin-vibration.git",
     "https://github.com/apache/cordova-plugin-dialogs.git",
-    "cordova-plugin-crosswalk-webview"
+    "https://github.com/apache/cordova-plugin-media.git",
+    "https://github.com/apache/cordova-plugin-media-capture.git"
   ],
   "cordovaPlatforms": [
     "android"
