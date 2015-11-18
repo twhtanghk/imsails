@@ -117,7 +117,7 @@ module.exports = (angularModule) ->
 					$scope.model.thumb.$fetch()
 						.catch alert
 				when 'audio'
-					$scope.model.audio = new resource.Audio $scope.model
+					$scope.model.audio = new resource.Attachment $scope.model
 					$scope.model.audio.$fetch()
 						.catch alert
 				when 'file'

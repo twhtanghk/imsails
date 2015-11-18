@@ -68,6 +68,7 @@
     "cordova-plugin-device",
     "cordova-plugin-console",
     "com.ionic.keyboard",
+    "https://github.com/twhtanghk/cordova-plugin-file",
     "https://github.com/phonegap/phonegap-plugin-push.git",
     "https://github.com/VersoSolutions/CordovaClipboard.git",
     "https://github.com/pwlin/cordova-plugin-file-opener2.git",
