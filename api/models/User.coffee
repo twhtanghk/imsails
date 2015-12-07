@@ -10,7 +10,7 @@ pair = (array) ->
 	return ret
 		
 photoUrl = (user) ->
-	return if user.photo then "#{sails.config.url}/user/photo/#{user.id}?m=#{user.updatedAt}" else null
+	return if user.photo then "user/photo/#{user.id}?m=#{user.updatedAt}" else null
 	
 module.exports =
 	
@@ -170,7 +170,7 @@ module.exports =
 		# update photoUrl if photo is updated
 		if changes.photo
 			now = new Date()
-			_.extend changes, photoUrl: "#{sails.config.url}/user/photo/#{id}?m=#{now}"
+			_.extend changes, photoUrl: "user/photo/#{id}?m=#{now}"
 			delete changes.photo
 	
 	broadcast: (roomName, eventName, data, socketToOmit) ->
