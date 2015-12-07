@@ -1,10 +1,8 @@
-path = '/im.app2'
 uuid = require 'node-uuid'
 agent = require 'https-proxy-agent'
 
 module.exports =
-	path:			path
-	url:			"http://localhost:3000#{path}"
+	url:			"http://localhost:3000"
 	port:			3000
 	adminUser:		
 		username:	'imadmin'
@@ -60,8 +58,6 @@ module.exports =
 				next(null, "#{uuid.v4()}/#{stream.filename}")
 		img:
 			resize:		'25%'
-	sockets:
-		path:	"#{path}/socket.io"
 	csp:
 		"Content-Security-Policy": "default-src 'self' data: https://mob.myvnc.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/css; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ws://localhost:3000; child-src 'self' https://mob.myvnc.com https://*.google.com; object-src 'none'; media-src 'self' data: filesystem:; img-src 'self' data: filesystem:"
 	log:

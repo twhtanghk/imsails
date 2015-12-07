@@ -111,25 +111,9 @@ module.exports = (angularModule) ->
 			
 		.controller 'msgCtrl', ($scope, $http, audioService, resource, fileService) ->
 			token =	$http.defaults.headers.common.Authorization.split(' ')[1]
-			switch $scope.model.msgType()
-				when 'img'
-					$scope.model.thumb = new resource.Thumb $scope.model
-					$scope.model.thumb.$fetch()
-						.catch alert
-				when 'audio'
-					$scope.model.audio = new resource.Attachment $scope.model
-					$scope.model.audio.$fetch()
-						.catch alert
-				when 'file'
-					break
-				when 'msg'
-					break
-				else
-					break
 			_.extend $scope, 
 				getfile: ->
-					attachment = new resource.Attachment $scope.model
-					attachment.$saveAs()
+					$scope.model.attachment.$saveAs()
 						
 		.filter 'msgFilter', ->
 			(msgs, search) ->

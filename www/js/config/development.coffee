@@ -1,12 +1,16 @@
 url = 'http://localhost:3000'
-path = 'im.app2'
+path = ''
 
+io.sails.url = url
+io.sails.path = "#{path}/socket.io"
+io.sails.useCORSRouteToGetCookie = false
+		
 module.exports =
-	path: "/#{path}"		
+	path: path		
 	server:
 		app:
 			url:		url					# server url
-			urlRoot:	"#{url}/#{path}"	# api url
+			urlRoot:	"#{url}#{path}"	# api url
 		auth:
 			urlRoot:	'https://mob.myvnc.com/org'
 		mobile:
@@ -16,13 +20,13 @@ module.exports =
 	isNative: ->
 		/^file/i.test(document.URL)
 	platform: ->
-		if @isNative() then 'mobile' else 'browser'
+		if module.exports.isNative() then 'mobile' else 'browser'
 	oauth2: ->
-		authUrl: "#{@server.auth.urlRoot}/oauth2/authorize/"
 		opts:
+			authUrl: "#{module.exports.server.auth.urlRoot}/oauth2/authorize/"
 			response_type:	"token"
-			scope:			["https://mob.myvnc.com/org/users", "https://mob.myvnc.com/mobile"]
-			client_id:		if @isNative() then 'imappDEV' else 'imDEV'
+			scope:			"https://mob.myvnc.com/org/users https://mob.myvnc.com/mobile"
+			client_id:		if module.exports.isNative() then 'imappDEV' else 'imDEV'
 	push:
 		gcm:
 			senderID:	'sender ID here'

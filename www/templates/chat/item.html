@@ -2,13 +2,7 @@
 	ng-class="model.from == me.jid ? 'left' : 'right'"
 	on-hold="copy(model)"
 	ng-controller='msgCtrl'>
-	<ng-include src="'templates/chat/file.html'" ng-if="model.msgType() == 'file'">
-	</ng-include>
-	<ng-include src="'templates/chat/img.html'" ng-if="model.msgType() == 'img'">
-	</ng-include>
-	<ng-include src="'templates/chat/audio.html'" ng-if="model.msgType() == 'audio'">
-	</ng-include>
-	<pre ng-if="model.msgType() == 'msg'">{{model.body}}</pre>
+	<ng-include src="model.templateUrl()">
 	<div class="item item-divider">
 		<span>{{model.createdAt.toLocaleString()}}</span>
 		<span ng-if="type == 'groupchat'">{{model.from}}</span>
