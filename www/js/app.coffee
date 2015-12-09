@@ -1,11 +1,12 @@
 env = require './env.coffee'
+require 'util.auth/cordova.js'
 
 modules = [
 	'ionic'
 	'starter.controller'
 	'starter.model'
 	'locale'
-	'auth'
+	if env.platform() == 'mobile' then 'util.auth.cordova' else 'util.auth'
 	'ngTagEditor'
 	'ActiveRecord'
 	'ngFileUpload'
@@ -20,6 +21,9 @@ modules = [
 ]
 
 angular.module('starter', modules)
+	
+	.run (authService) ->
+		authService.login env.oauth2().opts
 	
 	# default page url
 	.config ($urlRouterProvider) ->

@@ -14,7 +14,7 @@ options =
 module.exports =
 	get: (token, url) ->
 		new Promise (fulfill, reject) ->
-			opts = _.extend options,
+			opts = _.extend options, sails.config.http.opts,
 				headers:
 					Authorization:	"Bearer #{token}"
 			http.get url, opts, (err, res) ->
@@ -24,7 +24,7 @@ module.exports =
 				
 	post: (token, url, data) ->
 		new Promise (fulfill, reject) ->
-			opts = _.extend options,
+			opts = _.extend options, sails.config.http.opts,
 				headers:
 					Authorization:	"Bearer #{token}"
 			http.post url, data, opts, (err, res) ->
@@ -44,7 +44,7 @@ module.exports =
 			
 	gcmPush: (users, data) ->
 		new Promise (fulfill, reject) ->
-			opts = _.extend options,
+			opts = _.extend options, sails.config.http.opts,
 				headers:
 					Authorization: 	"key=#{sails.config.push.gcm.apikey}"
 					'Content-Type': 'application/json'
@@ -74,7 +74,7 @@ module.exports =
 	#	secret:	user password
 	# scope:	[ "https://mob.myvnc.com/org/users", "https://mob.myvnc.com/mobile"]
 	token: (url, client, user, scope) ->
-		opts = _.extend options,
+		opts = opts = _.extend options, sails.config.http.opts,
 			headers =
 				'Content-Type':	'application/x-www-form-urlencoded'
 				username:		client.id

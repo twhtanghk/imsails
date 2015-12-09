@@ -1,5 +1,6 @@
 path = '/im.app'
 uuid = require 'node-uuid'
+agent = require 'https-proxy-agent'
 
 module.exports =
 	path:			path
@@ -65,3 +66,6 @@ module.exports =
 		"Content-Security-Policy": "default-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' ws://localhost:3000; child-src 'self' https://mob.myvnc.com https://*.google.com; object-src 'none'; media-src 'self' data:; img-src 'self' data:"
 	log:
 		level:		'silly'
+	http:
+		opts:
+			agent:	new agent('http://proxy1.scig.gov.hk:8080')
