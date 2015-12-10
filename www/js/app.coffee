@@ -6,7 +6,7 @@ modules = [
 	'starter.controller'
 	'starter.model'
 	'locale'
-	if env.platform() == 'mobile' then 'util.auth.cordova' else 'util.auth'
+	'util.auth'
 	'ngTagEditor'
 	'ActiveRecord'
 	'ngFileUpload'

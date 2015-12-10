@@ -71,7 +71,7 @@
     "cordova-plugin-console",
     "cordova-plugin-media",
     "com.ionic.keyboard",
-    "cordova-plugin-inappbrowser",
+    "cordova-plugin-crosswalk-webview",
     "https://github.com/twhtanghk/cordova-plugin-file",
     "https://github.com/apache/cordova-plugin-file-transfer",
     "https://github.com/phonegap/phonegap-plugin-push.git",
