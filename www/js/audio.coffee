@@ -1,38 +1,61 @@
+env = require './env.coffee'
+dateformat = require 'dateformat'
+
+now = ->
+	ret = new Date()
+	dateformat new Date(), 'yyyymmddHHMMss'
+
 angular.module('audioService', ['ngCordova'])
 	
 	.config ($sceDelegateProvider) ->
 		
-		$sceDelegateProvider.resourceUrlWhitelist ['self', 'https://mob.myvnc.com/im.app/api/msg/file/**']
+		$sceDelegateProvider.resourceUrlWhitelist env.whitelist
 		
 	.factory 'audioService', ($cordovaDevice) ->
-	
-		class BrowserRecorder
+		
+		Wad = require 'Wad/build/wad.js'
+		
+		beep = (ms, cb) ->
+			sine = new Wad source: 'sine'
+			sine.play()
+			callback = ->
+				sine.stop()
+				cb()
+			_.delay callback, ms 
+		
+		class Recorder
+			
+			recording:	false
 			
 			constructor: ->
-				Wad = require 'Wad/build/wad.js'
 				@media = new Wad.Poly 
 					recConfig: 
 						workerPath: 'lib/Wad/src/Recorderjs/recorderWorker.js'
-				@mic = new Wad source: 'mic'
-				@sine = new Wad source: 'sine'
+				@mic = new Wad
+					source: 		'mic'
 				@media
 					.add @mic
-					.add @sine
 				
 			start: ->
-				@media.rec.clear()
-				@media.rec.record()
-				@sine.play()
-				msg = =>
-					@sine.stop()
+				beep 1000, =>
+					@recording = true
+					@media.rec.clear()
+					@media.output.disconnect(@media.destination)
+					@media.rec.record()
 					@mic.play()
-				_.delay msg, 1000
 				
 			stop: ->
-				@mic.stop()
-				@media.rec.stop()
-				
-			file: (name) ->
+				new Promise (fulfill, reject) =>
+					beep 500, =>
+						@mic.stop()
+						@media.rec.stop()
+						@media.output.connect(@media.destination)
+						@recording = false
+						@file().then (file) =>
+							@url = URL.createObjectURL file
+							fulfill @
+
+			file: (name = "#{now()}.wav") ->
 				new Promise (fulfill, reject) =>
 					@media.rec.exportWAV (blob) ->
 						_.extend blob,
@@ -40,26 +63,4 @@ angular.module('audioService', ['ngCordova'])
 							lastModifiedDate: 	new Date()
 						fulfill blob
 					
-		class NativeRecorder
-			
-			constructor: ->
-				document.addEventListener 'deviceready', =>
-					@media = new Media 'cdvfile://localhost/temporary/audio.wav'
-				
-			start: ->
-				@media.startRecord()
-				
-			stop: ->
-				@media.stopRecord()
-				
-			file: (name) ->
-				@media
-				
-		recorder = ->
-			switch $cordovaDevice.getPlatform()
-				when 'browser'
-					new BrowserRecorder()
-				else
-					new NativeRecorder()
-					
-		recorder: recorder()
+		recorder: new Recorder()

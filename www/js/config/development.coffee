@@ -1,16 +1,16 @@
 url = 'http://localhost:3000'
-path = 'im.app'
+path = ''		# context path '/im.app'
 
 io.sails.url = url
-io.sails.path = "/#{path}/socket.io"
+io.sails.path = "#{path}/socket.io"
 io.sails.useCORSRouteToGetCookie = false
     
 module.exports =
-	path: "/#{path}"		
+	whitelist: ['self', "#{url}/**", 'filesystem:**', 'blob:**']
 	server:
 		app:
 			url:		url					# server url
-			urlRoot:	"#{url}/#{path}"	# api url
+			urlRoot:	"#{url}#{path}"		# api url
 		auth:
 			urlRoot:	'https://mob.myvnc.com/org'
 		mobile:

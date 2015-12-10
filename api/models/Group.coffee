@@ -44,7 +44,7 @@ module.exports =
 			required:	true
 		
 		_photoUrl: ->
-			return if @photo then "#{sails.config.url}/group/photo/#{@id}?m=#{@updatedAt}" else null
+			return if @photo then "group/photo/#{@id}?m=#{@updatedAt}" else null
 			
 		# exclude the field photo for data retrieval
 		toJSON: ->
@@ -92,7 +92,7 @@ module.exports =
 		# update photoUrl if photo is updated
 		if changes.photo
 			now = new Date()
-			changes.photoUrl = "#{sails.config.url}/group/photo/#{id}?m=#{now}"
+			changes.photoUrl = "group/photo/#{id}?m=#{now}"
 			delete changes.photo
 		
 	# return group "Authenticated Users"	

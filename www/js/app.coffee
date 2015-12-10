@@ -34,43 +34,6 @@ angular.module('starter', modules)
 		$ionicConfigProvider.tabs.style 'standard'
 		$ionicConfigProvider.tabs.position 'bottom'
 
-	# define sails socket backend setting and initialize the backend
-	.config ($provide) ->
-		$provide.decorator '$sailsSocketBackend', ($delegate, $injector, $log) ->
-			# socket connect
-			io.sails.url = env.server.app.url
-			io.sails.path = "#{env.path}/socket.io"
-			io.sails.useCORSRouteToGetCookie = false
-			socket = null
-			backend = new Promise (fulfill, reject) ->
-				socket = io.sails.connect()
-				socket.on 'connect', ->
-					fulfill()
-				socket.on 'connect_error', ->
-					reject()
-				socket.on 'connect_timeout', ->
-					reject()
-			
-			# power saving or reduce network traffic		
-			document.addEventListener 'pause', ->
-				socket._raw.disconnect()
-				
-			document.addEventListener 'resume', ->
-				socket._raw.connect()
-			
-			(method, url, post, callback, headers, timeout, withCredentials, responseType) ->
-				backend
-					.then ->
-						io.socket = socket
-						opts = 
-							method: 	method.toLowerCase()
-							url: 		url
-							data:		if typeof post == 'string' then JSON.parse(post) else post
-							headers:	headers
-						socket.request opts, (body, jwr) ->
-							callback jwr.statusCode, body
-					.catch $log.error
-	
 	# define showAction method for ionic action sheet 
 	.config ($provide) ->
 		$provide.decorator '$ionicActionSheet', ($delegate) ->
