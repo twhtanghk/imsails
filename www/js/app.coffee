@@ -1,5 +1,5 @@
 env = require './env.coffee'
-require 'util.auth/cordova.js'
+require 'util.auth'
 
 modules = [
 	'ionic'
@@ -21,6 +21,10 @@ modules = [
 ]
 
 angular.module('starter', modules)
+	
+	.config ($sceDelegateProvider, $compileProvider) ->
+		$compileProvider.imgSrcSanitizationWhitelist env.whitelist.img	
+		$sceDelegateProvider.resourceUrlWhitelist env.whitelist.url
 	
 	.run (authService) ->
 		authService.login env.oauth2().opts

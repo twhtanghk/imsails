@@ -6,7 +6,9 @@ io.sails.path = "#{path}/socket.io"
 io.sails.useCORSRouteToGetCookie = false
     
 module.exports =
-	whitelist: ['self', "#{url}/**", 'filesystem:**', 'blob:**']
+	whitelist:
+		img:	/^\s*((https?|ftp|file|blob|filesystem):|data:image\/)/ 
+		url:	['self', "#{url}/**", 'filesystem:**', 'blob:**']
 	server:
 		app:
 			url:		url					# server url

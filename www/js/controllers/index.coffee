@@ -1,5 +1,7 @@
+require 'util.audio'
+
 angularModule =
-	angular.module('starter.controller', ['ionic', 'ngCordova', 'http-auth-interceptor', 'starter.model', 'platform', 'PageableAR', 'toaster', 'audioService'])
+	angular.module('starter.controller', ['ionic', 'ngCordova', 'starter.model', 'platform', 'PageableAR', 'toaster', 'util.audio'])
 	
 require("./common.coffee")(angularModule)
 require("./user.coffee")(angularModule)

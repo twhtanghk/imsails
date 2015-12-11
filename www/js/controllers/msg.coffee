@@ -1,5 +1,8 @@
 env = require '../env.coffee'
-					
+sails =
+	services:
+		file:	require '../../../api/services/file.coffee'
+				
 module.exports = (angularModule) ->
 
 	angularModule
@@ -45,7 +48,8 @@ module.exports = (angularModule) ->
 					# no more listen to those registered events
 					io.socket?.removeAllListeners 'msg'
 			
-		.controller 'ChatCtrl', ($scope, $cordovaMedia, $cordovaClipboard, toaster, $ionicScrollDelegate, $location, type, chat, me, collection, resource, platform, $cordovaCapture, fileService, audioService) ->
+		.controller 'ChatCtrl', ($scope, $cordovaClipboard, toaster, $ionicScrollDelegate, $location, type, chat, me, collection, resource, platform, $cordovaCapture, fileService, audioService) ->
+			recorder = new audioService.Recorder()
 			_.extend $scope,
 				type: type
 				chat: chat
@@ -75,10 +79,10 @@ module.exports = (angularModule) ->
 						attachment.$save().catch alert
 				record: 
 					start: ->
-						audioService.recorder.start()
+						recorder.start()
 					stop: ->
-						audioService.recorder.stop()
-						audioService.recorder.file env.file.audio
+						recorder.stop()
+						recorder.file env.file.audio
 							.then (file) ->
 								$scope.putfile [file]
 				copy: (msg) ->
@@ -109,16 +113,17 @@ module.exports = (angularModule) ->
 						$scope.$apply('collection.models')
 						$ionicScrollDelegate.scrollTop true
 			
-		.controller 'msgCtrl', ($scope, $http, resource) ->
-			token =	$http.defaults.headers.common.Authorization.split(' ')[1]
+		.controller 'msgCtrl', ($scope, $cordovaFileOpener2) ->
 			_.extend $scope, 
-				url: ->
-					"#{env.server.app.urlRoot}/#{$scope.model.file.url}?access_token=#{token}"
-				thumbUrl: ->
-					"#{env.server.app.urlRoot}/#{$scope.model.file.thumbUrl}?access_token=#{token}"
-				getfile: (msg) ->
-					attachment = new resource.Attachment id: msg.id, local: env.file.target(msg.file.base) 
-					attachment.$fetch().catch alert
+				getfile: ->
+					switch device.platform
+						when 'browser'
+							$scope.model.attachment.$saveAs()
+						when 'Android'
+							$scope.model.attachment.$fetch()
+								.then ->
+									$cordovaFileOpener2.open $scope.model.attachment.local, sails.services.file.type($scope.model.attachment.local)
+										.catch alert					
 				
 		.filter 'msgFilter', ->
 			(msgs, search) ->

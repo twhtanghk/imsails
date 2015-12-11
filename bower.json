@@ -32,7 +32,9 @@
     "AngularJS-Toaster": "angularjs-toaster#~0.4.15",
     "compass-css-arrow": "~0.0.5",
     "Wad": "wad#~2.2.3",
-    "util.auth": "*"
+    "util.auth": "*",
+    "util.audio": "~0.0.3",
+    "numeral": "~1.5.3"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.0.1"
