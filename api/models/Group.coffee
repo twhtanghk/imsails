@@ -10,7 +10,7 @@ module.exports =
 	
 	autosubscribe:		['update']
 	
-	tableName:	'groups'
+	tableName:			'groups'
 	
 	types:
 		type: (name) ->
@@ -51,7 +51,13 @@ module.exports =
 			ret = _.extend @toObject(), photoUrl: @_photoUrl()
 			delete ret.photo
 			return ret
+			
+		isPublic: ->
+			not @isPrivate()
 	
+		isPrivate: ->
+			type == 'Members-Only'
+			
 	afterCreate: (values, cb) ->
 		if values.type != 'Members-Only'
 			return cb null, values
@@ -96,19 +102,12 @@ module.exports =
 			delete changes.photo
 		
 	# return group "Authenticated Users"	
-	authGrp: (opts, cb) ->
-		group = (admin) ->
-			jid:			"#{sails.config.authGrp}@#{sails.config.xmpp.muc}"
-			name:			sails.config.authGrp
-			type:			'Moderated'
-			createdBy:		admin
+	authGrp: (cb) ->
+		ret = sails.models.group
+			.findOne name: sails.config.authGrp
+			.populateAll()
 			
-		sails.models.user.admin null, (err, admin) ->
-			sails.models.group
-				.findOrCreate name: sails.config.authGrp, group(admin)
-				.populateAll()
-				.then (group) ->
-					cb null, group
-				.catch (err) ->
-					sails.log.error err
-					cb err
+		if cb
+			ret.nodeify cb
+			return @
+		return ret

@@ -16,11 +16,15 @@ module.exports =
 			'*':		false
 			find:		['isAuth', 'group/publicOnly']
 			findOne:	['isAuth']
-			create:		['isAuth', 'setOwner', 'group/setJid']
-			update:		['isAuth', 'user/canEdit', 'omitId', 'group/exclude']
-			destroy:	['isAuth', 'user/canRemove']
+			findByMe:	['isAuth', 'filterByOwner']
+			findOneByName:	['isAuth', 'filterByOwner']
 			membersOnly:['isAuth']
 			getPhoto:	true
+			create:		['isAuth', 'setOwner', 'group/setJid']
+			add:		['isAuth', 'user/me', 'user/canAdd']
+			update:		['isAuth', 'user/canEdit', 'omitId', 'group/exclude']
+			destroy:	['isAuth', 'user/canDestroy']
+			remove:		['isAuth', 'user/me', 'user/canRemove']
 			exit:		['isAuth', 'omitId', 'group/exclude']
 		MsgController:
 			'*':		false

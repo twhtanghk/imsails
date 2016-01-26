@@ -7,7 +7,7 @@ verifyToken = (token) ->
 	oauth2 = sails.config.oauth2
 	
 	return new Promise (fulfill, reject) ->
-		sails.services.rest.get token, oauth2.verifyURL
+		sails.services.rest().get token, oauth2.verifyURL
 			.then (res) -> 
 				# check required scope authorized or not
 				scope = res.body.scope.split(' ')

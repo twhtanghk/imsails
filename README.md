@@ -30,11 +30,16 @@ Server API
 * api
 	```
 	post /api/group - create group with the specified attributes excluding id, jid, photoUrl
-    get /api/group - list public groups (moderated or unmoderated) for specified pagination/sorting parameters skip, limit, sort
-    get /api/group/membersOnly - list private groups (members only) for specified pagination/sorting parameters skip, limit, sort
+    get /api/group - list all public groups (moderated or unmoderated)
+    get /api/group/membersOnly - list private groups (members only) with current login user as member
+    get /api/group/me - list groups created by current login user
+    get /api/group/name/:name - get group details with specified name created by current login user
+    get /api/group/:id - get group details with specified group id
     get /group/photo/:id - get group photo
     put /api/group/:id - update group attributes of the specified id exlcuding id, jid, photoUrl
     del /api/group/:id - delete group of the specified id
+    del /api/group/:id/members - remove current login user from  member list of the specified group (leave group)
+    del /api/group/:id/moderators - remove current login user from  moderator list of the specified group (leave group)
 	```
 
 ## roster

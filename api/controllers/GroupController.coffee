@@ -5,7 +5,7 @@
 actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 
 module.exports =
-	# return full list of members only group
+	# list members only groups with current login user as member
 	membersOnly: (req, res) ->
 		sails.models.user
 			.findOne()
@@ -19,7 +19,6 @@ module.exports =
 				sails.services.crud
 					.find(req)
 					.then res.ok
-					.catch res.serverError
 			.catch res.serverError
 			
 	getPhoto: (req, res) ->
@@ -57,12 +56,33 @@ module.exports =
 				Model
 					.findOne()
 					.where({id: pk, name: '!': sails.config.authGrp}) # exclude authGrp from user to leave the group
-      				.populateAll()
-      				.then (group) ->
-      					if !group
-      						return res.notFound()
-      					if sails.hooks.pubsub
-      						Model.publishRemove(pk, 'moderators', req.user.id, !sails.config.blueprints.mirror && req)
-      						Model.publishRemove(pk, 'members', req.user.id, !sails.config.blueprints.mirror && req)
-      					return res.ok(group)
-      				.catch res.serverError
+					.populateAll()
+					.then (group) ->
+						if !group
+							return res.notFound()
+						if sails.hooks.pubsub
+							Model.publishRemove(pk, 'moderators', req.user.id, !sails.config.blueprints.mirror && req)
+							Model.publishRemove(pk, 'members', req.user.id, !sails.config.blueprints.mirror && req)
+						return res.ok(group)
+			.catch res.serverError
+	
+	# list groups created by me
+	findByMe: (req, res)->
+		opts = actionUtil.opts req
+		opts.model
+			.find()
+			.then res.ok
+			.catch res.serverError
+			
+	findOneByName: (req, res)->
+		opts = actionUtil.opts req
+		opts.model
+			.findOne()
+			.where opts.where
+			.populateAll()
+			.then (group) ->
+				if group
+					res.ok group
+				else
+					res.notFound()
+			.catch res.serverError			

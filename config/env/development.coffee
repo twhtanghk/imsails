@@ -3,6 +3,7 @@ agent = require 'https-proxy-agent'
 
 module.exports =
 	port:			3000
+	hookTimeout:	400000
 	adminUser:		
 		username:	'imadmin'
 		email:		'twhtanghk@gmail.com'

@@ -148,24 +148,19 @@ module.exports =
 		cb(null, values)
 		
 	afterCreate: (values, cb) ->
-		# add created user into "Authenticated Users" group except administrator
-		if values.username == sails.config.adminUser.username
-			return cb null, values
+		ret = sails.models.group.authGrp()
+			.then (group) ->
+				if group
+					group.members.add values
+					group.save()
+				else
+					Promise.reject "#{sails.config.authGrp} not defined"
+					
+		if cb
+			ret.nodeify cb
+			return @
+		return ret
 			
-		sails.models.group.authGrp null, (err, group) ->
-			if err
-				return cb err
-			if group
-				group.members.add values
-				group.save()
-					.then ->
-						cb null, values
-					.catch (err) ->
-						sails.log.error err
-						cb err
-			else
-				cb "#{sails.config.authGrp} not defined"
-	
 	beforePublishUpdate: (id, changes, req, options) ->
 		# update photoUrl if photo is updated
 		if changes.photo
@@ -178,17 +173,11 @@ module.exports =
 		sails.sockets.broadcast roomName, eventName, data
 		 
 	# return administrator		
-	admin: (opts, cb) ->
-		user = 
-			url:		"https://mob.myvnc.com/org/api/users/#{sails.config.adminUser.username}/"
-			username:	sails.config.adminUser.username
-			email:		sails.config.adminUser.email
-			name: 
-				given:	'Administrator'
-		sails.models.user
-			.findOrCreate username: sails.config.adminUser.username, user 
-			.then (admin) ->
-				cb null, admin
-			.catch (err) ->
-				sails.log.error err
-				cb err
+	admin: (cb) ->
+		ret = sails.models.user
+			.findOne username: sails.config.adminUser.username
+			
+		if cb
+			ret.nodeify cb
+			return @
+		return ret 
