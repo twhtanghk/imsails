@@ -5,7 +5,6 @@ actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 module.exports = (req, res, next) ->
 	
 	values = actionUtil.parseValues(req)
-	type = values.type
 	to = values.to
 	
 	if not sails.services.jid.isMuc(to)
@@ -16,7 +15,7 @@ module.exports = (req, res, next) ->
 				if user
 					return next()
 				else
-					return res.notFound values.to
+					return res.notFound to
 			.catch res.serverError
 	else
 		sails.models.group
@@ -27,7 +26,7 @@ module.exports = (req, res, next) ->
 					if req.user.canVoice group
 						return next()
 					else
-						return res.serverError msg: "Not granted with voice for room #{group.name}"
+						return res.badRequest msg: "Not granted with voice for room #{group.name}"
 				else
-					return res.notFound()
+					return res.notFound to
 			.catch res.serverError

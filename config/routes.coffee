@@ -42,20 +42,25 @@ module.exports =
 			action:			'find'
 			sort:			
 				createdAt:	'desc'
+		
 		'POST /api/msg/file':
 			controller:		'MsgController'
 			action:			'putFile'
+		
 		'GET /api/msg/file/:id':
 			controller:		'MsgController'
 			action:			'getFile'
+			
 		'GET /api/msg/file/thumb/:id':
 			controller:		'MsgController'
 			action:			'getThumb'
+			
 		'GET /api/roster':
 			controller:		'RosterController'
 			action:			'find'
 			sort:		
 				lastmsgAt:	'desc'
+				
 		'GET /api/user':
 			controller:		'UserController'
 			action:			'find'
@@ -64,6 +69,7 @@ module.exports =
 				'name.middle':	'asc'
 				'name.family':	'asc'
 				email:			'asc'
+				
 		'GET /user/photo/:id':
 			controller:		'UserController'
 			action:			'getPhoto'

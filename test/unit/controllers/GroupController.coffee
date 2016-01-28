@@ -3,8 +3,6 @@ req = require 'supertest'
 path = require 'path'
 util = require 'util'
 _ = require 'lodash'
-rest = require '../../../api/services/rest.coffee'
-agent = require 'https-proxy-agent'
 require 'shelljs/global'
 fs = require 'fs'
 Promise = require 'promise'
@@ -33,7 +31,7 @@ describe 'GroupController', ->
 				url:		"user2@#{domain}"
 				username:	'user2'
 				email:		"user2@#{domain}"
-			rest().token url, env.client, env.user, scope
+			sails.services.rest().token url, env.client, env.users[0], scope
 		]
 		Promise
 			.all tasks 

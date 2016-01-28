@@ -2,6 +2,29 @@ env = require '../env.coffee'
 sails =
 	services:
 		file:	require '../../../api/services/file.coffee'
+			
+# return promise to download msg.thumb or audio if msg is image/audio attachment 	
+download = (resource, msg) ->
+	new Promise (fulfill, reject) ->
+		if msg.file
+			msg.attachment = new resource.Attachment msg
+			switch true
+				when sails.services.file.isImg(msg.file.base) 
+					msg.thumb = new resource.Thumb msg
+					msg.thumb.$fetch()
+						.then ->
+							fulfill msg
+						.catch alert
+				when sails.services.file.isAudio(msg.file.base)
+					msg.audio = new resource.Audio msg
+					msg.audio.$fetch()
+						.then ->
+							fulfill msg
+						.catch reject
+				else
+					fulfill msg
+		else
+			fulfill msg
 				
 module.exports = (angularModule) ->
 
@@ -109,11 +132,15 @@ module.exports = (angularModule) ->
 			io.socket?.on "msg", (event) ->
 				if event.verb == 'created'
 					if isValid(event.data) 
-						collection.add new resource.Msg event.data
-						$scope.$apply('collection.models')
-						$ionicScrollDelegate.scrollTop true
-			
-		.controller 'msgCtrl', ($scope, $cordovaFileOpener2) ->
+						msg = new resource.Msg event.data
+						download(resource, msg)
+							.then (msg) ->
+								collection.add msg
+								$scope.$apply 'collection.models'
+								$ionicScrollDelegate.scrollTop true
+							.catch alert
+							
+		.controller 'msgCtrl', ($scope, resource, $cordovaFileOpener2) ->
 			_.extend $scope, 
 				getfile: ->
 					switch device.platform
@@ -124,6 +151,11 @@ module.exports = (angularModule) ->
 								.then ->
 									$cordovaFileOpener2.open $scope.model.attachment.local, sails.services.file.type($scope.model.attachment.local)
 										.catch alert					
+
+			download(resource, $scope.model)
+				.then ->
+					$scope.$apply 'model'
+				.catch alert
 				
 		.filter 'msgFilter', ->
 			(msgs, search) ->

@@ -5,9 +5,9 @@
 
 module.exports =
 
-	autoWatch:			false
+	autoWatch:			true
 	
-	autosubscribe:		['update']
+	autosubscribe:		['create', 'update']
 	
 	tableName:	'rosters'
 	
@@ -40,17 +40,27 @@ module.exports =
 				@group?.name
 			else
 				@user?.fullname()
-				
+			
+	beforeCreate: (values, cb) ->
+		values.type = sails.services.jid.type values.jid
+		cb()
+		
+	afterCreate: (createdRecord, cb) ->
+		@publishCreate createdRecord
+		cb() 
+		
 	afterUpdate: (updatedRecord, cb) ->
-		@publishUpdate updatedRecord.id, _.omit(updatedRecord, 'user', 'group')
+		@publishUpdate updatedRecord.id, updatedRecord
 		cb() 
 		
 	broadcast: (roomName, eventName, data, socketToOmit) ->
-		# filter to broadcast data update event to roster owner only 
-		sockets = sails.sockets.subscribers(roomName)
-		sails.models.roster.findOne(data.id)
+		# filter to broadcast data event to roster owner only 
+		@findOne data.id
+			.populateAll()
 			.then (roster) ->
-				ret = _.filter sockets, (id) ->
-					sails.sockets.get(id).user.id == roster.createdBy
-				sails.sockets.emit ret, eventName, data
+				sockets = _.filter sails.sockets.subscribers(roomName), (id) ->
+					sails.sockets.get(id).user.id == roster.createdBy.id
+				if roster
+					data.data = roster
+				sails.sockets.emit sockets, eventName, data
 			.catch sails.log.error

@@ -77,19 +77,33 @@ module.exports =
 				to == sails.sockets.get(id)?.user.jid or
 				from == sails.sockets.get(id)?.user.jid
 			emit(ret)
-			
+	
+	beforeCreate: (values, cb) ->
+		values.type = sails.services.jid.type values.to
+		cb()
+				
 	afterCreate: (values, cb) ->
-		# update sender corresponding roster item lastmsgAt timestamp
-		sails.models.roster
-			.find()
-			.where(jid: values.to)
-			.populateAll()
-			.then (roster) ->
-				_.each roster, (item) ->
-					if item.createdBy.jid == values.from
-						item.lastmsgAt = values.createdAt
-						item.save().catch sails.log.error
-		cb null, values
+		Promise
+			.all [
+				# create recipient roster item if necessary
+				sails.services.roster
+					.findOrCreate values.to, values.from
+				
+				# update sender corresponding roster item lastmsgAt timestamp
+				new Promise (fulfill, reject) ->
+					sails.models.roster
+						.findOne()
+						.where(jid: values.to)
+						.populate('createdBy', jid: values.from)
+						.populateAll()
+						.then (roster) ->
+							if roster
+								roster.lastmsgAt = values.createdAt
+								roster.save().then fulfill, reject
+							else
+								fulfill()
+			]
+			.nodeify cb
 		
 	afterDestroy: (values, cb) ->
 		_.each values, (msg) ->
@@ -132,6 +146,6 @@ module.exports =
 							item.lastmsgAt = values.createdAt
 							newmsg(item)
 							item.save().catch sails.log.error
-							sails.services.rest
+							sails.services.rest()
 								.push req.user.token, item, values
 								.catch sails.log.error

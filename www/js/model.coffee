@@ -216,12 +216,7 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 				ret = super(data, opts)
 				_.each ['updatedAt', 'createdAt'], (field) ->
 					ret[field] = new Date Date.parse ret[field]
-				if data.file
-					ret.attachment = new Attachment data
-					if sails.services.file.isImg(data.file.base) 
-						ret.thumb = new Thumb data
-						ret.thumb.$fetch()
-							.catch alert
+			
 				return ret
 			
 		class Attachment extends pageableAR.Model
@@ -270,6 +265,24 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 								transfer = new fileService.FileTransfer	@local, @$url()
 								transfer.download(opts)
 								
+		class Audio extends Attachment
+			$urlRoot: ->
+				urlRoot @, "api/msg/file"
+	
+			$save: ->
+				$log.error 'saving audio is not allowed'
+				
+			$fetch: (opts = {}) ->
+				opts = _.defaults opts, 
+					responseType: 	'blob'
+				fileService.FileSystem.requestFileSystem()
+					.then (fs) =>
+						fs.create @file.org
+							.then (entry) =>
+								@local = entry
+								transfer = new fileService.FileTransfer	@local, @$url()
+								transfer.download(opts)
+								
 		class Msgs extends pageableAR.PageableCollection
 			$urlRoot: ->
 				urlRoot(@, "api/msg")
@@ -291,5 +304,7 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 		Roster:			Roster
 		Msg:			Msg
 		Attachment:		Attachment
+		Thumb:			Thumb
+		Audio:			Audio
 		Msgs:			Msgs
 		Device:			Device

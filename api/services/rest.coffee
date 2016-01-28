@@ -12,7 +12,7 @@ options =
 	timeout:	10000
 	agent:		new agent('http://proxy1.scig.gov.hk:8080')
 ###
-module.exports = (options = sails.config.http.opts) ->
+module.exports = (options = sails.config.http.opts || {}) ->
 	_.defaults options, 
 		ca:			ca
 	
