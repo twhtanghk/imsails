@@ -261,9 +261,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 					.then (fs) =>
 						fs.create sails.services.file.thumbName(@file.org)
 							.then (entry) =>
-								@local = entry
-								transfer = new fileService.FileTransfer	@local, @$url()
+								transfer = new fileService.FileTransfer	entry, @$url()
 								transfer.download(opts)
+									.then =>
+										@local = entry
 								
 		class Audio extends Attachment
 			$urlRoot: ->
@@ -279,9 +280,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 					.then (fs) =>
 						fs.create @file.org
 							.then (entry) =>
-								@local = entry
-								transfer = new fileService.FileTransfer	@local, @$url()
+								transfer = new fileService.FileTransfer	entry, @$url()
 								transfer.download(opts)
+									.then =>
+										@local = entry
 								
 		class Msgs extends pageableAR.PageableCollection
 			$urlRoot: ->

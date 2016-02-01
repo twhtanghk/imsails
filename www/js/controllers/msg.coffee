@@ -62,12 +62,11 @@ module.exports = (angularModule) ->
 						ret = new resource.Msgs()
 						ret.$fetch params: {type: type, to: chat.jid, sort: 'createdAt DESC'}
 						
-				onEnter: (resource, chat) ->
+				onExit: (resource, chat) ->
 					# clear roster newmsg counter
 					item = _.findWhere resource.Roster.instance().models, jid: chat.jid
 					item?.$save(newmsg: 0)			
-					 
-				onExit: ->
+					
 					# no more listen to those registered events
 					io.socket?.removeAllListeners 'msg'
 			
@@ -131,14 +130,10 @@ module.exports = (angularModule) ->
 					return msg.to == chat.jid
 			io.socket?.on "msg", (event) ->
 				if event.verb == 'created' and isValid(event.data) 
-					msg = new resource.Msg event.data
-					download(resource, msg)
-						.then (msg) ->
-							collection.add msg
-							$scope.$apply 'collection.models'
-							$ionicScrollDelegate.scrollTop true
-						.catch alert
-							
+					collection.add new resource.Msg event.data
+					$scope.$apply 'collection.models'
+					$ionicScrollDelegate.scrollTop true
+					
 		.controller 'msgCtrl', ($scope, resource, $cordovaFileOpener2) ->
 			_.extend $scope, 
 				getfile: ->
@@ -150,6 +145,11 @@ module.exports = (angularModule) ->
 								.then ->
 									$cordovaFileOpener2.open $scope.model.attachment.local, sails.services.file.type($scope.model.attachment.local)
 										.catch alert					
+
+			download(resource, $scope.model)
+				.then ->
+					$scope.$apply()
+				.catch alert
 				
 		.filter 'msgFilter', ->
 			(msgs, search) ->
