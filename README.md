@@ -30,6 +30,8 @@ Server API
 * api
 	```
 	post /api/group - create group with the specified attributes excluding id, jid, photoUrl
+	post /api/group/:parentid/members/:id - add user with :id into group with :parentid as members
+	post /api/group/:parentid/moderators/:id - add user with :id into group with :parentid as moderators
     get /api/group - list all public groups (moderated or unmoderated)
     get /api/group/membersOnly - list private groups (members only) with current login user as member
     get /api/group/me - list groups created by current login user

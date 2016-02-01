@@ -14,7 +14,7 @@ download = (resource, msg) ->
 					msg.thumb.$fetch()
 						.then ->
 							fulfill msg
-						.catch alert
+						.catch reject
 				when sails.services.file.isAudio(msg.file.base)
 					msg.audio = new resource.Audio msg
 					msg.audio.$fetch()
@@ -130,15 +130,14 @@ module.exports = (angularModule) ->
 				else
 					return msg.to == chat.jid
 			io.socket?.on "msg", (event) ->
-				if event.verb == 'created'
-					if isValid(event.data) 
-						msg = new resource.Msg event.data
-						download(resource, msg)
-							.then (msg) ->
-								collection.add msg
-								$scope.$apply 'collection.models'
-								$ionicScrollDelegate.scrollTop true
-							.catch alert
+				if event.verb == 'created' and isValid(event.data) 
+					msg = new resource.Msg event.data
+					download(resource, msg)
+						.then (msg) ->
+							collection.add msg
+							$scope.$apply 'collection.models'
+							$ionicScrollDelegate.scrollTop true
+						.catch alert
 							
 		.controller 'msgCtrl', ($scope, resource, $cordovaFileOpener2) ->
 			_.extend $scope, 
@@ -151,11 +150,6 @@ module.exports = (angularModule) ->
 								.then ->
 									$cordovaFileOpener2.open $scope.model.attachment.local, sails.services.file.type($scope.model.attachment.local)
 										.catch alert					
-
-			download(resource, $scope.model)
-				.then ->
-					$scope.$apply 'model'
-				.catch alert
 				
 		.filter 'msgFilter', ->
 			(msgs, search) ->
