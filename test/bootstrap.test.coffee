@@ -1,5 +1,4 @@
 env = require './env.coffee'
-Promise = require 'promise'
 fs = require 'fs'
 config = JSON.parse fs.readFileSync './.sailsrc'
 

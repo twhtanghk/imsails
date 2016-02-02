@@ -125,7 +125,7 @@ module.exports =
 						item.lastmsgAt = values.createdAt
 						if item.createdBy.jid != values.from
 							newmsg(item)
-							sails.services.rest
+							sails.services.rest()
 								.push req.user.token, item, values
 								.catch sails.log.error
 						item.save().catch sails.log.error

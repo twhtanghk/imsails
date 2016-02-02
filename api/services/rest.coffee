@@ -1,6 +1,7 @@
 http = require 'needle'
 fs = require 'fs'
 Promise = require 'promise'
+util = require 'util'
 
 dir = '/etc/ssl/certs'
 files = fs.readdirSync(dir).filter (file) -> /.*\.pem/i.test(file)
@@ -44,9 +45,18 @@ module.exports = (options = sails.config.http.opts || {}) ->
 			msg:	msg
 		data = _.mapValues sails.config.push.data, (value) ->
 			_.template value, param
-		@post token, sails.config.push.url, 
-			users:	[roster.createdBy.email]
-			data:	data
+		ret = @post token, sails.config.push.url, 
+				users:	[roster.createdBy.email]
+				data:	data
+		new Promise (fulfill, reject) ->
+			ret	
+				.then (res) ->
+					sails.log.debug util.inspect data
+					sails.log.info util.inspect res.body
+					fulfill res
+				.catch (err) ->
+					sails.log.error err
+					reject err
 			
 	gcmPush: (users, data) ->
 		new Promise (fulfill, reject) ->
