@@ -21,6 +21,9 @@ module.exports =
 						cond =
 							jid:		data.jid
 							createdBy:	_from.id
-						sails.models.roster.findOrCreate(cond, data).then fulfill, reject
+						sails.models.roster
+							.findOrCreate(cond, data)
+							.populateAll()
+							.then fulfill, reject
 					else
 						reject new Error "#{from} or #{to} not found"
