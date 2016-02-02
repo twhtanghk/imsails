@@ -109,10 +109,6 @@ module.exports =
 		
 	afterPublishCreate: (values, req) ->
 		# update all target recipients corresponding roster items, and send push notification
-		# update roster newmsg counter
-		newmsg = (item) ->
-			item.newmsg ?= 0
-			item.newmsg = item.newmsg + 1
 		
 		if sails.services.jid.isMuc(values.to)
 			# update all subscribed parties (jid exists in roster)
@@ -124,7 +120,7 @@ module.exports =
 					_.each roster, (item) ->
 						item.lastmsgAt = values.createdAt
 						if item.createdBy.jid != values.from
-							newmsg(item)
+							item.newmsg = item.newmsg + 1
 							sails.services.rest()
 								.push req.user.token, item, values
 								.catch sails.log.error
@@ -133,9 +129,10 @@ module.exports =
 			# create recipient roster item if necessary
 			sails.services.roster
 				.findOrCreate values.to, values.from
-				.then (roster) ->
-					roster.newmsg = roster.newmsg + 1
-					roster.save().catch sails.log.error
+				.then (item) ->
+					item.lastmsgAt = values.createdAt
+					item.newmsg = item.newmsg + 1
+					item.save().catch sails.log.error
 					sails.services.rest()
 						.push req.user.token, item, values
 						.catch sails.log.error
