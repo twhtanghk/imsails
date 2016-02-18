@@ -26,7 +26,7 @@ module.exports =
 					try
 						prop = JSON.parse matchingRecord.body
 					catch error
-						return
+						sails.log.debug error
 					sails.config.file.opts.adapter(sails.config.file.opts)
 						.read matchingRecord.file, (err, data) ->
 							if err
