@@ -33,10 +33,4 @@ module.exports =
 		gcm:
 			senderID:	'sender ID here'
 	file:
-		target: (file) ->
-			switch device.platform
-				when 'browser'
-					file
-				when 'Android'
-					cordova.file.externalCacheDirectory + file
 		audio:	'audio.wav'

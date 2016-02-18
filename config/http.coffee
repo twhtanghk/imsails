@@ -4,14 +4,10 @@ module.exports =
 	http:
 		middleware:
 			static: express.static('platforms/browser/www')
-			resHeader: (req, res, next) ->
-				res.set sails.config.csp
-				next()
 			order: [
 				'startRequestTimer'
 				'cookieParser'
 				'session'
-				'resHeader'
 				'bodyParser'
 				'compress'
 				'methodOverride'

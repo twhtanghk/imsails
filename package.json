@@ -6,6 +6,7 @@
   "keywords": [],
   "dependencies": {
     "base64-stream": "^0.1.3",
+    "bluebird": "^3.3.1",
     "coffee-script": "^1.9.2",
     "connect-mongo": "^0.8.1",
     "dateformat": "^1.0.12",
@@ -72,10 +73,9 @@
   "cordovaPlugins": [
     "cordova-plugin-device",
     "cordova-plugin-console",
-    "cordova-plugin-media",
     "com.ionic.keyboard",
     "cordova-plugin-crosswalk-webview",
-    "https://github.com/twhtanghk/cordova-plugin-file",
+    "https://github.com/apache/cordova-plugin-file",
     "https://github.com/apache/cordova-plugin-file-transfer",
     "https://github.com/phonegap/phonegap-plugin-push.git",
     "https://github.com/VersoSolutions/CordovaClipboard.git",

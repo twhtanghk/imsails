@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://mob.myvnc.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://mob.myvnc.com wss://mob.myvnc.com ws://localhost:3000; child-src 'self' https://mob.myvnc.com https://*.google.com; object-src 'none'; media-src 'self' https://mob.myvnc.com data: filesystem:; img-src 'self' https://mob.myvnc.com data: filesystem:">
     <title>Instant Messaging</title>
 
 	<link rel="icon" type="image/png" href="img/icon.png" />
@@ -19,6 +20,7 @@
     <script type="text/javascript">
 		io.sails.autoConnect = false;
 	</script>
+	<script src="lib/cordova-promise-fs/dist/CordovaPromiseFS.js"></script>
     <script src="js/index.js"></script>
   </head>
   <body ng-app="starter">

@@ -3,29 +3,6 @@ sails =
 	services:
 		file:	require '../../../api/services/file.coffee'
 			
-# return promise to download msg.thumb or audio if msg is image/audio attachment 	
-download = (resource, msg) ->
-	new Promise (fulfill, reject) ->
-		if msg.file
-			msg.attachment = new resource.Attachment msg
-			switch true
-				when sails.services.file.isImg(msg.file.base) 
-					msg.thumb = new resource.Thumb msg
-					msg.thumb.$fetch()
-						.then ->
-							fulfill msg
-						.catch reject
-				when sails.services.file.isAudio(msg.file.base)
-					msg.audio = new resource.Audio msg
-					msg.audio.$fetch()
-						.then ->
-							fulfill msg
-						.catch reject
-				else
-					fulfill msg
-		else
-			fulfill msg
-				
 module.exports = (angularModule) ->
 
 	angularModule
@@ -70,7 +47,7 @@ module.exports = (angularModule) ->
 					# no more listen to those registered events
 					io.socket?.removeAllListeners 'msg'
 			
-		.controller 'ChatCtrl', ($scope, $cordovaClipboard, toaster, $ionicScrollDelegate, $location, type, chat, me, collection, resource, platform, $cordovaCapture, fileService, audioService) ->
+		.controller 'ChatCtrl', ($scope, $cordovaClipboard, toaster, $ionicScrollDelegate, $location, type, chat, me, collection, resource, audioService) ->
 			recorder = new audioService.Recorder()
 			_.extend $scope,
 				type: type
@@ -134,23 +111,48 @@ module.exports = (angularModule) ->
 					$scope.$apply 'collection.models'
 					$ionicScrollDelegate.scrollTop true
 					
-		.controller 'msgCtrl', ($scope, resource, $cordovaFileOpener2) ->
+		.controller 'msgCtrl', ($scope, resource, $cordovaFileOpener2, $http, fileService) ->
+			fs = fileService.fs
+				
+			msg = $scope.model
+			
+			if msg.file
+				dest = msg.file.org
+				switch true
+					when sails.services.file.isImg(msg.file.base) 
+						thumb = new resource.Thumb _.pick msg, 'id', 'file'
+						thumb.$fetch()
+							.then ->
+								$scope.$apply()
+							.catch (e) ->
+								alert e.message
+					when sails.services.file.isAudio(msg.file.base)
+						audio = new resource.Attachment _.pick msg, 'id', 'file'
+						audio.$fetch()
+							.then ->
+								$scope.$apply()
+							.catch (e) ->
+								alert e.message
+			
 			_.extend $scope, 
 				getfile: ->
+					file = new resource.Attachment _.pick msg, 'id', 'file'
 					switch device.platform
 						when 'browser'
-							$scope.model.attachment.$saveAs()
+							file
+								.$saveAs()
+								.catch alert
 						when 'Android'
-							$scope.model.attachment.$fetch()
+							transfer = new fileService.Progress msg.file.base
+							file
+								.$fetch progress: transfer.progress
 								.then ->
-									$cordovaFileOpener2.open $scope.model.attachment.local, sails.services.file.type($scope.model.attachment.local)
-										.catch alert					
+									transfer.end()
+									$cordovaFileOpener2.open file.file.local, sails.services.file.type(msg.file.org)
+								.catch (e) ->
+									transfer.end()
+									alert e.message
 
-			download(resource, $scope.model)
-				.then ->
-					$scope.$apply()
-				.catch alert
-				
 		.filter 'msgFilter', ->
 			(msgs, search) ->
 				if search

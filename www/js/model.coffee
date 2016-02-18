@@ -229,19 +229,23 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 			$save: (values = {}, opts = {}) ->
 				_.extend @, values
 				_.extend opts, data: _.pick(@, 'to', 'type')
-				transfer = new fileService.FileTransfer @local, @$url()
-				transfer.upload(opts)
+				fileService.fs.then (fs) =>
+					fs.uploadFile @local, @$urlRoot(), opts
 						
 			$fetch: (opts = {}) ->
-				opts = _.defaults opts, 
-					responseType: 	'blob'
-				transfer = new fileService.FileTransfer	@local, @$url()
-				transfer.download(opts)
-				
+				fileService.fs.then (fs) =>
+					fs.create @file.org
+						.then (entry) =>
+							fs.download @$url(), entry.toURL(), opts, opts.progress
+								.then =>
+									@file.local = entry.toURL()
+							
 			$saveAs: ->
-				transfer = new fileService.FileTransfer	name: @file.base, @$url()
-				transfer.saveAs()
-			
+				$http.get @file.url, responseType: 'blob'
+					.then (res) =>
+						contentType = res.headers('Content-type')
+						saveAs new Blob([res.data], type: contentType), @file.base
+					
 			localUrl: ->
 				@local?.toURL()
 			
@@ -253,37 +257,6 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 	
 			$save: ->
 				$log.error 'saving thumb image is not allowed'
-				
-			$fetch: (opts = {}) ->
-				opts = _.defaults opts, 
-					responseType: 	'blob'
-				fileService.FileSystem.requestFileSystem()
-					.then (fs) =>
-						fs.create sails.services.file.thumbName(@file.org)
-							.then (entry) =>
-								transfer = new fileService.FileTransfer	entry, @$url()
-								transfer.download(opts)
-									.then =>
-										@local = entry
-								
-		class Audio extends Attachment
-			$urlRoot: ->
-				urlRoot @, "api/msg/file"
-	
-			$save: ->
-				$log.error 'saving audio is not allowed'
-				
-			$fetch: (opts = {}) ->
-				opts = _.defaults opts, 
-					responseType: 	'blob'
-				fileService.FileSystem.requestFileSystem()
-					.then (fs) =>
-						fs.create @file.org
-							.then (entry) =>
-								transfer = new fileService.FileTransfer	entry, @$url()
-								transfer.download(opts)
-									.then =>
-										@local = entry
 								
 		class Msgs extends pageableAR.PageableCollection
 			$urlRoot: ->
@@ -307,6 +280,5 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 		Msg:			Msg
 		Attachment:		Attachment
 		Thumb:			Thumb
-		Audio:			Audio
 		Msgs:			Msgs
 		Device:			Device

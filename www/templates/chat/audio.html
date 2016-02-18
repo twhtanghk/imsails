@@ -1,3 +1,4 @@
-<audio ng-src="{{model.audio.localUrl()}}" controls="conrtols">
+<ion-spinner ng-if="! model.file.local"></ion-spinner>
+<audio ng-src="{{model.file.local}}" controls="conrtols" ng-if="model.file.local">
 	<i>Your browser does not support the audio element.</i>
 </audio>

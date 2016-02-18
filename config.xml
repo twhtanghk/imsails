@@ -56,7 +56,7 @@
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <allow-navigation href="*://mob.myvnc.com/*" />
     <allow-intent href="*://mob.myvnc.com/*" />
-    <preference name="xwalkVersion" value="15+" />
+    <preference name="xwalkVersion" value="16+" />
     <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
     <preference name="xwalkMode" value="embedded" />
     <preference name="xwalkMultipleApk" value="true" />

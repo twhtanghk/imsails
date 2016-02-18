@@ -126,7 +126,6 @@ angular.module('starter', modules)
 					if data.additionalData.foreground
 						$cordovaDialogs.beep(1)
 						$cordovaVibration.vibrate(1000)
-						location.hash = '/roster/list'
 					else
 						location.hash = data.additionalData.data.url
 				
