@@ -34,7 +34,8 @@
     "sails-hook-requestlogger-file": "^1.1.0",
     "sails-mongo": "^0.11.2",
     "shortid": "^2.2.2",
-    "skipper-gridfs": "https://github.com/willhuang85/skipper-gridfs.git"
+    "skipper-gridfs": "https://github.com/willhuang85/skipper-gridfs.git",
+    "winston": "^2.1.1"
   },
   "devDependencies": {
     "bower": "^1.3.3",
