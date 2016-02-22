@@ -1,5 +1,5 @@
 im = require 'imagemagick-stream'
 
 module.exports =
-	thumb: (stream) ->
-		stream.pipe(im().resize(sails.config.file.img.resize))
+	thumb: (size = sails.config.file.img.resize) ->
+		im().resize(size)

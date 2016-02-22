@@ -31,14 +31,19 @@ module.exports =
 		pk = actionUtil.requirePk(req)
 		sails.services.file.content(Model, pk)
 			.then (file) ->
-				header = 'Accept-Ranges': 'bytes'
-				if file.size
-					_.extend header,  
-					'Content-Length': file.size
-					'Content-Range': "bytes 0-#{file.size - 1}/#{file.size}"
-				res.set header
-				res.attachment encodeURIComponent(file.name)
-				file.stream.pipe(res)
+				md5 = req.param('md5', false)
+				sails.log.error "#{md5} #{file.prop.md5}"
+				if md5 and md5 == file.prop.md5
+					res.send 304, file.prop
+				else
+					header = 'Accept-Ranges': 'bytes'
+					if file.size
+						_.extend header,  
+						'Content-Length': file.prop.length
+						'Content-Range': "bytes 0-#{file.prop.length - 1}/#{file.prop.length}"
+					res.set header
+					res.attachment encodeURIComponent(file.prop.filename)
+					file.stream.pipe(res)
 			.catch res.serverError
 			
 	# GET /msg/file/thumb/:id
@@ -47,6 +52,10 @@ module.exports =
 		pk = actionUtil.requirePk(req)
 		sails.services.file.thumb(Model, pk)
 			.then (file) ->
-				res.attachment encodeURIComponent(file.name)
-				file.stream.pipe(res)
+				md5 = req.param('md5', false)
+				if md5 and md5 == file.prop.md5
+					res.send 304, file.prop
+				else
+					res.attachment encodeURIComponent(file.prop.filename)
+					file.stream.pipe(res)
 			.catch res.serverError

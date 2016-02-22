@@ -27,7 +27,7 @@
     "node-uuid": "^1.4.3",
     "passport": "^0.2.1",
     "passport-http-bearer": "^1.0.1",
-    "promise": "^7.0.1",
+    "promise": "^7.1.1",
     "rc": "~0.5.0",
     "sails": "~0.11.4",
     "sails-disk": "~0.10.0",
@@ -35,6 +35,7 @@
     "sails-mongo": "^0.11.2",
     "shortid": "^2.2.2",
     "skipper-gridfs": "https://github.com/willhuang85/skipper-gridfs.git",
+    "streamifier": "^0.1.1",
     "winston": "^2.1.1"
   },
   "devDependencies": {

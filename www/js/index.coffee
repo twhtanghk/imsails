@@ -1,6 +1,6 @@
 env = require './env.coffee'
 
-window.Promise = require 'promise'
+window.Promise = require 'bluebird'
 window._ = require 'lodash'
 window.$ = require 'jquery'
 window.$.deparam = require 'jquery-deparam'

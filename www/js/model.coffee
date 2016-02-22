@@ -233,13 +233,29 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 					fs.uploadFile @local, @$urlRoot(), opts
 						
 			$fetch: (opts = {}) ->
-				fileService.fs.then (fs) =>
-					fs.create @file.org
-						.then (entry) =>
-							fs.download @$url(), entry.toURL(), opts, opts.progress
-								.then =>
-									@file.local = entry.toURL()
-							
+				localfs = fileService.fs
+				localfs.then (localfs) =>
+					localfs.ensure localfs.dirname(@file.org)
+						.then =>
+							localfs.file @file.org, {create:true, exclusive: false}
+								.then (entry) =>
+									localfs.read @file.org, 'readAsBinaryString'
+										.then (buffer) =>
+											crypto = require 'crypto'
+											hash = crypto.createHash 'md5'
+											hash.update buffer, 'binary'
+											digest = hash.digest 'hex'
+											localfs.download "#{@$url()}?md5=#{digest}", entry.toURL(), opts, opts.progress
+												.then =>
+													@file.local = entry.toURL()
+													Promise.resolve()
+												.catch (err) =>
+													if err.http_status == 304
+														@file.local = entry.toURL()
+														Promise.resolve()
+													else
+														Promise.reject err
+
 			$saveAs: ->
 				$http.get @file.url, responseType: 'blob'
 					.then (res) =>
@@ -257,6 +273,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 	
 			$save: ->
 				$log.error 'saving thumb image is not allowed'
+				
+			$fetch: (opts = {}) ->
+				@file.org = sails.services.file.thumbName @file.org
+				super opts
 								
 		class Msgs extends pageableAR.PageableCollection
 			$urlRoot: ->
