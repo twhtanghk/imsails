@@ -32,7 +32,6 @@ module.exports =
 		sails.services.file.content(Model, pk)
 			.then (file) ->
 				md5 = req.param('md5', false)
-				sails.log.error "#{md5} #{file.prop.md5}"
 				if md5 and md5 == file.prop.md5
 					res.send 304, file.prop
 				else
