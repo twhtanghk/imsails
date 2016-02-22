@@ -10,6 +10,7 @@
     "coffee-script": "^1.9.2",
     "connect-mongo": "^0.8.1",
     "dateformat": "^1.0.12",
+    "digest-stream": "^0.2.2",
     "ejs": "~0.8.4",
     "express": "^4.12.3",
     "fluent-ffmpeg": "^2.0.1",
