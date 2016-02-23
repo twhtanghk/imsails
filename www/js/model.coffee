@@ -234,12 +234,13 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 						
 			$fetch: (opts = {}) ->
 				localfs = fileService.fs
+				path = @file.org
 				localfs.then (localfs) =>
-					localfs.ensure localfs.dirname(@file.org)
+					localfs.ensure localfs.dirname(path)
 						.then =>
-							localfs.file @file.org, {create:true, exclusive: false}
+							localfs.file path, {create:true, exclusive: false}
 								.then (entry) =>
-									localfs.read @file.org, 'readAsBinaryString'
+									localfs.read path, 'readAsBinaryString'
 										.then (buffer) =>
 											crypto = require 'crypto'
 											hash = crypto.createHash 'md5'
@@ -249,13 +250,7 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 												.then =>
 													@file.local = entry.toURL()
 													Promise.resolve()
-												.catch (err) =>
-													if err.http_status == 304
-														@file.local = entry.toURL()
-														Promise.resolve()
-													else
-														Promise.reject err
-
+												
 			$saveAs: ->
 				$http.get @file.url, responseType: 'blob'
 					.then (res) =>

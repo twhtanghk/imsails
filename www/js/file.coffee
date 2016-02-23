@@ -21,25 +21,32 @@ angular.module('util.file', ['ng', 'toaster'])
 				progress: (event) =>
 					@percentage = event.loaded / event.total
 				
+		opts = 
+			persistent:		true
+			storageSize:	1024 * 1024 * 1024 # storage size in bytes 
+			concurrency:	3 # how many concurrent uploads/downloads?
+			Promise: 		require 'bluebird'
+		
 		deviceReady = ->
 			new Promise (fulfill, reject) ->
 				document.addEventListener 'deviceready', ->
 					fulfill()
 			
+		quotaReady = ->
+			new Promise (resolve, reject) ->
+				switch true
+					when window.device.platform == 'browser'
+						return navigator.webkitPersistentStorage.requestQuota opts.storageSize, resolve, reject
+					when window.device.platform == 'Android'
+						return resolve()
+				
 		fsReady = ->
-			new Promise (fulfill, reject) -> 
+			if window.device.platform == 'Android'
+				_.extend opts, fileSystem: cordova.file.externalDataDirectory
 			
-				opts = 
-					persistent:		true
-					storageSize:	0 # storage size in bytes 
-					concurrency:	3 # how many concurrent uploads/downloads?
-					Promise: 		require 'bluebird'
-				
-				if window.device.platform == 'Android'
-					_.extend opts, fileSystem: cordova.file.externalDataDirectory
-					
+			new Promise (resolve, reject) ->
 				fs = CordovaPromiseFS opts
-				
+			
 				defaultOpts =
 					headers: 		$http.defaults.headers.common
 					trustAllHosts:	true
@@ -55,19 +62,6 @@ angular.module('util.file', ['ng', 'toaster'])
 							.map fs.removeDir
 					]
 								
-				# override create to clear the filesystem if quota exceeded
-				create = fs.create
-				fs.create = (filename) ->
-					create filename
-						.catch (e) ->
-							if e.code == FileError.QUOTA_EXCEEDED_ERR
-								fs
-									.clear()
-									.then ->
-										create filename
-							else
-								Promise.reject e
-				
 				# override upload to send request with oauth2 token and show progress	
 				upload = fs.upload
 				fs.upload = (source, dest, options = {}, onprogress) ->
@@ -110,8 +104,15 @@ angular.module('util.file', ['ng', 'toaster'])
 				fs.download = (source, dest, options = {}, onprogress) ->
 					_.defaults options, defaultOpts
 					download source, dest, options, onprogress
+						.catch (err) =>
+							if err.http_status == 304
+								# not modified, reference the cached copy
+								Promise.resolve()
+							else
+								# it is mostly filesystem quota exceeded
+								Promise.reject new Error 'fileystem quota exceeded, please see <a href="https://developer.chrome.com/apps/offline_storage#reset">here</a> to clear the filesystem'
 						
-				fulfill fs
+				resolve fs
 			
 		Progress:	Progress
-		fs:			deviceReady().then fsReady
+		fs:			deviceReady().then -> quotaReady().then fsReady
