@@ -1,6 +1,5 @@
 #!/bin/sh
 
-root=~/prod/imsails
-sails=`which sails`
+root=$(dirname $0)
 
-forever start --workingDir ${root} -a -l imsails.log ${sails} lift --prod
+forever start --workingDir ${root} -a -l imsails.log app.js --prod

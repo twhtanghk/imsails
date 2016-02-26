@@ -126,7 +126,5 @@ angular.module('starter', modules)
 					if data.additionalData.foreground
 						$cordovaDialogs.beep(1)
 						$cordovaVibration.vibrate(1000)
-					else
-						location.hash = data.additionalData.data.url
 				
 				push.on 'error', alert

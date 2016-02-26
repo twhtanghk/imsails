@@ -234,32 +234,33 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 						
 			$fetch: (opts = {}) ->
 				localfs = fileService.fs
-				path = @file.org
+				path = @localPath()
 				localfs.then (localfs) =>
-					localfs.ensure localfs.dirname(path)
-						.then =>
-							localfs.file path, {create:true, exclusive: false}
-								.then (entry) =>
-									localfs.read path, 'readAsBinaryString'
-										.then (buffer) =>
-											crypto = require 'crypto'
-											hash = crypto.createHash 'md5'
-											hash.update buffer, 'binary'
-											digest = hash.digest 'hex'
-											localfs.download "#{@$url()}?md5=#{digest}", entry.toURL(), opts, opts.progress
-												.then =>
-													@file.local = entry.toURL()
-													Promise.resolve()
-												
+					localfs.exists path
+						.then (entry) =>
+							if entry
+								# local file exists 
+								Promise.resolve entry	
+							else
+								# local file not found, create and download, resolve local entry
+								localfs.create path
+									.then (entry) =>
+										 localfs.download @$url(), entry.toURL(), opts, opts.progress
+											.then =>
+												Promise.resolve entry
+						.then (entry) =>
+							@file.local = entry.toURL()
+							Promise.resolve()
+				
 			$saveAs: ->
 				$http.get @file.url, responseType: 'blob'
 					.then (res) =>
 						contentType = res.headers('Content-type')
 						saveAs new Blob([res.data], type: contentType), @file.base
 					
-			localUrl: ->
-				@local?.toURL()
-			
+			localPath: ->
+				@file.org
+				
 			@sync: pageableAR.Model.restsync
 	
 		class Thumb extends Attachment
@@ -269,9 +270,8 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 			$save: ->
 				$log.error 'saving thumb image is not allowed'
 				
-			$fetch: (opts = {}) ->
-				@file.org = sails.services.file.thumbName @file.org
-				super opts
+			localPath: ->
+				sails.services.file.thumbName @file.org
 								
 		class Msgs extends pageableAR.PageableCollection
 			$urlRoot: ->
