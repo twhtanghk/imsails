@@ -48,7 +48,6 @@ module.exports = (angularModule) ->
 					io.socket?.removeAllListeners 'msg'
 			
 		.controller 'ChatCtrl', ($scope, $cordovaClipboard, toaster, $ionicScrollDelegate, $location, type, chat, me, collection, resource, audioService) ->
-			recorder = new audioService.Recorder()
 			_.extend $scope,
 				type: type
 				chat: chat
@@ -76,14 +75,12 @@ module.exports = (angularModule) ->
 					if $files and $files.length != 0
 						attachment = new resource.Attachment type: type, to: chat.jid, local: $files[0]
 						attachment.$save().catch alert
-				record: 
+				recorder: 
 					start: ->
-						recorder.start()
+						audioService.recorder.start()
 					stop: ->
-						recorder.stop()
-						recorder.file env.file.audio
-							.then (file) ->
-								$scope.putfile [file]
+						audioService.recorder.stop().then ->
+							$scope.putfile [audioService.recorder.file]
 				copy: (msg) ->
 					if env.isNative()
 						$cordovaClipboard.copy(msg.body)

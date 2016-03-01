@@ -33,7 +33,7 @@
     "compass-css-arrow": "~0.0.5",
     "Wad": "wad#~2.2.3",
     "util.auth": "*",
-    "util.audio": "~0.0.3",
+    "util.audio": "~0.0.6",
     "numeral": "~1.5.3",
     "cordova-promise-fs": "~1.0.1"
   },
