@@ -22,7 +22,9 @@ angular.module('util.file', ['ng', 'toaster'])
 					toaster.clear '*', @name
 					
 				progress: (event) =>
-					@percentage = event.loaded / event.total
+					update = =>
+						@percentage = event.loaded / event.total
+					$timeout update, 0
 				
 		opts = 
 			persistent:		true
