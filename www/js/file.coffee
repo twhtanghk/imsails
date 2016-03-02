@@ -3,20 +3,23 @@ path = require 'path'
 
 angular.module('util.file', ['ng', 'toaster'])
 
-	.factory 'fileService', ($http, toaster) ->
+	.factory 'fileService', ($http, $timeout, toaster) ->
 
 		class Progress
 				constructor: (@name, @percentage = 0) ->
-					@id = toaster.pop
-						type:	'info'
-						body: =>
-							template:	'templates/progress.html'
-							data:		@
-						bodyOutputType:	'templateWithData'
-						timeout:		0
+					show = =>
+						toaster.pop
+							type:	'info'
+							body: =>
+								template:	'templates/progress.html'
+								data:		@
+							bodyOutputType:	'templateWithData'
+							toastId: 		@name
+							timeout:		0
+					$timeout show, 0
 						
 				end: =>
-					toaster.clear @id
+					toaster.clear '*', @name
 					
 				progress: (event) =>
 					@percentage = event.loaded / event.total
