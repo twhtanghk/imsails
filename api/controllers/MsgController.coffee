@@ -36,10 +36,10 @@ module.exports =
 					res.send 304, file.prop
 				else
 					header = 'Accept-Ranges': 'bytes'
-					if file.size
+					if file.prop.length
 						_.extend header,  
-						'Content-Length': file.prop.length
-						'Content-Range': "bytes 0-#{file.prop.length - 1}/#{file.prop.length}"
+							'Content-Length': file.prop.length
+							'Content-Range': "bytes 0-#{file.prop.length - 1}/#{file.prop.length}"
 					res.set header
 					res.attachment encodeURIComponent(file.prop.filename)
 					file.stream.pipe(res)

@@ -6,26 +6,32 @@ angular.module('util.file', ['ng', 'toaster'])
 	.factory 'fileService', ($http, $timeout, toaster) ->
 
 		class Progress
-				constructor: (@name, @percentage = 0) ->
-					show = =>
-						toaster.pop
-							type:	'info'
-							body: =>
-								template:	'templates/progress.html'
-								data:		@
-							bodyOutputType:	'templateWithData'
-							toastId: 		@name
-							timeout:		0
-					$timeout show, 0
-						
-				end: =>
-					toaster.clear '*', @name
+			showProgress:	true
+			
+			constructor: (@name, @percentage = 0) ->
+				toaster.pop
+					type:	'info'
+					body: =>
+						template:	'templates/progress.html'
+						data:		@
+					bodyOutputType:	'templateWithData'
+					toastId: 		@name
+					timeout:		0
+				@scope().$apply()
 					
-				progress: (event) =>
-					update = =>
-						@percentage = event.loaded / event.total
-					$timeout update, 0
+			end: =>
+				toaster.clear '*', @name
 				
+			progress: (event) =>
+				if event.lengthComputable && event.total > 0
+					@percentage = Math.round event.loaded / event.total * 100
+				else
+					@showProgress = false
+				@scope().$apply()
+				
+			scope: ->
+				angular.element($('#toast-container')[0]).scope()
+					
 		opts = 
 			persistent:		true
 			storageSize:	1024 * 1024 * 1024 # storage size in bytes 

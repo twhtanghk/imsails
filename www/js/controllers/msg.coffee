@@ -145,7 +145,7 @@ module.exports = (angularModule) ->
 								.$fetch progress: transfer.progress
 								.then ->
 									transfer.end()
-									$cordovaFileOpener2.open file.file.local, sails.services.file.type(msg.file.org)
+									$cordovaFileOpener2.open decodeURIComponent(file.file.local), sails.services.file.type(msg.file.org)
 								.catch (e) ->
 									transfer.end()
 									alert e.message
