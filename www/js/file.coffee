@@ -24,6 +24,7 @@ angular.module('util.file', ['ng', 'toaster'])
 				
 			progress: (event) =>
 				if event.lengthComputable && event.total > 0
+					@showProgress = true
 					@percentage = Math.round event.loaded / event.total * 100
 				else
 					@showProgress = false
