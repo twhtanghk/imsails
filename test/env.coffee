@@ -10,7 +10,7 @@ module.exports =
 		{ id: 'user1', secret: 'password', jid: "user1@#{domain}" }
 		{ id: 'user2', secret: 'password', jid: "user2@#{domain}" }
 	]
-	group: { name: 'group1', jid: "group1@#{domain}" } 
+	group: { name: 'group1' } 
 	getTokens: ->
 		new Promise (fulfill, reject) ->
 			url = 'https://mob.myvnc.com/org/oauth2/token/'

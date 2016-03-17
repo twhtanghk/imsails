@@ -1,5 +1,6 @@
 uuid = require 'node-uuid'
 agent = require 'https-proxy-agent'
+winston = require 'winston'
 
 module.exports =
 	port:			3000
@@ -60,6 +61,12 @@ module.exports =
 			resize:		'25%'
 	log:
 		level:		'silly'
+		custom: new winston.Logger
+			transports: [
+				new winston.transports.Console
+					level:		'silly'
+					timestamp:	true
+			]
 	http:
 		opts:
 			agent:	new agent('http://proxy1.scig.gov.hk:8080')

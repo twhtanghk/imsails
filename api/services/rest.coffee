@@ -40,23 +40,30 @@ module.exports = (options = sails.config.http.opts || {}) ->
 				fulfill res
 					
 	push: (token, roster, msg) ->
-		param =
-			roster: roster
-			msg:	msg
-		data = _.mapValues sails.config.push.data, (value) ->
-			_.template value, param
-		ret = @post token, sails.config.push.url, 
-				users:	[roster.createdBy.email]
-				data:	data
-		new Promise (fulfill, reject) ->
-			ret	
-				.then (res) ->
-					sails.log.debug util.inspect data
-					sails.log.info util.inspect res.body
-					fulfill res
-				.catch (err) ->
-					sails.log.error err
-					reject err
+		# ensure roster.createdBy is populated
+		rosterReady = (roster) ->
+			if typeof roster.createdBy == 'string'
+				sails.models.roster
+					.findOne roster.id
+					.populateAll()
+			else
+				Promise.resolve roster
+				
+		rosterReady(roster)
+			.then (roster) ->
+				data = _.mapValues sails.config.push.data, (value) ->
+					_.template(value) {roster: roster, msg:	msg}
+				sails.services.rest()
+					.post token, sails.config.push.url, 
+						users:	[roster.createdBy.email]
+						data:	data
+					.then (res) ->
+						sails.log.debug util.inspect data
+						sails.log.info util.inspect res.body
+						Promise.resolve res
+			.catch (err) ->
+				sails.log.error err
+				Promise.reject err
 			
 	gcmPush: (users, data) ->
 		new Promise (fulfill, reject) ->

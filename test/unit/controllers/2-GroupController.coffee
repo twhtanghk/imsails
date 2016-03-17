@@ -30,7 +30,6 @@ describe 'GroupController', ->
 				.post '/api/group'
 				.set 'Authorization', "Bearer #{tokens[0]}"
 				.send
-					jid: 		env.group.jid
 					name:		env.group.name
 					type:		'Members-Only'
 				.expect (res) ->

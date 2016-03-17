@@ -56,30 +56,12 @@ module.exports =
 			not @isPrivate()
 	
 		isPrivate: ->
-			type == 'Members-Only'
+			@type == 'Members-Only'
 			
 	afterCreate: (values, cb) ->
-		if values.type != 'Members-Only'
-			return cb null, values
-		# add this group into roster of the defined members 
-		sails.models.group
-			.findOne()
-			.populateAll()
-			.where(id: values.id)
-			.then (group) ->
-				if not group
-					return res.notFound "Group #{values.name} not found"
-				users = _.uniq _.union([group.createdBy], group.moderators, group.members), 'id'
-				Promise
-					.all _.map users, (item) ->
-						sails.models.roster.create
-							jid:		group.jid
-							group:		group
-							type:		'groupchat'
-							createdBy:	item
-					.then (result) ->
-						cb null, values
-					.catch cb
+		sails.services.roster.recipient null, values.jid
+			.then ->
+				cb()
 			.catch cb
 		
 	afterDestroy: (values, cb) ->

@@ -40,6 +40,20 @@ module.exports =
 				@group?.name
 			else
 				@user?.fullname()
+		sent: (msg) ->
+			switch @jid
+				when msg.from
+					@lastmsgAt = msg.createdAt
+					@newmsg = @newmsg + 1
+					@save()
+				when msg.to
+					@lastmsgAt = msg.createdAt
+					# also update msg counter for groupchat members other than roster owner
+					if sails.services.jid.isMuc(msg.to) and @createdBy.id != msg.createdBy 
+						@newmsg = @newmsg + 1
+					@save()
+				else
+					@
 			
 	beforeCreate: (values, cb) ->
 		values.type = sails.services.jid.type values.jid
@@ -58,9 +72,11 @@ module.exports =
 		@findOne data.id
 			.populateAll()
 			.then (roster) ->
-				sockets = _.filter sails.sockets.subscribers(roomName), (id) ->
-					sails.sockets.get(id).user.id == roster.createdBy.id
-				if roster
-					data.data = roster
-				sails.sockets.emit sockets, eventName, data
+				sails.services.socket.clients roomName
+					.then (clients) ->
+						clients = _.filter clients, (client) ->
+							sails.sockets.get(client).user.id == roster.createdBy.id
+						if roster
+							data.data = roster
+						sails.services.socket.broadcast clients, eventName, data
 			.catch sails.log.error

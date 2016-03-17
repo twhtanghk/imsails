@@ -10,7 +10,7 @@ module.exports =
 
 	autoWatch:			true
 	
-	autosubscribe:		false
+	autosubscribe:		['create']
 	
 	tableName:	'msgs'
 		
@@ -54,50 +54,47 @@ module.exports =
 	broadcast: (roomName, eventName, data, socketToOmit) ->
 		to = data.data.to
 		from = data.data.from
-		msg = sails.models.msg.findOne(data.id)
-		grp = sails.models.group.findOne(jid: to).populateAll()
-		emit = (sockets) ->
-			msg
+		
+		# read message details and broadcast to those authorized listeners
+		broadcast = (sockets) ->
+			sails.models.msg
+				.findOne data.id
 				.then (message) ->
 					_.extend data, data: message.toJSON()
-					sails.sockets.emit sockets, eventName, data
-				.catch sails.log.error
-		
+					sails.services.socket.broadcast sockets, eventName, data
+
 		# filter if socket.user is authorized to listen the created msg
-		sockets = _.map sails.sockets.subscribers(roomName)
-		if sails.services.jid.isMuc to
-			grp
-				.then (group) ->
-					ret = _.filter sockets, (id) ->
-						sails.sockets.get(id).user.canEnter group
-					emit(ret)
-				.catch sails.log.error
-		else
-			ret = _.filter sockets, (id) ->
-				to == sails.sockets.get(id)?.user.jid or
-				from == sails.sockets.get(id)?.user.jid
-			emit(ret)
-	
+		sails.services.socket
+			.clients(roomName)
+			.then (clients) ->
+				if sails.services.jid.isMuc to
+					sails.models.group
+						.findOne jid: to
+						.populateAll()
+						.then (group) ->
+							broadcast _.filter clients, (id) ->
+								sails.sockets.get(id).user.canEnter group
+				else
+					broadcast _.filter clients, (id) ->
+						to == sails.sockets.get(id).user.jid or from == sails.sockets.get(id).user.jid		
+			.catch sails.log.error
+
 	beforeCreate: (values, cb) ->
 		values.type = sails.services.jid.type values.to
 		cb()
 				
 	afterCreate: (values, cb) ->
-		# update sender corresponding roster item lastmsgAt timestamp
-		sails.models.roster
-			.findOne()
-			.where(jid: values.to)
-			.populate('createdBy', jid: values.from)
-			.populateAll()
-			.then (roster) ->
-				if roster
-					roster.lastmsgAt = values.createdAt
-					roster.save()
-						.then ->
-							cb()
-						.catch cb
-				else
-					cb()
+		# find or create roster items for those subscribers for msg.from and msg.to 
+		sails.services.roster
+			.subscribeAll values.from, values.to
+			.then (items) ->		
+				# update all subscribers' roster item
+				Promise
+					.all _.map items, (roster) ->
+						roster.sent values
+					.then ->
+						cb()
+			.catch cb
 		
 	afterDestroy: (values, cb) ->
 		_.each values, (msg) ->
@@ -108,31 +105,12 @@ module.exports =
 		cb()
 		
 	afterPublishCreate: (values, req) ->
-		# update all target recipients corresponding roster items, and send push notification
-		
-		if sails.services.jid.isMuc(values.to)
-			# update all subscribed parties (jid exists in roster)
-			sails.models.roster
-				.find()
-				.where(jid: values.to)
-				.populateAll()
-				.then (roster) ->
-					_.each roster, (item) ->
-						item.lastmsgAt = values.createdAt
-						if item.createdBy.jid != values.from
-							item.newmsg = item.newmsg + 1
-							sails.services.rest()
-								.push req.user.token, item, values
-								.catch sails.log.error
-						item.save().catch sails.log.error
-		else
-			# create recipient roster item if necessary
-			sails.services.roster
-				.findOrCreate values.to, values.from
-				.then (item) ->
-					item.lastmsgAt = values.createdAt
-					item.newmsg = item.newmsg + 1
-					item.save().catch sails.log.error
-					sails.services.rest()
-						.push req.user.token, item, values
-						.catch sails.log.error
+		# send push notification to all subscribers excluding sender
+		sails.services.roster
+			.recipient values.from, values.to
+			.then (items) ->
+				_.each items, (item) ->
+					if item.createdBy.jid != values.from
+						sails.services.rest()
+							.push req.user.token, item, values
+			.catch sails.log.error

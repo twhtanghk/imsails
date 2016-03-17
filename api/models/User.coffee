@@ -153,8 +153,7 @@ module.exports =
 				if group
 					group.members.add values
 					group.save()
-				else
-					Promise.reject "#{sails.config.authGrp} not defined"
+			.catch sails.log.error
 					
 		if cb
 			ret.nodeify cb
@@ -168,10 +167,6 @@ module.exports =
 			_.extend changes, photoUrl: "user/photo/#{id}?m=#{now}"
 			delete changes.photo
 	
-	broadcast: (roomName, eventName, data, socketToOmit) ->
-		# ignore socketToOmit to broadcast the event to sender also
-		sails.sockets.broadcast roomName, eventName, data
-		 
 	# return administrator		
 	admin: (cb) ->
 		ret = sails.models.user
