@@ -26,7 +26,7 @@
     "ngCordova": "~0.1.14-alpha",
     "ngImgCrop": "~0.3.2",
     "sails-auth": "*",
-    "sails.io.js": "git://github.com/twhtanghk/sails.io.js.git#3de3fdcf7868132f288f5ab6cc905932025486b6",
+    "sails.io.js": "0.13.7",
     "tagDirective": "*",
     "ionic-press-again-to-exit": "*",
     "AngularJS-Toaster": "angularjs-toaster#~0.4.15",

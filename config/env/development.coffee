@@ -29,27 +29,15 @@ module.exports =
 		mongo:
 			adapter:	'sails-mongo'
 			driver:		'mongodb'
-			host:		'localhost'
-			port:		27017
-			user:		'admin'
-			password:	''
-			database:	'im'
+			url:		'mongodb://mongo/im'
 	session:
 		secret: 	'41bfa8fb25bde0164c3e5b82f45dd27d'
 		adapter:	'mongo'
-		host: 		'localhost'
-		port: 		27017
-		db:			'im'
-		username:	'imrw'
-		password:	'password'
+		url:		'mongodb://mongo/im'
 	file:
 		opts:
 			adapter:	require 'skipper-gridfs'
-			host:		'localhost'
-			port:		27017
-			dbname:		'im'
-			username:	'imrw'
-			password:	'password'
+			uri:		'mongodb://mongo/im'
 			maxBytes:	10240000	# 10MB
 			saveAs:		(stream, next) ->
 				# convert input wav stream to ogg stream
