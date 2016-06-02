@@ -1,5 +1,5 @@
 url = 'https://mob1.myvnc.com'
-path = ''		# context path '/im.app'
+path = '/im.app'		# context path '/im.app'
 
 io.sails.url = url
 io.sails.path = "#{path}/socket.io"
