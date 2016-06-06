@@ -71,7 +71,7 @@
   "cordovaPlugins": [
     "cordova-plugin-device",
     "cordova-plugin-console",
-    "com.ionic.keyboard",
+    "ionic-plugin-keyboard",
     "cordova-plugin-crosswalk-webview",
     "https://github.com/apache/cordova-plugin-file",
     "https://github.com/apache/cordova-plugin-file-transfer",
