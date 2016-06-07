@@ -29,15 +29,16 @@ module.exports =
 		mongo:
 			adapter:	'sails-mongo'
 			driver:		'mongodb'
-			url:		'mongodb://mongo/im'
+			url:		'mongodb://im_mongo/im'
 	session:
 		secret: 	'41bfa8fb25bde0164c3e5b82f45dd27d'
 		adapter:	'mongo'
-		url:		'mongodb://mongo/im'
+		url:		'mongodb://im_mongo/im'
 	file:
 		opts:
 			adapter:	require 'skipper-gridfs'
-			uri:		'mongodb://mongo/im'
+			uri:		'mongodb://@im_mongo:27017/im'
+			bucket:		'fs'
 			maxBytes:	10240000	# 10MB
 			saveAs:		(stream, next) ->
 				# convert input wav stream to ogg stream
