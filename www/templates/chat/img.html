@@ -1,4 +1,5 @@
 <a class="file" href ng-click="getfile()">
 	<ion-spinner ng-if="! model.file.local"></ion-spinner>
 	<img ng-src="{{model.file.local}}" alt="{{model.file.base}}" ng-if="model.file.local"/>
+        <ng-include src="templates/chat/msg.html" ng-if="model.body"></ng-include>
 </a>
