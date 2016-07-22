@@ -11,6 +11,7 @@
     "connect-mongo": "^1.2.0",
     "dateformat": "^1.0.12",
     "digest-stream": "^1.0.1",
+    "duplexify": "^3.4.5",
     "fluent-ffmpeg": "^2.0.1",
     "https-proxy-agent": "^1.0.0",
     "imagemagick-stream": "^4.1.0",
