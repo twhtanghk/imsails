@@ -1,4 +1,4 @@
-url = 'https://mob1.myvnc.com'
+url = 'https://mob.myvnc.com'
 path = '/im.app'		# context path '/im.app'
 
 io.sails.url = url
@@ -14,9 +14,9 @@ module.exports =
 			url:		url					# server url
 			urlRoot:	"#{url}#{path}"		# api url
 		auth:
-			urlRoot:	'https://mob1.myvnc.com/org'
+			urlRoot:	'https://mob.myvnc.com/org'
 		mobile:
-			urlRoot:	'https://mob1.myvnc.com/mobile'
+			urlRoot:	'https://mob.myvnc.com/mobile'
 	isMobile: ->
 		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 	isNative: ->
