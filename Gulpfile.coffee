@@ -11,6 +11,7 @@ source = require 'vinyl-source-stream'
 uglify = require 'gulp-uglify'
 gulpif = require 'gulp-if'
 templateCache = require 'gulp-angular-templatecache'
+del = require 'del'
 
 paths = sass: ['./scss/**/*.scss']
 
@@ -33,7 +34,7 @@ gulp.task 'copy', ->
 	   
 gulp.task 'coffee', ['copy', 'template'],  ->
   browserify(entries: ['./www/js/index.coffee'])
-  	.transform('coffeeify')
+    .transform('coffeeify')
     .transform('debowerify')
     .bundle()
     .pipe(source('index.js'))
@@ -41,8 +42,8 @@ gulp.task 'coffee', ['copy', 'template'],  ->
   
 gulp.task 'template', ->
   gulp.src('./www/templates/**/*.html')
-  	.pipe(templateCache(root: 'templates', standalone: true))
-  	.pipe(gulp.dest('./www/js/'))
+    .pipe(templateCache(root: 'templates', standalone: true))
+    .pipe(gulp.dest('./www/js/'))
   	  
 gulp.task 'pre-android', ->
   argv.prod = true
@@ -63,9 +64,15 @@ gulp.task 'browser', ['pre-browser', 'sass', 'coffee'], ->
 
 gulp.task 'plugin', ->
   for plugin in require('./package.json').cordovaPlugins
-  	sh.exec "cordova plugin add #{plugin}"
+    sh.exec "cordova plugin add #{plugin}"
   
 gulp.task 'clean', ->
   sh.exec "cordova platform rm browser"
   sh.exec "cordova platform rm android"
-  sh.exec "rm -rf node_modules www/lib resources plugins"
+  del [
+    'node_modules'
+    'www/lib'
+    'resources/browser'
+    'resources/android'
+    'plugins'
+  ]
