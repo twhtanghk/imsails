@@ -1,4 +1,5 @@
-Promise = require 'promise'
+_ = require 'lodash'
+Promise = require 'bluebird'
 actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 
 module.exports = 

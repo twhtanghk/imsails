@@ -1,3 +1,5 @@
+_ = require 'lodash'
+
 dump = ->
 	_.each sails.io.sockets.sockets, (socket) ->
 		rooms =  sails.sockets.socketRooms socket

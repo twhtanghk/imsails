@@ -1,3 +1,4 @@
+_ = require 'lodash'
 passport = require 'passport'
 bearer = require 'passport-http-bearer'
 Promise = require 'promise'

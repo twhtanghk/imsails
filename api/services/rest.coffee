@@ -1,6 +1,7 @@
+_ = require 'lodash'
 http = require 'needle'
 fs = require 'fs'
-Promise = require 'promise'
+Promise = require 'bluebird'
 util = require 'util'
 
 dir = '/etc/ssl/certs'

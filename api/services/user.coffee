@@ -1,3 +1,5 @@
+_ = require 'lodash'
+
 module.exports =
 	fullname: (user) ->
 		if user.name?.given or user.name?.middle or user.name?.family

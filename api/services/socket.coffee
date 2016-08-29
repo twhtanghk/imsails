@@ -1,3 +1,5 @@
+_ = require 'lodash'
+
 module.exports =
 	# promise to resolve all sockets subscribed to the input roomName
 	clients: (roomName) ->
