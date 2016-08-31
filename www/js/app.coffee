@@ -1,44 +1,45 @@
 env = require './env.coffee'
 require 'util.auth'
+require 'log_toast'
 
-modules = [
-	'ionic'
-	'starter.controller'
-	'starter.model'
-	'locale'
-	'util.auth'
-	'ngTagEditor'
-	'ActiveRecord'
-	'ngFileUpload'
-	'ngTouch'
-	'ngImgCrop'
-	'ngFancySelect'
-	'ngIcon'
-	'templates'
-	'ionic-press-again-to-exit'
-	'toaster'
-	'ngCordova'
-]
+angular
 
-angular.module('starter', modules)
-	
+	.module 'starter', [
+		'ionic'
+		'starter.controller'
+		'starter.model'
+		'locale'
+		'util.auth'
+		'ngTagEditor'
+		'ActiveRecord'
+		'ngFileUpload'
+		'ngTouch'
+		'ngImgCrop'
+		'ngFancySelect'
+		'ngIcon'
+		'templates'
+		'ionic-press-again-to-exit'
+		'logToast'
+		'ngCordova'
+	]
+
 	.config ($sceDelegateProvider, $compileProvider) ->
-		$compileProvider.imgSrcSanitizationWhitelist env.whitelist.img	
+		$compileProvider.imgSrcSanitizationWhitelist env.whitelist.img
 		$sceDelegateProvider.resourceUrlWhitelist env.whitelist.url
-	
+
 	.run (authService) ->
 		authService.login env.oauth2().opts
-	
+
 	# default page url
 	.config ($urlRouterProvider) ->
 		$urlRouterProvider.otherwise('/roster/list')
-		
+
 	# ionic default settings
 	.config ($ionicConfigProvider) ->
 		$ionicConfigProvider.tabs.style 'standard'
 		$ionicConfigProvider.tabs.position 'bottom'
 
-	# define showAction method for ionic action sheet 
+	# define showAction method for ionic action sheet
 	.config ($provide) ->
 		$provide.decorator '$ionicActionSheet', ($delegate) ->
 			###
@@ -67,30 +68,24 @@ angular.module('starter', modules)
 					newopts.cancelText = cancel.text
 					newopts.cancel = cancel.cb
 				$delegate.show newopts
-				
+
 			return $delegate
-					
+
 	# press again to exit
-	.run ($translate, $ionicPressAgainToExit, toaster) ->
+	.run ($translate, $ionicPressAgainToExit, toastr) ->
 		$ionicPressAgainToExit ->
-			$translate 'Press again to exit'
-				.then (text) ->
-					toaster.pop
-						type:			'info'
-						body:			text
-						bodyOutputType: 'trustedHtml'
-						timeout:		2000
-					
+			toastr.info 'Press again to exit'
+
 	# state change error
-	.run ($rootScope) ->
+	.run ($rootScope, $log) ->
 		$rootScope.$on '$stateChangeError', (evt, toState, toParams, fromState, fromParams, error) ->
-			window.alert error
-	
+			$log.error error
+
 	# image crop
 	.run ($rootScope, $ionicModal) ->
 		$rootScope.$on 'cropImg', (event, inImg) ->
 			_.extend $rootScope,
-				model: 
+				model:
 					inImg: inImg
 					outImg: ''
 				confirm: ->
@@ -100,31 +95,31 @@ angular.module('starter', modules)
 				.then (modal) ->
 					modal.show()
 					$rootScope.modal = modal
-					
+
 	# push notification
 	.run ($cordovaDevice, $cordovaDialogs, $cordovaVibration, $log, resource) ->
 		document.addEventListener 'deviceready', ->
 			if $cordovaDevice.getPlatform() != 'browser'
 				push = PushNotification.init
-					android: 
+					android:
 						env.push.gcm
-					ios: 
+					ios:
 						alert: "true"
 						badge: "true"
 						sound: "true"
-					windows: 
+					windows:
 						{}
-	         			
+
 				push.on 'registration', (data) ->
 					device = new resource.Device
 						regid: 		data.registrationId
 						model:		$cordovaDevice.getModel()
 						version:	$cordovaDevice.getVersion()
-					device.$save().catch alert
-						
+					device.$save()
+
 				push.on 'notification', (data) ->
 					if data.additionalData.foreground
 						$cordovaDialogs.beep(1)
 						$cordovaVibration.vibrate(1000)
-				
-				push.on 'error', alert
+
+				push.on 'error', $log.error

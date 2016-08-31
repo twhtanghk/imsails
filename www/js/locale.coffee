@@ -1,7 +1,8 @@
 angular.module('locale', ['pascalprecht.translate'])
-	
+
 	.config ($translateProvider) ->
 		$translateProvider
+			.useSanitizeValueStrategy 'sanitize'
 			.useStaticFilesLoader
 				prefix: 'locale/'
 				suffix: '.json'

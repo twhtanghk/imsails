@@ -31,9 +31,6 @@ module.exports = (angularModule) ->
 					data = new resource.User id: $scope.model.id
 					data.$save(status: $scope.model.status).catch alert
 		
-		.run (toaster) ->
+		.run (toastr) ->
 			window.alert = (msg) ->
-				toaster.pop
-					type:			'error'
-					body:			util.inspect(msg)
-					bodyOutputType: 'trustedHtml'
+				toastr.error util.inspect(msg)

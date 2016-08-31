@@ -47,7 +47,7 @@ module.exports = (angularModule) ->
 					# no more listen to those registered events
 					io.socket?.removeAllListeners 'msg'
 			
-		.controller 'ChatCtrl', ($scope, $cordovaClipboard, toaster, $ionicScrollDelegate, $location, type, chat, me, collection, resource, audioService) ->
+		.controller 'ChatCtrl', ($scope, $cordovaClipboard, $log, $ionicScrollDelegate, $location, type, chat, me, collection, resource, audioService) ->
 			_.extend $scope,
 				type: type
 				chat: chat
@@ -85,11 +85,8 @@ module.exports = (angularModule) ->
 					if env.isNative()
 						$cordovaClipboard.copy(msg.body)
 							.then ->
-								toaster.pop
-									type:	'info'
-									body:	'Message copied'
-									bodyOutputType: 'trustedHtml'
-							.catch alert
+								$log.info 'Message copied'
+							.catch $log.error
 			
 			# reload collection once reconnected
 			io.socket?.on 'connect', (event) ->

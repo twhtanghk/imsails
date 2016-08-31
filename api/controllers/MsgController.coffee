@@ -2,6 +2,7 @@
  #
  # @description :: Server-side logic for managing msgs
  # @help        :: See http://links.sailsjs.org/docs/controllers
+_ = require 'lodash'
 actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 create = require 'sails/lib/hooks/blueprints/actions/create'
 

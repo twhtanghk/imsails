@@ -1,49 +1,40 @@
 _ = require 'lodash'
 path = require 'path'
 
-angular.module('util.file', ['ng', 'toaster'])
+angular.module('util.file', ['ng', 'toastr'])
 
-	.factory 'fileService', ($http, $timeout, toaster) ->
+	.factory 'fileService', ($http, toastr) ->
 
 		class Progress
 			showProgress:	true
-			
+
 			constructor: (@name, @percentage = 0) ->
-				toaster.pop
-					type:	'info'
-					body: =>
-						template:	'templates/progress.html'
-						data:		@
-					bodyOutputType:	'templateWithData'
-					toastId: 		@name
-					timeout:		0
-				@scope().$apply()
-					
+				@toast = toastr.info "",	@name,
+					autoDismiss: false
+					extraData: @
+					progressBar: true
+
 			end: =>
-				toaster.clear '*', @name
-				
+				toastr.clear @toast
+
 			progress: (event) =>
 				if event.lengthComputable && event.total > 0
 					@showProgress = true
 					@percentage = Math.round event.loaded / event.total * 100
 				else
 					@showProgress = false
-				@scope().$apply()
-				
-			scope: ->
-				angular.element($('#toast-container')[0]).scope()
-					
-		opts = 
+
+		opts =
 			persistent:		true
-			storageSize:	1024 * 1024 * 1024 # storage size in bytes 
+			storageSize:	1024 * 1024 * 1024 # storage size in bytes
 			concurrency:	3 # how many concurrent uploads/downloads?
 			Promise: 		require 'bluebird'
-		
+
 		deviceReady = ->
 			new Promise (fulfill, reject) ->
 				document.addEventListener 'deviceready', ->
 					fulfill()
-			
+
 		quotaReady = ->
 			new Promise (resolve, reject) ->
 				switch true
@@ -51,18 +42,18 @@ angular.module('util.file', ['ng', 'toaster'])
 						return navigator.webkitPersistentStorage.requestQuota opts.storageSize, resolve, reject
 					when window.device.platform == 'Android'
 						return resolve()
-				
+
 		fsReady = ->
 			if window.device.platform == 'Android'
 				_.extend opts, fileSystem: cordova.file.externalDataDirectory
-			
+
 			new Promise (resolve, reject) ->
 				fs = CordovaPromiseFS opts
-			
+
 				defaultOpts =
 					headers: 		$http.defaults.headers.common
 					trustAllHosts:	true
-					
+
 				# clear all subfolders and files on the filesystem
 				fs.clear = ->
 					Promise.all [
@@ -73,15 +64,15 @@ angular.module('util.file', ['ng', 'toaster'])
 							.list '', 'd'
 							.map fs.removeDir
 					]
-								
-				# override upload to send request with oauth2 token and show progress	
+
+				# override upload to send request with oauth2 token and show progress
 				upload = fs.upload
 				fs.upload = (source, dest, options = {}, onprogress) ->
 					_.defaults options, defaultOpts
 					transfer = new Progress source
 					upload source, dest, options, onprogress || transfer.progress
 						.then transfer.end, transfer.end
-					
+
 				# upload file entry and show progress
 				fs.uploadFile = (entry, dest, opts = {}, onprogress) ->
 					_.defaults opts, defaultOpts
@@ -91,13 +82,13 @@ angular.module('util.file', ['ng', 'toaster'])
 						_.each opts.data, (value, key) ->
 							data.append key, value
 						data.append 'file', entry, entry.name
-						
+
 						# define header
 						xhr = new XMLHttpRequest()
 						xhr.open 'post', dest, true
 						_.each opts.headers, (value, key) ->
 							xhr.setRequestHeader key, value
-							
+
 						# send upload request
 						transfer = new Progress entry.name
 						_fulfill = ->
@@ -105,12 +96,12 @@ angular.module('util.file', ['ng', 'toaster'])
 							fulfill()
 						_reject = ->
 							transfer.end()
-							reject()	
+							reject()
 						xhr.upload.addEventListener 'loadend', _fulfill
 						xhr.upload.addEventListener 'error', _reject
 						xhr.upload.addEventListener 'progress', onprogress || transfer.progress
 						xhr.send data
-					
+
 				# override download to send request with oauth2 token
 				download = fs.download
 				fs.download = (source, dest, options = {}, onprogress) ->
@@ -123,8 +114,8 @@ angular.module('util.file', ['ng', 'toaster'])
 							else
 								# it is mostly filesystem quota exceeded
 								Promise.reject new Error 'fileystem quota exceeded, please see <a href="https://developer.chrome.com/apps/offline_storage#reset">here</a> to clear the filesystem'
-						
+
 				resolve fs
-			
+
 		Progress:	Progress
 		fs:			deviceReady().then -> quotaReady().then fsReady
