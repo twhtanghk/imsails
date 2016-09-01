@@ -73,7 +73,7 @@ gulp.task 'pre-browser', ->
   sh.exec "cordova platform add browser"
   sh.exec "ionic resources browser"
 
-gulp.task 'browser', ['pre-browser', 'plugin', 'csss', 'coffee'], ->
+gulp.task 'browser', ['pre-browser', 'plugin', 'css', 'coffee'], ->
   sh.exec "cordova build browser"
 
 gulp.task 'plugin', ->
