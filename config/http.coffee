@@ -9,7 +9,7 @@ module.exports =
 				host = req.headers['x-forwarded-host'] || req.headers['host']
 				ret = csp
 					directives:
-						connectSrc: [ "'self'", "ws://#{host}" ]
+						connectSrc: [ "'self'", "ws://#{host}", "wss://#{host}" ]
 						styleSrc: [ "'self'", "'unsafe-inline'" ]
 						scriptSrc: [ "'self'", "'unsafe-inline'", "'unsafe-eval'" ]
 				ret req, res, next
