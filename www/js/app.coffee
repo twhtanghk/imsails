@@ -72,9 +72,11 @@ angular
 			return $delegate
 
 	# press again to exit
-	.run ($translate, $ionicPressAgainToExit, toastr) ->
+	.run ($translate, $ionicPressAgainToExit, $log) ->
 		$ionicPressAgainToExit ->
-			toastr.info 'Press again to exit'
+			$translate 'Press again to exit'
+				.then (text) ->
+					$log.info text
 
 	# state change error
 	.run ($rootScope, $log) ->
