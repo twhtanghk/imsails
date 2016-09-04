@@ -89,9 +89,20 @@ module.exports =
 		sails.services.roster
 			.subscribeAll values.from, values.to
 			.then ->		
-				# search for all subscribed rosters
-				sails.models.roster
-					.find jid: values.to
+				if sails.services.jid.isMuc values.to
+					# search for all subscribed rosters
+					sails.models.roster
+						.find jid: values.to
+						.populateAll()
+				else
+					sails.models.user
+						.findOne jid: values.to
+						.then (user) ->
+							sails.models.roster
+								.find
+									jid: values.from
+									createdBy: user.id
+								.populateAll()
 			.then (items) ->
 				# update all subscribers' roster item
 				Promise
