@@ -65,17 +65,19 @@ module.exports =
 				cb()
 			.catch cb
 		
-	afterDestroy: (values, cb) ->
-		_.each values, (group) ->
-			# remove all roster reference to the deleted group
-			sails.models.roster
-				.destroy(jid: group.jid)
-				.catch sails.log.error
-			# remove all msg sent to the deleted group
-			sails.models.msg
-				.destroy(to: group.jid)
-				.catch sails.log.error
-		cb()
+	afterDestroy: (groups, cb) ->
+		Promise
+			.each groups, (group) ->
+				Promise.all [
+					# remove rosters for the deleted group
+					sails.models.roster.destroy jid: group.jid
+
+					# remove msgs for the deleted group
+					sails.models.msg.destroy to: group.jid
+				]	
+			.then ->
+				cb()
+			.catch cb
        			
 	beforePublishUpdate: (id, changes, req, options) ->
 		# update photoUrl if photo is updated
