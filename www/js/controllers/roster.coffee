@@ -62,7 +62,6 @@ module.exports = (angularModule) ->
 					collection.$fetch()
 						.then ->
 							$scope.$broadcast('scroll.infiniteScrollComplete')
-						.catch alert
 					return @
 					
 			# reload collection once reconnected

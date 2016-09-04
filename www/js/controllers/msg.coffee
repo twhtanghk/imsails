@@ -58,7 +58,6 @@ module.exports = (angularModule) ->
 					collection.$fetch params: {type: type, to: chat.jid, sort: 'createdAt DESC'}
 						.then ->
 							$scope.$broadcast('scroll.infiniteScrollComplete')
-						.catch alert
 					return @
 				# to control no of rows required for the input textarea
 				row: (msg) ->
@@ -68,13 +67,13 @@ module.exports = (angularModule) ->
 				send: ->
 					if $scope.msg != ''
 						msg = new resource.Msg type: type, to: chat.jid, body: $scope.msg
-						msg.$save().catch alert
+						msg.$save()
 						$scope.msg = ''
 						$scope.row('')
 				putfile: ($files) ->
 					if $files and $files.length != 0
 						attachment = new resource.Attachment type: type, to: chat.jid, local: $files[0]
-						attachment.$save().catch alert
+						attachment.$save()
 				recorder: 
 					start: ->
 						audioService.recorder.start()
@@ -118,15 +117,11 @@ module.exports = (angularModule) ->
 						thumb.$fetch()
 							.then ->
 								$scope.$apply()
-							.catch (e) ->
-								alert e.message
 					when sails.services.file.isAudio(msg.file.base)
 						audio = new resource.Attachment _.pick msg, 'id', 'file'
 						audio.$fetch()
 							.then ->
 								$scope.$apply()
-							.catch (e) ->
-								alert e.message
 			
 			_.extend $scope, 
 				getfile: ->
@@ -135,7 +130,6 @@ module.exports = (angularModule) ->
 						when 'browser'
 							file
 								.$saveAs()
-								.catch alert
 						when 'Android'
 							transfer = new fileService.Progress msg.file.base
 							file
@@ -145,7 +139,6 @@ module.exports = (angularModule) ->
 									$cordovaFileOpener2.open decodeURIComponent(file.file.local), sails.services.file.type(msg.file.org)
 								.catch (e) ->
 									transfer.end()
-									alert e.message
 
 		.filter 'msgFilter', ->
 			(msgs, search) ->

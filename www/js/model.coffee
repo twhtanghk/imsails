@@ -31,7 +31,7 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 				
 				if ret.group
 					ret.group = new Group ret.group
-					ret.group.$fetch(reset: true).catch alert
+					ret.group.$fetch(reset: true)
 						
 				return ret
 				

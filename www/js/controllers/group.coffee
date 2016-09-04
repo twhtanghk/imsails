@@ -121,7 +121,6 @@ domain =
 				collection.$fetch()
 					.then ->
 						$scope.$broadcast('scroll.infiniteScrollComplete')
-					.catch alert
 				return @
 				
 		# reload collection once reconnected
@@ -171,7 +170,6 @@ domain =
 						if model.type == 'Members-Only'
 							next = 'app.group.list.private' 
 						$state.go next
-					.catch alert
 		
 		$scope.$on 'cropImg.completed', (event, outImg) ->
 			$scope.model.photoUrl = outImg		
@@ -215,7 +213,6 @@ module.exports = (angularModule) ->
 										if rosterItem
 											resource.Roster.instance().remove rosterItem
 										close()
-									.catch alert 
 						edit =
 							type:	'button'
 							text:	translations['Edit']

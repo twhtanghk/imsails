@@ -29,7 +29,7 @@ module.exports = (angularModule) ->
 			$scope.$watch 'model.status', (newvalue, oldvalue) ->
 				if newvalue != oldvalue
 					data = new resource.User id: $scope.model.id
-					data.$save(status: $scope.model.status).catch alert
+					data.$save(status: $scope.model.status)
 		
 		.run (toastr) ->
 			window.alert = (msg) ->

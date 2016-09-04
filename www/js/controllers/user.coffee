@@ -79,7 +79,6 @@ domain =
 				collection.$fetch()
 					.then ->
 						$scope.$broadcast('scroll.infiniteScrollComplete')
-					.catch alert
 				return @
 				
 		# reload collection once reconnected
@@ -102,7 +101,6 @@ domain =
 				collection.$fetch()
 					.then ->
 						$scope.$broadcast('scroll.infiniteScrollComplete')
-					.catch alert
 				return @
 		
 		$scope.collection.$fetch()
@@ -124,7 +122,6 @@ domain =
 					lib.readFile(files)
 						.then (inImg) ->
 							$scope.$emit 'cropImg', inImg 
-						.catch alert
 				
 		$scope.$on 'cropImg.completed', (event, outImg) ->
 			$scope.model.photoUrl = outImg
