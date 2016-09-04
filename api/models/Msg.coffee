@@ -88,13 +88,17 @@ module.exports =
 		# find or create roster items for those subscribers for msg.from and msg.to 
 		sails.services.roster
 			.subscribeAll values.from, values.to
-			.then (items) ->		
+			.then ->		
+				# search for all subscribed rosters
+				sails.models.roster
+					.find jid: values.to
+			.then (items) ->
 				# update all subscribers' roster item
 				Promise
 					.all _.map items, (roster) ->
 						roster.sent values
-					.then ->
-						cb()
+			.then ->
+				cb()
 			.catch cb
 		
 	afterDestroy: (values, cb) ->
