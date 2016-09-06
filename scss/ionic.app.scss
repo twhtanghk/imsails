@@ -71,7 +71,7 @@ util-audio {
 }
 
 img {
-	border-radius: 50% !important;
+	border-radius: 50%;
 }
 
 icon i {
@@ -142,7 +142,7 @@ i.photo {
 		    height: 100%;
 		    font-size: 40px;
 		    
-			@extend .rounded;
+			@extend img;
 		}
 	}
 }
