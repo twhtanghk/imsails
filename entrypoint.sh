@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./node_modules/.bin/gulp --prod
+./node_modules/.bin/gulp browser
 sed 's/\/config.xml/config.xml/g' <./platforms/browser/www/cordova.js >/tmp/cordova.js
 cp /tmp/cordova.js ./platforms/browser/www
 cp /tmp/cordova.js ./platforms/browser/platform_www
