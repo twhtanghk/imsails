@@ -71,6 +71,8 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 				_.each ['updatedAt', 'createdAt'], (field) ->
 					if ret[field]
 						ret[field] = new Date Date.parse ret[field]
+				if env.isNative() and ret.photoUrl and ret.photoUrl.indexOf(env.server.app.urlRoot) == -1
+					ret.photoUrl = "#{env.server.app.urlRoot}/#{ret.photoUrl}"
 				return ret
 				
 			post: ->
@@ -156,6 +158,9 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 				if ret.createdBy and typeof ret.createdBy == 'object'
 					ret.createdBy = new User ret.createdBy
 					
+				if env.isNative() and ret.photoUrl and ret.photoUrl.indexOf(env.server.app.urlRoot) == -1
+					ret.photoUrl = "#{env.server.app.urlRoot}/#{ret.photoUrl}"
+
 				return ret
 			
 			exit: ->
