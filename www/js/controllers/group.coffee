@@ -134,7 +134,7 @@ domain =
 			model: model
 			users:		resource.Users.instance()
 			select: (files) ->
-				if files.length != 0
+				if files?.length != 0
 					lib.readFile(files)
 						.then (inImg) ->
 							$scope.$emit 'cropImg', inImg 
@@ -157,7 +157,7 @@ domain =
 			model: 		model
 			users:		resource.Users.instance()
 			select: (files) ->
-				if files.length != 0
+				if files?.length != 0
 					lib.readFile(files)
 						.then (inImg) ->
 							$scope.$emit 'cropImg', inImg 

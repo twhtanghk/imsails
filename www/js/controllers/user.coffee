@@ -118,7 +118,7 @@ domain =
 				model.$save().then ->
 					$state.go 'app.user.list'
 			select: (files) ->
-				if files.length != 0
+				if files?.length != 0
 					lib.readFile(files)
 						.then (inImg) ->
 							$scope.$emit 'cropImg', inImg 
