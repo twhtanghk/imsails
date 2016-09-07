@@ -17,8 +17,8 @@ module.exports =
 			scope = [ "https://mob.myvnc.com/org/users", "https://mob.myvnc.com/mobile"]
 			Promise
 				.all [
-					sails.services.rest().token url, module.exports.client, module.exports.users[0], scope
-					sails.services.rest().token url, module.exports.client, module.exports.users[1], scope
+					sails.services.oauth2.token url, module.exports.client, module.exports.users[0], scope
+					sails.services.oauth2.token url, module.exports.client, module.exports.users[1], scope
 				] 
 				.then (res) ->
 					fulfill _.map res, (response) ->

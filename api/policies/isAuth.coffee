@@ -1,14 +1,17 @@
 _ = require 'lodash'
 passport = require 'passport'
 bearer = require 'passport-http-bearer'
-Promise = require 'promise'
+Promise = require 'bluebird'
+needle = Promise.promisifyAll require 'needle'
 
 # check if oauth2 bearer is available
 verifyToken = (token) ->
 	oauth2 = sails.config.oauth2
 	
 	return new Promise (fulfill, reject) ->
-		sails.services.rest().get token, oauth2.verifyURL
+		opts = headers:
+			Authorization: "Bearer #{token}"
+		needle.getAsync oauth2.verifyURL, opts
 			.then (res) -> 
 				# check required scope authorized or not
 				scope = res.body.scope.split(' ')

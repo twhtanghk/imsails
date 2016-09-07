@@ -127,6 +127,6 @@ module.exports =
 			.then (items) ->
 				_.each items, (item) ->
 					if item.createdBy.jid != values.from
-						sails.services.rest()
+						sails.services.gcm
 							.push req.user.token, item, values
 			.catch sails.log.error

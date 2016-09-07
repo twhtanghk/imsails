@@ -1,13 +1,11 @@
 _ = require 'lodash'
 
-dump = ->
-	_.each sails.io.sockets.sockets, (socket) ->
-		rooms =  sails.sockets.socketRooms socket
-		sails.log.verbose "#{socket.user?.jid}: #{JSON.stringify(rooms)}" 	
-	
 module.exports = 
 	bootstrap:	(cb) ->
-		# setInterval dump, 5000
+		if process.env.OAUTH2_CA
+			require 'ssl-root-cas'
+				.inject()
+				.addFile process.env.OAUTH2_CA
 		
 		sails.models.user
 			.findOrCreate username: sails.config.adminUser.username,

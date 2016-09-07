@@ -19,7 +19,7 @@ describe 'message', ->
 				.findOne jid: users[1].jid
 				.populateAll()
 				.then (roster) ->
-					sails.services.rest()
+					sails.services.gcm
 						.push tokens[1], roster, 'testing'
 						.then ->
 							done()
