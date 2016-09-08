@@ -1,6 +1,5 @@
 uuid = require 'node-uuid'
 agent = require 'https-proxy-agent'
-winston = require 'winston'
 
 module.exports =
 	hookTimeout:	400000
@@ -49,9 +48,3 @@ module.exports =
 			resize:		'25%'
 	log:
 		level:		'info'
-		custom: new winston.Logger
-			transports: [
-				new winston.transports.Console
-					level:		'silly'
-					timestamp:	true
-			]
