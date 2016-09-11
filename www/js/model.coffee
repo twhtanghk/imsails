@@ -1,4 +1,6 @@
 env = require './env.coffee'
+lurl = require 'url'
+lpath = require 'path'
 require 'PageableAR'
 _ = require 'lodash'
 sails =
@@ -7,7 +9,9 @@ sails =
 		file:	require '../../api/services/file.coffee'
 		
 urlRoot = (model, url, root = env.server.app.urlRoot) ->
-	if model.transport() == 'io' then "/#{url}" else "#{root}/#{url}"
+	ret = lurl.parse root
+	ret.pathname = lpath.join ret.pathname, url
+	if model.transport() == 'io' then "/#{url}" else lurl.format ret
 		
 angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 
@@ -235,22 +239,19 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 			$fetch: (opts = {}) ->
 				localfs = fileService.fs
 				path = @localPath()
-				localfs.then (localfs) =>
-					localfs.exists path
-						.then (entry) =>
-							if entry
-								# local file exists 
-								Promise.resolve entry	
-							else
+				localfs
+					.then (localfs) =>
+						localfs.exists path
+							.then (entry) =>
 								# local file not found, create and download, resolve local entry
-								localfs.create path
-									.then (entry) =>
-										 localfs.download @$url(), entry.toURL(), opts, opts.progress
-											.then =>
-												Promise.resolve entry
-						.then (entry) =>
-							@file.local = entry.toURL()
-							Promise.resolve()
+								entry ?= localfs.create path
+							.then (entry) =>
+						 		localfs.download @$url(), decodeURIComponent(entry.toURL()), opts, opts.progress
+									.then ->
+										entry
+					.then (entry) =>
+						@file.local = decodeURIComponent entry.toURL()
+						@
 				
 			$saveAs: ->
 				$http.get @file.url, responseType: 'blob'
@@ -296,4 +297,4 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 		Attachment:		Attachment
 		Thumb:			Thumb
 		Msgs:			Msgs
-		Device:			Device
+		device:			Device

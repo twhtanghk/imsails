@@ -1,7 +1,15 @@
 _ = require 'lodash'
-path = require 'path'
 
-angular.module('util.file', ['ng', 'toastr'])
+angular
+	.module 'util.file', [
+		'ng'
+		'toastr'
+	]
+
+	.config (toastrConfig) ->
+		_.extend toastrConfig,
+			templates:
+				toast: 'templates/progress.html'
 
 	.factory 'fileService', ($http, toastr) ->
 
@@ -9,10 +17,11 @@ angular.module('util.file', ['ng', 'toastr'])
 			showProgress:	true
 
 			constructor: (@name, @percentage = 0) ->
-				@toast = toastr.info "",	@name,
-					autoDismiss: false
+				@toast = toastr.info '', @name,
+					allowHtml: true
 					extraData: @
-					progressBar: true
+					autoDismiss: false
+					timeOut: 0
 
 			end: =>
 				toastr.clear @toast
@@ -21,6 +30,7 @@ angular.module('util.file', ['ng', 'toastr'])
 				if event.lengthComputable && event.total > 0
 					@showProgress = true
 					@percentage = Math.round event.loaded / event.total * 100
+					@toast.scope.$apply()
 				else
 					@showProgress = false
 
@@ -118,4 +128,6 @@ angular.module('util.file', ['ng', 'toastr'])
 				resolve fs
 
 		Progress:	Progress
-		fs:			deviceReady().then -> quotaReady().then fsReady
+		fs: deviceReady()
+			.then quotaReady
+			.then fsReady
