@@ -31,6 +31,10 @@ $msg-arrow: 20px;
 
 $input-height: 54px;
 
+.button-clear.button-clear {
+	color: $button-default-text;
+}
+
 util-audio {
 	display: block;
 }
