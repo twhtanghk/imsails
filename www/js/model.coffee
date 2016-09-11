@@ -243,8 +243,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 					.then (localfs) =>
 						localfs.exists path
 							.then (entry) =>
+								if entry
+									return entry
 								# local file not found, create and download, resolve local entry
-								entry ?= localfs.create path
+								localfs.create path
 							.then (entry) =>
 						 		localfs.download @$url(), decodeURIComponent(entry.toURL()), opts, opts.progress
 									.then ->
