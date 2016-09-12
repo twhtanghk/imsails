@@ -299,4 +299,4 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 		Attachment:		Attachment
 		Thumb:			Thumb
 		Msgs:			Msgs
-		device:			Device
+		Device:			Device
