@@ -99,3 +99,6 @@ gulp.task 'clean', ->
     'resources/android'
     'plugins'
   ]
+
+gulp.task 'verify', ->
+  sh.exec "jarsigner -keystore /home/twhtang/.android/release.keystore -verify -certs -sigalg SHA1withRSA -digestalg SHA1 -verbose platforms/android/build/outputs/apk/android-armv7-debug.apk"

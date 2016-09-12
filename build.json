@@ -1,10 +1,17 @@
 {
 	"android": {
+		"debug": {
+             "keystore": "/home/twhtang/.android/release.keystore",
+             "storePassword": "",
+             "alias": "mobile",
+             "password" : "",
+             "keystoreType": ""
+         },
 		"release": {
-             "keystore": "/home/twhtang/.android/debug.keystore",
-             "storePassword": "android",
-             "alias": "androiddebugkey",
-             "password" : "android",
+             "keystore": "/home/twhtang/.android/release.keystore",
+             "storePassword": "",
+             "alias": "mobile",
+             "password" : !",
              "keystoreType": ""
          }
      }
