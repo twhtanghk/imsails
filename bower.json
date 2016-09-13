@@ -35,10 +35,10 @@
     "util.audio": "~0.0.7",
     "numeral": "~1.5.3",
     "cordova-promise-fs": "~1.0.1",
-    "ionic": "driftyco/ionic-bower#1.3.1"
+    "ionic": "driftyco/ionic-bower#1.3.1",
+    "bootstrap": "^3.3.7"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "resolutions": {
     "angular": "1.5.3",
     "sails.io.js": "master",

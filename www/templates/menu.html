@@ -21,12 +21,10 @@
         <ion-item nav-clear menu-close href="#/user/update">
           {{'Personal Info' | translate}}
         </ion-item>
-        <fancy-select
-			template-url='templates/user/status.html'
-			ng-selected="model.status"
-			ng-model="resource.User.type.status"
-			title="{{'Select' | translate}}">
-		</fancy-select>
+	<a class="item item-icon-right" href="#" ng-click="statusModal.show()">
+		{{model.status | translate}}
+		<i class="icon ion-ios-arrow-right"></i>
+	</a>
       </ion-list>
     </ion-content>
   </ion-side-menu>

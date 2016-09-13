@@ -14,6 +14,7 @@ bower = require 'gulp-bower'
 source = require 'vinyl-source-stream'
 rework = require 'gulp-rework'
 reworkNPM = require 'rework-npm'
+reworkBower = require 'rework-bower'
 cleanCSS = require 'gulp-clean-css'
 uglify = require 'gulp-uglify'
 templateCache = require 'gulp-angular-templatecache'
@@ -24,10 +25,10 @@ fs = require 'fs'
 util = require 'util'
 
 config = (params) ->
-  _.defaults params, 
+  _.defaults params,
     _.pick(process.env, 'ROOTURL', 'SENDER_ID', 'CLIENT_ID', 'OAUTH2_SCOPE')
   fs.writeFileSync 'www/js/config.json', util.inspect(params)
-  
+
 gulp.task 'default', ['browser', 'android']
 
 gulp.task 'css', (done) ->
@@ -40,7 +41,7 @@ gulp.task 'css', (done) ->
       .pipe concat 'scss-files.scss'
     gulp.src 'www/css/index.css'
       .pipe whitespace()
-      .pipe rework reworkNPM shim: 'angular-toastr': 'dist/angular-toastr.css'
+      .pipe rework reworkNPM(shim: 'angular-toastr': 'dist/angular-toastr.css'), reworkBower()
       .pipe concat 'css-files.css'
   ]
   merge objectMode: true, lessAll, cssAll, scssAll
