@@ -209,9 +209,9 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 			@msgType: (msg) ->
 				if msg.file
 					switch true
-						when sails.services.file.isImg(msg.file.base)
+						when sails.services.file.isImg msg.file_inode
 							return 'img'
-						when sails.services.file.isAudio(msg.file.base)
+						when sails.services.file.isAudio msg.file_inode
 							return 'audio'
 						else
 							return 'file'
@@ -230,6 +230,9 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 					ret[field] = new Date Date.parse ret[field]
 
 				return ret
+
+			$fetch: (opts) ->
+				super _.extend opts, populate: ['file_inode', 'createdBy']
 
 		class Attachment extends pageableAR.Model
 			$urlRoot: ->
@@ -289,6 +292,9 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 				urlRoot(@, "api/msg")
 
 			model: Msg
+
+			$fetch: (opts) ->
+				super _.extend opts, populate: ['file_inode', 'createdBy']
 
 		class Device extends pageableAR.Model
 			$urlRoot: ->
