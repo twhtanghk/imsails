@@ -7,11 +7,20 @@ module.exports =
 			static: express.static('platforms/browser/www')
 			csp: (req, res, next)->
 				host = req.headers['x-forwarded-host'] || req.headers['host']
+				src = [
+					"'self'"
+					"filesystem:"
+					"data:"
+					"http://#{host}"
+					"https://#{host}"
+					"https://mob.myvnc.com"
+				]
 				ret = csp
 					directives:
-						connectSrc: [ "'self'", "ws://#{host}", "wss://#{host}" ]
-						styleSrc: [ "'self'", "'unsafe-inline'" ]
-						scriptSrc: [ "'self'", "'unsafe-inline'", "'unsafe-eval'" ]
+						defaultSrc: src
+						connectSrc: [ "ws://#{host}", "wss://#{host}" ].concat src
+						styleSrc: [ "'unsafe-inline'" ].concat src
+						scriptSrc: [ "'unsafe-inline'", "'unsafe-eval'" ].concat src
 				ret req, res, next
 			order: [
 				'cookieParser'
