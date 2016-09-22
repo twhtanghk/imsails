@@ -10,10 +10,10 @@
 <ion-content>
 	<div class="row">
 		<div class="col col-33">
-			<icon class="photo edit" 
+			<icon class="photo edit"
 				ng-src="model.photoUrl"
-				ngf-select ngf-multiple='false' 
-				ngf-change="select($files)" 
+				ngf-select ngf-multiple='false'
+				ngf-change="select($files)"
 				ngf-accept="'image/*'"
 				aria-label="{{model.name}}"
 				otherwise="icon ion-android-people">
@@ -24,13 +24,13 @@
 				<input type="text" name="name" ng-model="model.name" placeholder="Name" required>
 			</label>
 			<div ng-messages="groupCreate.name.$error"
-				role="alert" 
+				role="alert"
 				ng-show="groupCreate.name.$error">
 				<div class="form-error" ng-if="groupCreate.name.$error.required">This field is required</div>
 				<div class="form-error" ng-if="groupCreate.name.$error.server">{{groupCreate.name.$error.server}}</div>
 			</div>
 			<fancy-select
-				template-url='templates/user/select.html'
+				template-url='templates/user/status.html'
 				ng-selected="model.type"
 				ng-model="resource.Group.type.values"
 				title="Select group type">
@@ -42,10 +42,10 @@
 			<ion-item class="item-divider">
 				{{resource.Group.type.placeholder[type]}}
 			</ion-item>
-			
+
 			<div class="row">
 				<div class="col">
-					<fancy-select-model 
+					<fancy-select-model
 						template-url='templates/user/select.html'
 						label="fullname"
 						multiple
@@ -55,11 +55,11 @@
 					</fancy-select-model>
 				</div>
 			</div>
-			
+
 			<ion-item class="item-avatar"
 				ng-repeat="user in model[type]"
 				ng-controller="UserCtrl">
-				<icon class="avatar" 
+				<icon class="avatar"
 					ng-src="user.photoUrl"
 					aria-label="{{user.fullname()}}"
 					otherwise="icon ion-android-person">
