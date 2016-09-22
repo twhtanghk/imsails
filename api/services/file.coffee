@@ -63,7 +63,7 @@ module.exports =
 			.catch Promise.reject
 
 	type: (inode) ->
-		inode.contentType
+		inode.?contentType
 
 	isImg: (inode) ->
 		(/^image/i).test @type inode

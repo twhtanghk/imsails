@@ -1,3 +1,4 @@
+_ = require 'lodash'
 util = require 'util'
 Promise = require 'bluebird'
 needle = Promise.promisifyAll require 'needle'
