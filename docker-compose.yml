@@ -1,29 +1,21 @@
 version: '2'
 services:
-  im_mongo:
-    image: mongo
-    container_name: im_mongo
-    hostname: im_mongo
-    ports:
-      - 27017
-    volumes:
-      - ${COMPOSEROOT}/imsails/data:/data/db
-    command: mongod --directoryperdb
-    env_file: ../.env
-
   imsails:
-    depends_on:
-      - im_mongo
     image: twhtanghk/imsails
-    container_name: imsails
-    hostname: imsails
+    external_links:
+      - im_mongo
+    networks:
+      - immongo_default
     ports:
       - 1337
     volumes:
-      - ${COMPOSEROOT}/imsails/conf/server.coffee:/usr/src/app/config/env/production.coffee
       - /etc/ssl/certs:/etc/ssl/certs
       - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates
     environment:
       SERVICE_NAME: imsails
     env_file: 
       - ./.env
+
+networks:
+  immongo_default:
+    external: true
