@@ -1,4 +1,5 @@
 _ = require 'lodash'
+path = require 'path'
 
 angular
 	.module 'util.file', [
@@ -91,7 +92,7 @@ angular
 						data = new FormData()
 						_.each opts.data, (value, key) ->
 							data.append key, value
-						data.append 'file', entry, entry.name
+						data.append 'file', entry, path.basename entry.name
 
 						# define header
 						xhr = new XMLHttpRequest()
