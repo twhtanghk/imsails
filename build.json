@@ -11,7 +11,7 @@
              "keystore": "/home/twhtang/.android/release.keystore",
              "storePassword": "",
              "alias": "mobile",
-             "password" : !",
+             "password" : "",
              "keystoreType": ""
          }
      }
