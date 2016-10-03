@@ -44,7 +44,7 @@ module.exports =
 				ret.file = _.extend path.parse(ret.file),
 					org: ret.file
 					url: "api/msg/file/#{@id}"
-				if sails.services.file.isImg @file_inode
+				if sails.services.file.isImg(@file_inode) or sails.services.file.isVideo(@file_inode)
 					_.extend ret.file, thumbUrl: "api/msg/file/thumb/#{@id}"
 			return ret
 		getMime: ->

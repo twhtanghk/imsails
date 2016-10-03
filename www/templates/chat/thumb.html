@@ -1,5 +1,5 @@
 <a class="file" href ng-click="getfile()">
 	<ion-spinner ng-if="! model.file.local"></ion-spinner>
-	<img ng-src="{{model.file.local}}" alt="{{model.file.base}}" ng-if="model.file.local"/>
+	<img ng-class="{clip: model.msgType() == 'video'}" ng-src="{{model.file.local}}" alt="{{model.file.base}}" ng-if="model.file.local"/>
 </a>
 <ng-include src="'templates/chat/msg.html'"></ng-include>

@@ -48,18 +48,25 @@ module.exports =
 	thumb: (Model, pk) ->
 		module.exports.content(Model, pk)
 			.then (file) ->
-				if not module.exports.isImg file.prop
-					return Promise.reject 'Attachment is not an image file'
-				file.prop.filename = sails.services.file.thumbName file.prop.filename
-				new Promise (resolve, reject) ->
-					file.stream
-						.pipe sails.services.img.thumb()
-						.pipe digest 'md5', 'hex', (digest, length) ->
-							file.prop.length = length
-							file.prop.md5 = digest
-						.pipe miss.concat (buffer) ->
-							file.stream = streamifier.createReadStream buffer
-							resolve file
+				if module.exports.isImg(file.prop) or module.exports.isVideo(file.prop)
+					file.prop.filename = sails.services.file.thumbName file.prop.filename
+					thumbnail = ->
+						if module.exports.isImg file.prop
+							file.stream
+								.pipe sails.services.thumb.img()
+						else
+							file.stream
+								.pipe sails.services.thumb.video(), end: false
+					new Promise (resolve, reject) ->
+						thumbnail()
+							.pipe digest 'md5', 'hex', (digest, length) ->
+								file.prop.length = length
+								file.prop.md5 = digest
+							.pipe miss.concat (buffer) ->
+								file.stream = streamifier.createReadStream buffer
+								resolve file
+				else
+					Promise.reject 'Attachment is not an image/video file'
 			.catch Promise.reject
 
 	type: (inode) ->
@@ -70,6 +77,9 @@ module.exports =
 
 	isAudio: (inode) ->
 		(/^audio/i).test @type inode
+
+	isVideo: (inode) ->
+		(/^video/i).test @type inode
 
 	thumbName: (filename) ->
 		"thumb.#{filename}"

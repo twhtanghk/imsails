@@ -112,7 +112,7 @@ module.exports = (angularModule) ->
 			if msg.file
 				dest = msg.file.org
 				switch true
-					when sails.services.file.isImg msg.file_inode
+					when sails.services.file.isImg(msg.file_inode) or sails.services.file.isVideo(msg.file_inode)
 						thumb = new resource.Thumb _.pick msg, 'id', 'file'
 						thumb.$fetch()
 							.then ->

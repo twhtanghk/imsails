@@ -213,6 +213,8 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 							return 'img'
 						when sails.services.file.isAudio msg.file_inode
 							return 'audio'
+						when sails.services.file.isVideo msg.file_inode
+							return 'video'
 						else
 							return 'file'
 				else
@@ -222,7 +224,15 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 				Msg.msgType @
 
 			templateUrl: ->
-				"templates/chat/#{@msgType()}.html"
+				switch @msgType()
+					when 'img'
+						"templates/chat/thumb.html"
+					when 'audio'
+						"templates/chat/audio.html"
+					when 'video'
+						"templates/chat/thumb.html"
+					else
+						"templates/chat/file.html"
 
 			$parse: (data, opts) ->
 				ret = super(data, opts)

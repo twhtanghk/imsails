@@ -13,8 +13,11 @@ streamify = require 'gulp-streamify'
 bower = require 'gulp-bower'
 source = require 'vinyl-source-stream'
 rework = require 'gulp-rework'
+imprt = require 'rework-import'
 reworkNPM = require 'rework-npm'
 reworkBower = require 'rework-bower'
+vars = require 'rework-vars'
+calc = require 'rework-calc'
 cleanCSS = require 'gulp-clean-css'
 uglify = require 'gulp-uglify'
 templateCache = require 'gulp-angular-templatecache'
@@ -41,7 +44,7 @@ gulp.task 'css', (done) ->
       .pipe concat 'scss-files.scss'
     gulp.src 'www/css/index.css'
       .pipe whitespace()
-      .pipe rework reworkNPM(shim: 'angular-toastr': 'dist/angular-toastr.css'), reworkBower()
+      .pipe rework reworkNPM(shim: 'angular-toastr': 'dist/angular-toastr.css'), reworkBower(), imprt(path: 'www/css'), vars(), calc
       .pipe concat 'css-files.css'
   ]
   merge objectMode: true, lessAll, cssAll, scssAll
