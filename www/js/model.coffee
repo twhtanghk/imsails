@@ -231,8 +231,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 						"templates/chat/audio.html"
 					when 'video'
 						"templates/chat/thumb.html"
-					else
+					when 'file'
 						"templates/chat/file.html"
+					else
+						"templates/chat/msg.html"
 
 			$parse: (data, opts) ->
 				ret = super(data, opts)
