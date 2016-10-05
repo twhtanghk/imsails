@@ -1,14 +1,17 @@
 lib = require './lib.coffee'
 
-domain =
-	state: ($stateProvider) ->
+angular
+
+  .module 'starter.controller'
+
+	.config ($stateProvider) ->
 		$stateProvider.state 'app.group',
 			url: "/group"
 			abstract: true
 			views:
 				menuContent:
 					templateUrl: "templates/group/index.html"
-		
+
 		$stateProvider.state 'app.group.create',
 			cache: false
 			url: "/create"
@@ -19,8 +22,8 @@ domain =
 			resolve:
 				resource: 'resource'
 				model: (resource) ->
-					new resource.Group() 
-			
+					new resource.Group()
+
 		$stateProvider.state 'app.group.update',
 			cache: false
 			url: "/update/:id"
@@ -35,18 +38,24 @@ domain =
 				model: (resource, id) ->
 					ret = new resource.Group id: id
 					ret.$fetch()
-						
+
 		$stateProvider.state 'app.group.list',
 			url: "/list"
 			abstract: true
 			views:
 				groupContent:
 					templateUrl: 'templates/group/list.html'
-					controller: ($scope, $location) ->
+					controller: ($scope, popover) ->
+						_.extend popover.scope,
+							search: ->
+								$scope.subheader = not $scope.subheader
 						_.extend $scope,
-							searchText:	''
-							$location:	$location
-					
+							popover: popover	
+			resolve:
+				popover: ($ionicPopover) ->
+					$ionicPopover
+						.fromTemplateUrl 'templates/group/dropdown.html'
+
 		$stateProvider.state 'app.group.list.public',
 			cache:	false
 			url: 	"/public"
@@ -62,7 +71,7 @@ domain =
 				# no more listen to those registered events
 				_.each ['connect', 'group'], (event) ->
 					io.socket?.removeAllListeners event
-					
+
 		$stateProvider.state 'app.group.list.private',
 			cache:	false
 			url: "/private"
@@ -92,8 +101,8 @@ domain =
 				model: (resource, id) ->
 					ret = new resource.Group id: id
 					ret.$fetch()
-					
-	item: ($rootScope, $scope, $location, resource) ->
+
+	.controller 'GroupCtrl', ($rootScope, $scope, $location, resource) ->
 		_.extend $scope,
 			edit: ->
 				$location.url "/group/update/#{$scope.model.id}"
@@ -106,14 +115,14 @@ domain =
 				item.$save()
 			select: ->
 				$rootScope.$broadcast 'group:select', $scope.model
-					
+
 		# listen if user status is updated
 		io.socket?.on "group", (event) ->
 			if event.verb == 'updated' and event.id == $scope.model.id
 				_.extend $scope.model, new resource.Group event.data
 				$scope.$apply 'model'
-		
-	list: ($scope, $location, resource, collection) ->
+
+	.controller 'GroupsCtrl', ($scope, $location, resource, collection) ->
 		_.extend $scope,
 			collection:		collection
 			me:				resource.User.me()
@@ -122,13 +131,13 @@ domain =
 					.then ->
 						$scope.$broadcast('scroll.infiniteScrollComplete')
 				return @
-				
+
 		# reload collection once reconnected
 		io.socket?.on 'connect', (event) ->
 			if $location.url().indexOf('/group/list') != -1
 				$scope.collection.$refetch()
-				
-	create: ($scope, $state, resource, model, ErrorService) ->
+
+	.controller 'GroupCreateCtrl', ($scope, $state, resource, model, ErrorService) ->
 		_.extend $scope,
 			resource: resource
 			model: model
@@ -137,21 +146,26 @@ domain =
 				if files?.length != 0
 					lib.readFile(files)
 						.then (inImg) ->
-							$scope.$emit 'cropImg', inImg 
+							$scope.$emit 'cropImg', inImg
 			save: ->
 				$scope.model.$save()
 					.then ->
 						next = 'app.group.list.public'
 						if $scope.model.type == 'Members-Only'
-							next = 'app.group.list.private' 
+							next = 'app.group.list.private'
 						$state.go next
 					.catch (err) ->
 						ErrorService.formErr $scope.groupCreate, err
-						
+
 		$scope.$on 'cropImg.completed', (event, outImg) ->
 			$scope.model.photoUrl = outImg
-		
-	update: ($scope, $state, resource, model) ->
+
+	.controller 'GroupReadCtrl', ($scope, resource, model) ->
+		_.extend $scope,
+			resource:	resource
+			model:		model
+
+	.controller 'GroupUpdateCtrl', ($scope, $state, resource, model) ->
 		_.extend $scope,
 			resource:	resource
 			model: 		model
@@ -160,7 +174,7 @@ domain =
 				if files?.length != 0
 					lib.readFile(files)
 						.then (inImg) ->
-							$scope.$emit 'cropImg', inImg 
+							$scope.$emit 'cropImg', inImg
 			save: ->
 				if model.photoUrl?.match(/^data:(.+);base64,(.*)$/)
 					model.photo = model.photoUrl
@@ -168,14 +182,13 @@ domain =
 					.then ->
 						next = 'app.group.list.public'
 						if model.type == 'Members-Only'
-							next = 'app.group.list.private' 
+							next = 'app.group.list.private'
 						$state.go next
-		
+
 		$scope.$on 'cropImg.completed', (event, outImg) ->
-			$scope.model.photoUrl = outImg		
-			
-filter = 
-	list: ->
+			$scope.model.photoUrl = outImg
+
+.filter 'groupFilter', ->
 		(collection, search) ->
 			if search
 				return _.filter collection, (item) ->
@@ -183,61 +196,47 @@ filter =
 					r.test(item.name) or r.test(item.jid)
 			else
 				return collection
-			
-module.exports = (angularModule) ->
-	angularModule
-		.config ['$stateProvider', domain.state]
-		.controller 'GroupCtrl', ['$rootScope', '$scope', '$location', 'resource', domain.item]
-		.controller 'GroupsCtrl', ['$scope', '$location', 'resource', 'collection', domain.list]
-		.controller 'GroupCreateCtrl', ['$scope', '$state', 'resource', 'model', 'ErrorService', domain.create]
-		.controller 'GroupUpdateCtrl', ['$scope', '$state', 'resource', 'model', domain.update]
-		.filter 'groupFilter', filter.list
-		
-		.run ($rootScope, $ionicActionSheet, $translate, $location, $ionicHistory, resource) ->
-			$rootScope.$on 'group:select', (event, group, rosterItem) ->
-				$translate ['Info', 'Exit', 'Edit', 'Delete', 'Cancel']
-					.then (translations) -> 
-						info =
-							type:	'button'
-							text:	translations['Info']
-							show:	true
-							cb:		->
-								$location.path("/group/#{group.id}")
-						exit =
-							type:	'button'
-							text:	translations['Exit']
-							show:	resource.User.me().isModerator(group) or resource.User.me().isMember(group)
-							cb:		->
-								group.exit()
-									.then ->
-										if rosterItem
-											resource.Roster.instance().remove rosterItem
-										close()
-						edit =
-							type:	'button'
-							text:	translations['Edit']
-							show:	resource.User.me().canEdit(group)
-							cb:		->
-								$location.path("/group/update/#{group.id}")
-						del =
-							type:	'destructive'
-							text:	translations['Delete']
-							show:	resource.User.me().canRemove(group)
-							cb:		->
+
+.run ($rootScope, $ionicActionSheet, $translate, $location, $ionicHistory, resource) ->
+	$rootScope.$on 'group:select', (event, group, rosterItem) ->
+		$translate ['Info', 'Exit', 'Edit', 'Delete', 'Cancel']
+			.then (translations) ->
+				info =
+					type:	'button'
+					text:	translations['Info']
+					show:	true
+					cb:		->
+						$location.path("/group/#{group.id}")
+				exit =
+					type:	'button'
+					text:	translations['Exit']
+					show:	resource.User.me().isModerator(group) or resource.User.me().isMember(group)
+					cb:		->
+						group.exit()
+							.then ->
 								if rosterItem
 									resource.Roster.instance().remove rosterItem
-								else 
-									collection = if group.type == 'Members-Only' then resource.GroupsPrivate else resource.Groups
-									collection.instance().remove group
 								close()
-						cancel =
-							type:	'cancel'
-							text:	translations['Cancel']
-							show:	true
-						close = $ionicActionSheet.showAction
-							action: [info, exit, edit, del, cancel] 
-		
-		.controller 'GroupReadCtrl', ($scope, resource, model) ->
-			_.extend $scope,
-				resource:	resource
-				model:		model
+				edit =
+					type:	'button'
+					text:	translations['Edit']
+					show:	resource.User.me().canEdit(group)
+					cb:		->
+						$location.path("/group/update/#{group.id}")
+				del =
+					type:	'destructive'
+					text:	translations['Delete']
+					show:	resource.User.me().canRemove(group)
+					cb:		->
+						if rosterItem
+							resource.Roster.instance().remove rosterItem
+						else
+							collection = if group.type == 'Members-Only' then resource.GroupsPrivate else resource.Groups
+							collection.instance().remove group
+						close()
+				cancel =
+					type:	'cancel'
+					text:	translations['Cancel']
+					show:	true
+				close = $ionicActionSheet.showAction
+					action: [info, exit, edit, del, cancel]

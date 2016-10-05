@@ -31,6 +31,23 @@ $msg-arrow: 20px;
 
 $input-height: 54px;
 
+.platform-android ion-popover-view.fit {
+  margin-top: 10px;
+}
+
+.platform-ios ion-popover-view.fit {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+ion-popover-view.fit {
+  height: auto;
+
+	ion-content {
+  	position: relative;
+	}
+}
+
 .button-clear.button-clear {
 	color: $button-default-text;
 }

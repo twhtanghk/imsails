@@ -1,4 +1,5 @@
 env = require './env.coffee'
+require './directive.coffee'
 require 'util.auth'
 require 'log_toast'
 
@@ -10,6 +11,7 @@ angular
 		'starter.model'
 		'locale'
 		'util.auth'
+		'util.directive'
 		'ngTagEditor'
 		'ActiveRecord'
 		'ngFileUpload'

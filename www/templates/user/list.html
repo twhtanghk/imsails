@@ -1,18 +1,19 @@
 <ion-header-bar class="item-input-inset">
     <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
-    <h1 class='title'>{{'User' | translate}}</h1>  
+    <h1 class='title'>{{'User' | translate}}</h1>
+    <button class="button button-clear icon ion-ios-search" ng-click="subheader = ! subheader"></button>
 </ion-header-bar>
-<div class="bar item-input-inset">
+<div class="bar item-input-inset" ng-show="subheader">
 	<label class="item-input-wrapper">
 		<i class="icon ion-search placeholder-icon"></i>
-	    <input type="text" ng-model="searchText">
+	    <input type="text" ng-model="searchText" focus-on="!!subheader">
 	</label>
 </div>
-<ion-content class='has-subheader'>
+<ion-content ng-class='{"has-subheader": subheader}'>
 	<ion-list>
 		<ion-item class="item-avatar"
-			ng-class="model.online ? '' : 'offline'" 
+			ng-class="model.online ? '' : 'offline'"
 			ng-repeat="model in collection.models | excludeMe | UserSearchFilter:searchText | orderBy:['name.given', 'name.middle', 'name.family', 'email']"
 			ng-controller="UserCtrl"
 			ng-class="model.selected ? 'selected' : ''"

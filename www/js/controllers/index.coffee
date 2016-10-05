@@ -17,6 +17,6 @@ angular
 
 require "./common.coffee"
 require("./user.coffee")(angular.module('starter.controller'))
-require("./group.coffee")(angular.module('starter.controller'))
+require "./group.coffee"
 require("./roster.coffee")(angular.module('starter.controller'))
 require("./msg.coffee")(angular.module('starter.controller'))

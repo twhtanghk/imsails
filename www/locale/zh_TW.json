@@ -1,6 +1,6 @@
 {
-	"Roster":			"通訊錄",
-	"User":				"使用者",
+	"Roster":			"對話",
+	"User":				"聯絡人",
 	"Group":			"群組",
 	"Available":		"有空",
 	"In a meeting":			"開會中",
@@ -29,6 +29,7 @@
 	"Info":				"詳細資料",
 	"Exit":				"退出",
 	"Cancel":			"取消",
+	"Search":			"搜尋",
 	"Type":				"分類",
 	"Owner":			"擁有人",
 	"Moderators":		"管理员",

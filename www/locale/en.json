@@ -1,6 +1,6 @@
 {
 	"Roster":			"Chats",
-	"User":				"User",
+	"User":				"Contacts",
 	"Group":			"Group",
 	"Available":		"Available",
 	"In a meeting":			"In a Meeting",
@@ -29,6 +29,7 @@
 	"Info":				"Info",
 	"Exit":				"Exit",
 	"Cancel":			"Cancel",
+	"Search":			"Search",
 	"Type":				"Type",
 	"Owner":			"Owner",
 	"Moderators":		"Moderators",
