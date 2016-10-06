@@ -45,12 +45,16 @@ angular
 			views:
 				groupContent:
 					templateUrl: 'templates/group/list.html'
-					controller: ($scope, popover) ->
+					controller: ($scope, $location, popover) ->
 						_.extend popover.scope,
 							search: ->
 								$scope.subheader = not $scope.subheader
+								popover.hide()
+							create: ->
+								$location.url "/group/create"
+								popover.hide()
 						_.extend $scope,
-							popover: popover	
+							popover: popover
 			resolve:
 				popover: ($ionicPopover) ->
 					$ionicPopover
