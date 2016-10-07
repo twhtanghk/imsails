@@ -28,16 +28,19 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 
 				_.each ['updatedAt', 'createdAt', 'lastmsgAt'], (field) ->
 					if ret[field]
-						ret[field] = new Date Date.parse ret[field]
+						ret[field] = new Date ret[field]
 
 				if ret.user
 					ret.user = new User ret.user
 
 				if ret.group
 					ret.group = new Group ret.group
-					ret.group.$fetch(reset: true)
 
 				return ret
+
+			$fetch: (opts = {}) ->
+				opts.params = _.defaults populate: ['user', 'group', 'createdBy'], opts.params
+				super opts
 
 		class Roster extends pageableAR.PageableCollection
 			_instance = null
@@ -49,6 +52,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 
 			@instance: ->
 				_instance ?= new Roster()
+
+			$fetch: (opts = {}) ->
+				opts.params = _.defaults populate: ['user', 'group', 'createdBy'], opts.params
+				super opts
 
 		class User extends pageableAR.Model
 			@type:
@@ -82,10 +89,14 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 				ret = super(data, opts)
 				_.each ['updatedAt', 'createdAt'], (field) ->
 					if ret[field]
-						ret[field] = new Date Date.parse ret[field]
+						ret[field] = new Date ret[field]
 				if env.isNative() and ret.photoUrl and ret.photoUrl.indexOf(env.server.app.urlRoot) == -1
 					ret.photoUrl = "#{env.server.app.urlRoot}/#{ret.photoUrl}"
 				return ret
+
+			$fetch: (opts = {}) ->
+				opts.params = _.defaults populate: ['ownerGrps', 'moderatorGrps', 'memberGrps', 'createdBy'], opts.params
+				super opts
 
 			post: ->
 				sails.services.user.post(@)
@@ -135,6 +146,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 					_instance.$fetch()
 				return _instance
 
+			$fetch: (opts = {}) ->
+				opts.params = _.defaults populate: ['ownerGrps', 'moderatorGrps', 'memberGrps', 'createdBy'], opts.params
+				super opts
+
 		class Group extends pageableAR.Model
 			@type:
 				placeholder:
@@ -157,7 +172,7 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 
 				_.each ['updatedAt', 'createdAt'], (field) ->
 					if ret[field]
-						ret[field] = new Date Date.parse ret[field]
+						ret[field] = new Date ret[field]
 
 				if ret.moderators
 					ret.moderators = _.map ret.moderators, (user) ->
@@ -175,6 +190,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 
 				return ret
 
+			$fetch: (opts = {}) ->
+				opts.params = _.defaults populate: ['moderators', 'members', 'createdBy'], opts.params
+				super opts
+
 			exit: ->
 				@$save {}, url: "#{@$url()}/exit"
 
@@ -190,6 +209,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 			@instance: ->
 				_instance ?= new Groups()
 
+			$fetch: (opts = {}) ->
+				opts.params = _.defaults populate: ['moderators', 'members', 'createdBy'], opts.params
+				super opts
+
 		# membersOnly groups
 		class GroupsPrivate extends pageableAR.PageableCollection
 			_instance = null
@@ -201,6 +224,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 
 			@instance: ->
 				_instance ?= new GroupsPrivate()
+
+			$fetch: (opts = {}) ->
+				opts.params = _.defaults populate: ['moderators', 'members', 'createdBy'], opts.params
+				super opts
 
 		class Msg extends pageableAR.Model
 			$urlRoot: ->
@@ -239,12 +266,13 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 			$parse: (data, opts) ->
 				ret = super(data, opts)
 				_.each ['updatedAt', 'createdAt'], (field) ->
-					ret[field] = new Date Date.parse ret[field]
+					ret[field] = new Date ret[field]
 
 				return ret
 
-			$fetch: (opts) ->
-				super _.extend opts, populate: ['file_inode', 'createdBy']
+			$fetch: (opts = {}) ->
+				opts.params = _.defaults populate: ['file_inode', 'createdBy'], opts.params
+				super opts
 
 		class Attachment extends pageableAR.Model
 			$urlRoot: ->
@@ -305,8 +333,9 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 
 			model: Msg
 
-			$fetch: (opts) ->
-				super _.extend opts, populate: ['file_inode', 'createdBy']
+			$fetch: (opts = {}) ->
+				opts.params = _.defaults populate: ['file_inode', 'createdBy'], opts.params
+				super opts
 
 		class Device extends pageableAR.Model
 			$urlRoot: ->
