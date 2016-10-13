@@ -77,7 +77,7 @@ module.exports = (angularModule) ->
 					
 		.filter 'rosterFilter', ->
 			(roster, search) ->
-				r = new RegExp(search, 'i')
+				r = new RegExp RegExp.quote(search), 'i'
 				userSearch = (user) ->
 					r.test(user?.jid) or r.test(user?.email) or r.test(user?.fullname()) or r.test(user?.post())
 				grpSearch = (group) ->	

@@ -1,6 +1,9 @@
 util = require 'util'
 _ = require 'lodash'
 
+RegExp.quote = (str) ->
+	str.replace /([.?*+^$[\]\\(){}|-])/g, "\\$1"
+
 angular
 
 		.module 'starter.controller'

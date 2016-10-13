@@ -196,7 +196,7 @@ angular
 		(collection, search) ->
 			if search
 				return _.filter collection, (item) ->
-					r = new RegExp(search, 'i')
+					r = new RegExp RegExp.quote(search), 'i'
 					r.test(item.name) or r.test(item.jid)
 			else
 				return collection

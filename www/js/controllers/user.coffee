@@ -139,7 +139,7 @@ filter =
 		(collection, search) ->
 			if search
 				return _.filter collection, (item) ->
-					r = new RegExp(search, 'i')
+					r = new RegExp RegExp.quote(search), 'i'
 					r.test(item.fullname()) or r.test(item.post())
 			else
 				return collection

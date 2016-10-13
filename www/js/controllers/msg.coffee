@@ -144,7 +144,7 @@ module.exports = (angularModule) ->
 			(msgs, search) ->
 				if search
 					return _.filter msgs, (msg) ->
-						r = new RegExp(search, 'i')
+						r = new RegExp RegExp.quote(search), 'i'
 						r.test(msg.body) or r.test(msg.file?.base)
 				else
 					return msgs
