@@ -1,18 +1,28 @@
 {
-	"android": {
-		"debug": {
-             "keystore": "/home/twhtang/.android/release.keystore",
-             "storePassword": "",
-             "alias": "mobile",
-             "password" : "",
-             "keystoreType": ""
-         },
-		"release": {
-             "keystore": "/home/twhtang/.android/release.keystore",
-             "storePassword": "",
-             "alias": "mobile",
-             "password" : "",
-             "keystoreType": ""
-         }
-     }
+  "android": {
+    "debug": {
+      "keystore": "/home/twhtang/.android/release.keystore",
+      "storePassword": "",
+      "alias": "mobile",
+      "password" : "",
+      "keystoreType": ""
+    },
+    "release": {
+      "keystore": "/home/twhtang/.android/release.keystore",
+      "storePassword": "",
+      "alias": "mobile",
+      "password" : "",
+      "keystoreType": ""
+    }
+  },
+  "ios": {
+    "debug": {
+      "codeSignIdentity": "iPhone Developer",
+      "provisioningProfile": ""
+    },
+    "release": {
+      "codeSignIdentity": "iPhone Distribution",
+      "provisioningProfile": ""
+    }
+  }
 }
