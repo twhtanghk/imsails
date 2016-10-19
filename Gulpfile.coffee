@@ -32,7 +32,7 @@ config = (params) ->
     _.pick(process.env, 'ROOTURL', 'SENDER_ID', 'CLIENT_ID', 'OAUTH2_SCOPE')
   fs.writeFileSync 'www/js/config.json', util.inspect(params)
 
-gulp.task 'default', ['browser', 'android']
+gulp.task 'default', ['browser', 'android', 'ios']
 
 gulp.task 'css', (done) ->
   [lessAll, scssAll, cssAll] = [
@@ -69,6 +69,15 @@ gulp.task 'template', ->
   gulp.src('./www/templates/**/*.html')
     .pipe(templateCache(root: 'templates', standalone: true))
     .pipe(gulp.dest('./www/js/'))
+
+gulp.task 'pre-ios', ->
+  config CLIENT_ID: process.env.NATIVE_CLIENT_ID
+  sh.exec "cordova platform rm ios"
+  sh.exec "cordova platform add ios"
+  sh.exec "ionic resources ios"
+
+gulp.task 'ios', ['pre-ios', 'plugin', 'css', 'coffee'], ->
+  sh.exec "cordova build ios"
 
 gulp.task 'pre-android', ->
   config CLIENT_ID: process.env.NATIVE_CLIENT_ID

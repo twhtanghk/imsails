@@ -51,12 +51,15 @@ angular
 				switch true
 					when window.device.platform == 'browser'
 						return navigator.webkitPersistentStorage.requestQuota opts.storageSize, resolve, reject
-					when window.device.platform == 'Android'
+					else
 						return resolve()
 
 		fsReady = ->
-			if window.device.platform == 'Android'
-				_.extend opts, fileSystem: cordova.file.externalDataDirectory
+			switch true
+				when window.device.platform == 'Android'
+					_.extend opts, fileSystem: cordova.file.externalDataDirectory
+				when window.device.platform == 'iOS'
+					_.extend opts, fileSystem: cordova.file.dataDirectory
 
 			new Promise (resolve, reject) ->
 				fs = CordovaPromiseFS opts

@@ -1,4 +1,3 @@
-require 'util.audio'
 require 'angular-xeditable'
 
 angular
@@ -9,7 +8,6 @@ angular
 		'platform'
 		'PageableAR'
 		'toastr'
-		'util.audio'
 		'xeditable'
 	]
 	.run (editableOptions) ->

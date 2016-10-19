@@ -47,7 +47,7 @@ module.exports = (angularModule) ->
 					# no more listen to those registered events
 					io.socket?.removeAllListeners 'msg'
 
-		.controller 'ChatCtrl', ($scope, $cordovaClipboard, $log, $ionicScrollDelegate, $location, type, chat, me, collection, resource, audioService) ->
+		.controller 'ChatCtrl', ($scope, $cordovaClipboard, $log, $ionicScrollDelegate, $location, type, chat, me, collection, resource) ->
 			_.extend $scope,
 				type: type
 				chat: chat
@@ -74,12 +74,6 @@ module.exports = (angularModule) ->
 					if $files and $files.length != 0
 						attachment = new resource.Attachment type: type, to: chat.jid, local: $files[0]
 						attachment.$save()
-				recorder:
-					start: ->
-						audioService.recorder.start()
-					stop: ->
-						audioService.recorder.stop().then ->
-							$scope.putfile [audioService.recorder.file]
 				copy: (msg) ->
 					if env.isNative()
 						$cordovaClipboard.copy(msg.body)
@@ -130,7 +124,7 @@ module.exports = (angularModule) ->
 						when 'browser'
 							file
 								.$saveAs()
-						when 'Android'
+						else
 							transfer = new fileService.Progress msg.file.base
 							file
 								.$fetch progress: transfer.progress
