@@ -41,9 +41,6 @@ module.exports =
 						return res.badRequest 'No file was uploaded'
 					when files.length == 1
 						_.extend req.options.values,
-							body: JSON.stringify
-								path:	files[0].fd
-								size:	files[0].size
 							file: files[0].fd
 							file_inode: files[0].extra.fileId.toString()
 						return @create(req, res)
