@@ -4,7 +4,7 @@ module.exports =
   file:
     opts:
       adapter: require 'skipper-gridfs'
-      uri: 'mongodb://@im_mongo:27017/im'
+      uri: process.env.DB || 'mongodb://@im_mongo:27017/im'
       bucket: 'fs'
       maxBytes: 10240000        # 10MB
       saveAs: (stream, next) ->
