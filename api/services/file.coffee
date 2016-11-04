@@ -59,6 +59,7 @@ module.exports =
 								.pipe sails.services.thumb.video(), end: false
 					new Promise (resolve, reject) ->
 						thumbnail()
+							.on 'error', reject
 							.pipe digest 'md5', 'hex', (digest, length) ->
 								file.prop.length = length
 								file.prop.md5 = digest
