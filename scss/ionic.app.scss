@@ -52,6 +52,10 @@ ion-popover-view.fit {
 	color: $button-default-text;
 }
 
+input[type=file] {
+  display: none;
+}
+
 ion-content#status {
 	form.editable-text {
 		div.editable-controls {
@@ -253,6 +257,7 @@ ion-nav-view[name=chatContent] {
 			}
 
 			audio {
+				display: block;
 				max-width: 100%;
 			}
 
@@ -295,7 +300,7 @@ ion-nav-view[name=chatContent] {
 				overflow-x: hidden;
 			}
 		}
-		button {
+		button, .button {
 			background: $positive !important;
 			border: none;
 			border-radius: 50%;

@@ -40,6 +40,7 @@ angular
 	.config ($ionicConfigProvider) ->
 		$ionicConfigProvider.tabs.style 'standard'
 		$ionicConfigProvider.tabs.position 'bottom'
+		$ionicConfigProvider.navBar.alignTitle 'left'
 
 	# define showAction method for ionic action sheet
 	.config ($provide) ->

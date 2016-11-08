@@ -26,13 +26,29 @@ del = require 'del'
 _ = require 'lodash'
 fs = require 'fs'
 util = require 'util'
+modernizr = require 'modernizr'
+stream = require 'stream'
 
 config = (params) ->
   _.defaults params,
     _.pick(process.env, 'ROOTURL', 'SENDER_ID', 'CLIENT_ID', 'OAUTH2_SCOPE')
   fs.writeFileSync 'www/js/config.json', util.inspect(params)
 
+class StringStream extends stream.Readable
+  constructor: (@str) ->
+    super()
+
+  _read: (size) ->
+    @push @str
+    @push null
+
 gulp.task 'default', ['browser', 'android', 'ios']
+
+gulp.task 'modernizr', ->
+  modernizr.build 'feature-detects': ['webrtc/getusermedia'], (test) ->
+    new StringStream test
+      .pipe source 'detect.js'
+      .pipe gulp.dest 'www/js/'
 
 gulp.task 'css', (done) ->
   [lessAll, scssAll, cssAll] = [
@@ -54,7 +70,7 @@ gulp.task 'css', (done) ->
     .pipe rename extname: '.min.css'
     .pipe gulp.dest 'www/css/'
 
-gulp.task 'coffee', ['template'],  ->
+gulp.task 'coffee', ['template', 'modernizr'],  ->
   browserify(entries: ['./www/js/index.coffee'])
     .transform 'coffeeify'
     .transform 'debowerify'

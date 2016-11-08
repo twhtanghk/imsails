@@ -266,7 +266,8 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 			$parse: (data, opts) ->
 				ret = super(data, opts)
 				_.each ['updatedAt', 'createdAt'], (field) ->
-					ret[field] = new Date ret[field]
+					if ret[field]
+						ret[field] = new Date ret[field]
 
 				return ret
 

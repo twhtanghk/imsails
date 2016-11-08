@@ -38,8 +38,13 @@
 	    <button class="button" ng-click="send()" ng-if="msg != ''">
 	    	<i class="icon ion-android-send"></i>
 	    </button>
-	    <button class="button" ngf-select="putfile($files)" ng-if="msg == ''">
+	    <label class="button" ng-if="msg == ''">
 	    	<i class="icon ion-paperclip"></i>
-	    </button>
+		<input type="file" onchange="angular.element(this).scope().putfile(event.target.files)">
+	    </label>
+            <util-audio-recorder></util-audio-recorder>
+            <button class="button" ng-click="start()" ng-controller="AudioCtrl" ng-if="! Modernizr.getusermedia">
+              <i class="icon ion-mic-a"></i>
+            </button>
     </div>
 </ion-footer-bar>
