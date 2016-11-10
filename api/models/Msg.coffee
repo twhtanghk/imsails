@@ -29,8 +29,6 @@ module.exports =
 			defaultsTo: 'chat'
 		body:
 			type: 		'string'
-			required:	true
-			defaultsTo:	'file'
 		file:
 			type:		'string'
 		file_inode:
