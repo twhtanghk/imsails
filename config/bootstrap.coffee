@@ -9,7 +9,7 @@ module.exports =
 		
 		sails.models.user
 			.findOrCreate username: sails.config.adminUser.username,
-				url:		"https://mob.myvnc.com/org/api/users/#{sails.config.adminUser.username}/"
+				url:		"#{process.env.AUTHURL}/api/users/#{sails.config.adminUser.username}/"
 				username:	sails.config.adminUser.username
 				email:		sails.config.adminUser.email
 				name: 

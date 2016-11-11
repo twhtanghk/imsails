@@ -1,4 +1,6 @@
+domain = process.env.DOMAIN || 'mob.myvnc.com'
+
 module.exports =
   xmpp:
-    domain: 'mob.myvnc.com'
-    muc: 'muc.mob.myvnc.com'
+    domain: domain
+    muc: "muc.#{domain}"

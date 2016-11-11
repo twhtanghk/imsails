@@ -10,7 +10,7 @@ module.exports =
   # user:
   #   id: registered user id
   #   secret: user password
-  # scope: [ "https://mob.myvnc.com/org/users", "https://mob.myvnc.com/mobile"]
+  # scope: [ "User", "Mobile"]
   token: (url, client, user, scope) ->
     opts = 
       'Content-Type': 'application/x-www-form-urlencoded'

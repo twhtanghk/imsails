@@ -13,7 +13,6 @@ module.exports =
 					"data:"
 					"http://#{host}"
 					"https://#{host}"
-					"https://mob.myvnc.com"
 				]
 				ret = csp
 					directives:

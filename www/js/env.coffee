@@ -16,9 +16,9 @@ module.exports =
 			url:		url					# server url
 			urlRoot:	"#{url}#{root.path}"		# api url
 		auth:
-			urlRoot:	'https://mob.myvnc.com/org'
+			urlRoot:	process.env.AUTHURL
 		mobile:
-			urlRoot:	'https://mob.myvnc.com/mobile'
+			urlRoot:	process.env.MOBILEURL
 	isMobile: ->
 		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 	isNative: ->

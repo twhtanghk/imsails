@@ -1,5 +1,5 @@
 agent = require 'https-proxy-agent'
-domain = 'mob.myvnc.com'
+domain = process.env.DOMAIN || 'mob.myvnc.com'
 
 module.exports =
 	timeout: 4000000
