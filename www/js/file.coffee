@@ -12,7 +12,7 @@ angular
 			templates:
 				toast: 'templates/progress.html'
 
-	.factory 'fileService', ($http, toastr) ->
+	.factory 'fileService', ($http, $log, toastr) ->
 
 		class Progress
 			showProgress:	true
@@ -121,13 +121,7 @@ angular
 				fs.download = (source, dest, options = {}, onprogress) ->
 					_.defaults options, defaultOpts
 					download source, dest, options, onprogress
-						.catch (err) =>
-							if err.http_status == 304
-								# not modified, reference the cached copy
-								Promise.resolve()
-							else
-								# it is mostly filesystem quota exceeded
-								Promise.reject new Error 'fileystem quota exceeded, please see <a href="https://developer.chrome.com/apps/offline_storage#reset">here</a> to clear the filesystem'
+						.catch $log.error
 
 				resolve fs
 
