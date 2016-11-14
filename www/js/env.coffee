@@ -16,9 +16,9 @@ module.exports =
 			url:		url					# server url
 			urlRoot:	"#{url}#{root.path}"		# api url
 		auth:
-			urlRoot:	process.env.AUTHURL
+			urlRoot:	config.AUTHURL
 		mobile:
-			urlRoot:	process.env.MOBILEURL
+			urlRoot:	config.MOBILEURL
 	isMobile: ->
 		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 	isNative: ->
