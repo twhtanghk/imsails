@@ -48,7 +48,7 @@ angular
 				# no more listen to those registered events
 				io.socket?.removeAllListeners 'msg'
 
-	.controller 'ChatCtrl', ($scope, $cordovaClipboard, $log, $ionicScrollDelegate, $location, type, chat, me, collection, resource, $cordovaFileTransfer, $http) ->
+	.controller 'ChatCtrl', ($scope, $cordovaClipboard, $log, $ionicScrollDelegate, $location, type, chat, me, collection, resource, $cordovaFileTransfer, $http, audioService) ->
 		_.extend $scope,
 			type: type
 			chat: chat
@@ -108,6 +108,12 @@ angular
 				collection.add new resource.Msg event.data
 				$scope.$apply 'collection.models'
 				$ionicScrollDelegate.scrollTop true
+
+		recorded = ->
+			$scope.putfile [audioService.recorder.file]
+		audioService.recorder.on 'stop', recorded
+		$scope.$on '$destroy', ->
+			audioService.recorder.removeListener 'stop', recorded
 
 	.controller 'msgCtrl', ($scope, resource, $cordovaFileOpener2, $http, fileService, $log) ->
 		fs = fileService.fs
