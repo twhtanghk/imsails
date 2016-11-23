@@ -128,3 +128,7 @@ angular
 						$cordovaVibration.vibrate(1000)
 
 				push.on 'error', $log.error
+
+	.run ($rootScope) ->
+		document.addEventListener "deviceready", ->
+			$rootScope.device = device
