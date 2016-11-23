@@ -153,8 +153,7 @@ angular
 							.catch $log.error
 							.finally transfer.end
 
-	.controller 'AudioCtrl', ($scope, $cordovaDevice, $cordovaCapture, $log) ->
-		$scope.platform = $cordovaDevice.getPlatform()
+	.controlLer 'AudioCtrl', ($scope, $cordovaDevice, $cordovaCapture, $log) ->
 		$scope.start = ->
 			$cordovaCapture.captureAudio()
 				.then (files) ->
