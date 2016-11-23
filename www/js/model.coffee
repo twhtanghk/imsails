@@ -300,7 +300,10 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 								# local file not found, create and download, resolve local entry
 								localfs.create path
 							.then (entry) =>
-						 		localfs.download @$url(), decodeURIComponent(entry.toURL()), opts, opts.progress
+								target = entry.toURL()
+								if device.platform != 'iOS'
+									target = decodeURIComponent target
+								localfs.download @$url(), target, opts, opts.progress
 									.then ->
 										entry
 					.then (entry) =>
