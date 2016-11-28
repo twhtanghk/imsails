@@ -1,4 +1,5 @@
 require 'angular-xeditable'
+require '../audio.coffee'
 
 angular
 	.module 'starter.controller', [
@@ -9,7 +10,7 @@ angular
 		'PageableAR'
 		'toastr'
 		'xeditable'
-		'util.audio'
+		'starter.audio'
 	]
 	.run (editableOptions) ->
 		editableOptions.theme = 'bs3'

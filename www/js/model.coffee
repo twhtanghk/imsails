@@ -15,7 +15,7 @@ urlRoot = (model, url, root = env.server.app.urlRoot) ->
 
 angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 
-	.factory 'resource',  ($rootScope, pageableAR, $http, fileService) ->
+	.factory 'resource',  ($rootScope, pageableAR, $http, $log, fileService) ->
 
 		pageableAR.setTransport(pageableAR.Model.iosync)
 
@@ -300,15 +300,12 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 								# local file not found, create and download, resolve local entry
 								localfs.create path
 							.then (entry) =>
-								target = entry.toURL()
+								@file.local = entry.toURL()
 								if device.platform != 'iOS'
-									target = decodeURIComponent target
-								localfs.download @$url(), target, opts, opts.progress
+									@file.local = decodeURIComponent @file.local
+								localfs.download @$url(), @file.local, opts, opts.progress
 									.then ->
 										entry
-					.then (entry) =>
-						@file.local = decodeURIComponent entry.toURL()
-						@
 
 			$saveAs: ->
 				$http.get @file.url, responseType: 'blob'

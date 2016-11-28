@@ -1,4 +1,3 @@
-require 'util.audio'
 env = require '../env.coffee'
 sails =
 	services:
@@ -149,9 +148,10 @@ angular
 							.$fetch progress: transfer.progress
 							.then ->
 								transfer.end()
-								$cordovaFileOpener2.open decodeURIComponent(file.file.local), sails.services.file.type(msg.file_inode)
-							.catch $log.error
-							.finally transfer.end
+								$cordovaFileOpener2.open file.file.local, sails.services.file.type(msg.file_inode)
+							.catch (err) ->
+								transfer.end()
+								$log.error err
 
 	.controller 'AudioCtrl', ($scope, $cordovaDevice, $cordovaCapture, $log) ->
 		$scope.start = ->
