@@ -35,7 +35,7 @@
     "ionic": "driftyco/ionic-bower#1.3.1",
     "bootstrap": "^3.3.7",
     "cordova-promise-fs": "^1.1.1",
-    "util.audio": "^0.0.10"
+    "util.audio": "^0.0.11"
   },
   "devDependencies": {},
   "resolutions": {
