@@ -1,4 +1,3 @@
-agent = require 'https-proxy-agent'
 domain = process.env.DOMAIN || 'mob.myvnc.com'
 
 module.exports =
@@ -13,8 +12,8 @@ module.exports =
 	group: { name: 'group1' } 
 	getTokens: ->
 		new Promise (fulfill, reject) ->
-			url = 'https://mob.myvnc.com/org/oauth2/token/'
-			scope = [ "https://mob.myvnc.com/org/users", "https://mob.myvnc.com/mobile"]
+			url = process.env.TOKENURL
+			scope = process.env.OAUTH2_SCOPE?.split(' ') || [ 'User', 'Mobile' ]
 			Promise
 				.all [
 					sails.services.oauth2.token url, module.exports.client, module.exports.users[0], scope
