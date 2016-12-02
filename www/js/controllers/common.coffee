@@ -21,8 +21,10 @@ angular
 				templateUrl: "templates/menu.html"
 				resolve:
 					resource: 'resource'
-					model: (resource) ->
+					me: (resource) ->
 						resource.User.me().$fetch()
+					model: (me) ->
+						me
 
 		.controller 'MenuCtrl', ($scope, $ionicModal, resource, model) ->
 			$ionicModal
