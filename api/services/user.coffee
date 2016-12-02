@@ -18,14 +18,14 @@ module.exports =
 		owner == user?.id
 		
 	isModerator: (user, group) ->
-		_.any group?.moderators, (item) ->
-			owner = item.id || item
-			owner == user?.id
+		_.any user?.moderatorGrps, (item) ->
+			grp = item.id || item
+			grp == group?.id
 			
 	isMember: (user, group) ->
-		group?.type == 'Unmoderated' or _.any group?.members, (item) ->
-			owner = item.id || item
-			owner == user?.id
+		group?.type == 'Unmoderated' or _.any user?.memberGrps, (item) ->
+			grp = item.id || item
+			grp == group?.id
 			
 	isVisitor: (user, group) ->
 		group?.type == 'Moderated'
