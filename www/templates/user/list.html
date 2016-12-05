@@ -14,7 +14,7 @@
 	<ion-list>
 		<ion-item class="item-avatar"
 			ng-class="model.online ? '' : 'offline'"
-			ng-repeat="model in collection.models | excludeMe | UserSearchFilter:searchText | orderBy:fullname"
+			ng-repeat="model in collection.models | excludeMe | UserSearchFilter:searchText | UserOrderByFullname"
 			ng-controller="UserCtrl"
 			ng-class="model.selected ? 'selected' : ''"
 			href="#/chat/chat/{{model.id}}"

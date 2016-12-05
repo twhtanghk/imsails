@@ -16,7 +16,7 @@ angular
 		editableOptions.theme = 'bs3'
 
 require "./common.coffee"
-require("./user.coffee")(angular.module('starter.controller'))
+require "./user.coffee"
 require "./group.coffee"
 require("./roster.coffee")(angular.module('starter.controller'))
 require "./msg.coffee"
