@@ -3,9 +3,9 @@ _ = require 'lodash'
 module.exports =
 	fullname: (user) ->
 		if user.name?.given or user.name?.middle or user.name?.family
-			"#{user.name?.given || ''} #{user.name?.middle || ''} #{user.name?.family || ''}"
+			"#{user.name?.given || ''} #{user.name?.middle || ''} #{user.name?.family || ''}".trim()
 		else
-			user.email
+			user.email.trim()
 		
 	post: (user) ->
 		if user.organization?.name or user.title

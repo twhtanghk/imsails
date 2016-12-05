@@ -75,6 +75,8 @@ domain =
 			searchText:		''
 			resource:		resource
 			collection:		collection
+			fullname: (user) ->
+				user.fullname()
 			loadMore: ->
 				collection.$fetch()
 					.then ->
