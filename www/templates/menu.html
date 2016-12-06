@@ -5,7 +5,13 @@
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">{{'Menu' | translate}}</h1>
+      <h1 class="title">
+        <icon class="header" ng-src="model.photoUrl"
+          aria-label="{{model.fullname()}}"
+          otherwise="icon ion-android-person">
+        </icon>
+        <span>{{model.fullname()}}</span>
+      </h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
