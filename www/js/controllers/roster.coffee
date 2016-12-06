@@ -17,7 +17,7 @@ module.exports = (angularModule) ->
 						controller: 'RosterCtrl'
 				resolve:
 					resource: 'resource'
-					collection: (resource) ->
+					collection: (me, resource) ->
 						ret = resource.Roster.instance()
 						ret.$fetch reset: true
 				onExit: ->
