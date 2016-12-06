@@ -79,16 +79,51 @@ describe 'GroupController', ->
         .set 'Authorization', "Bearer #{tokens[0]}"
         .expect 200
         
+  describe 'send message', ->
+    it "to group", ->
+      req sails.hooks.http.app
+        .post '/api/msg'
+        .set 'Authorization', "Bearer #{tokens[0]}"
+        .send
+          to: group.jid
+          body: "msg from #{env.users[0].id} to #{group.jid}"
+        .expect 201
+        .then ->
+          sails.models.group
+            .findOne name: group.name
+            .populateAll()
+        .then (group) ->
+          Promise.map group.subscribers(), (user) ->
+            sails.models.roster
+              .findOne
+                group: group.id
+                createdBy: user.id
+              .then (roster) ->
+                if _.isUndefined roster
+                  throw new Error "roster #{group.name} for #{user.username} not properly created"
+
   describe 'delete', ->
     it 'user from group.members', ->
       req sails.hooks.http.app
         .del "/api/group/#{group.id}/members/#{users[0].id}"
         .set 'Authorization', "Bearer #{tokens[0]}"
         .expect 200
+
+    it "group", ->
+      req sails.hooks.http.app
+        .del "/api/group/#{group.id}"
+        .set 'Authorization', "Bearer #{tokens[0]}"
+        .expect 200
+        .then ->
+          sails.models.msg
+            .find
+              to: group.jid
+        .then (msgs) ->
+          if msgs.length != 0
+            throw new Error "msgs for #{group.name} not completely deleted"
         .then ->
           sails.models.roster
-            .find
-              group: group.id
-        .then (groups) ->
-          if groups.length != 0
-            throw new Error "roster for #{group.jid} not completely deleted"
+            .find jid: group.jid
+        .then (roster) ->
+          if roster.length != 0
+            throw new Error "roster for #{group.name} not completely deleted"

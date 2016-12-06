@@ -35,7 +35,7 @@ describe 'MsgController', ->
           to:     env.users[0].jid
           body:    "msg from #{env.users[1].id} to #{env.users[0].id}"
         .expect 201
-        .expect (res) ->
+        .then (res) ->
           msgs[0] = res.body
           Promise
             .all [
@@ -60,7 +60,7 @@ describe 'MsgController', ->
         .field 'to', users[0].jid
         .attach 'file', 'test/data/test.png'
         .expect 201
-        .expect (res) ->
+        .then (res) ->
           msgs[1] = res.body
     
     it 'audio attachement', ->
@@ -70,7 +70,7 @@ describe 'MsgController', ->
         .field 'to', users[0].jid
         .attach 'file', 'test/data/test.mp3'
         .expect 201
-        .expect (res) ->
+        .then (res) ->
           msgs[2] = res.body
         
   describe 'read', ->
@@ -91,38 +91,48 @@ describe 'MsgController', ->
         .get "/api/msg/file/thumb/#{msgs[1].id}"
         .set 'Authorization', "Bearer #{tokens[1]}"
         .expect 200
-        .parse (res) ->
+        .parse (res, cb) ->
           new Promise (resolve, reject) ->
             res.pipe fs.createWriteStream '/tmp/test.thumb.png'
-              .on 'finish', resolve
-              .on 'error', reject
+              .on 'finish', ->
+                cb()
+                resolve()
+              .on 'error', (err) ->
+                cb err
+                reject err
         
-    it "image file sent", (done) ->
+    it "image file sent", ->
       req sails.hooks.http.app
         .get "/api/msg/file/#{msgs[1].id}"
         .set 'Authorization', "Bearer #{tokens[1]}"
         .expect 200
-        .parse (res) ->
+        .parse (res, cb) ->
           new Promise (resolve, reject) ->
             res.pipe fs.createWriteStream '/tmp/test.png'
               .on 'finish', ->
                 ret = exec "diff /tmp/test.png test/data/test.png"
                 if ret.code != 0
                   throw new Error 'file mismatch'
+                cb()
                 resolve()
-              .on 'error', reject
+              .on 'error', (err) ->
+                cb err
+                reject err
           
     it "audio file sent", ->
       req sails.hooks.http.app
         .get "/api/msg/file/#{msgs[2].id}"
         .set 'Authorization', "Bearer #{tokens[1]}"
         .expect 200
-        .parse (res) ->
+        .parse (res, cb) ->
           new Promise (resolve, reject) ->
             res.pipe fs.createWriteStream '/tmp/test.mp3'
               .on 'finish', ->
                 ret = exec "diff /tmp/test.mp3 test/data/test.mp3"
                 if ret.code != 0
                   throw new Error 'file mismatch'
+                cb()
                 resolve()
-              .on 'error', reject
+              .on 'error', (err) ->
+                cb err
+                reject err
