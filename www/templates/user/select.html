@@ -18,7 +18,7 @@
 	        <div class="list">
 	          <!-- Multi select -->
 	          <ion-toggle
-	                      ng-repeat="item in model.models | UserSearchFilter:searchText | orderBy:['name.given', 'name.middle', 'name.family', 'email']"
+	                      ng-repeat="item in model.models | UserSearchFilter:searchText | UserOrderByFullname"
 	                      ng-if="multiple"
 	                      ng-model="item.selected"
 	                      ng-change="select(item)"

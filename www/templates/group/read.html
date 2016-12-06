@@ -41,7 +41,7 @@
 			{{resource.Group.type.placeholder[type] | translate}}
 		</ion-item>
 		<ion-item class="item-avatar user"
-			ng-repeat="model in model[type]"
+			ng-repeat="model in model[type] | UserOrderByFullname"
 			ng-controller="UserCtrl"
 			ng-include="'templates/user/item.html'"
 			on-hold="select(model)">

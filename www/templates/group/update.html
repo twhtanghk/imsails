@@ -51,7 +51,7 @@
 			</div>
 		
 			<ion-item class="item-avatar"
-				ng-repeat="user in model[type]"
+				ng-repeat="user in model[type] | UserOrderByFullname"
 				ng-controller="UserCtrl">
 				<icon class="avatar" 
 					ng-src="user.photoUrl"
