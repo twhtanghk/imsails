@@ -59,6 +59,12 @@ module.exports =
 		isPrivate: ->
 			@type == 'Members-Only'
 			
+		subscribers: ->
+			ret = _.uniq [@createdBy].concat(@moderators), 'id'
+			if @isPrivate()
+				ret = ret.concat @members
+			ret
+
 	afterCreate: (values, cb) ->
 		sails.services.roster.recipient null, values.jid
 			.then ->
