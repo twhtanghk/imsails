@@ -154,7 +154,7 @@ angular
   .filter 'UserOrderByFullname', ->
     (collection) ->
       _.sortBy collection, (user) ->
-        user.fullname()
+        user.fullname().toLowerCase()
       
   .run ($rootScope, $ionicActionSheet, $translate, $location, $ionicHistory, resource) ->
     $rootScope.$on 'user:select', (event, user, roster = null) ->
