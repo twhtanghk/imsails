@@ -123,6 +123,16 @@ angular
 					download source, dest, options, onprogress
 						.catch $log.error
 
+				# overried exists
+				exists = fs.exists
+				fs.exists = (path) ->
+					exists path
+						.catch (err) ->
+							if err.code == 8
+								Promise.resolve false
+							else
+								Promise.reject err
+
 				resolve fs
 
 		Progress:	Progress
