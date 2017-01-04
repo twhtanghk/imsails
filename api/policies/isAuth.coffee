@@ -21,7 +21,7 @@ verifyToken = (token) ->
 					
 				# create user
 				# otherwise check if user registered before (defined in model.User or not)
-				user = _.pick res.body.user, 'url', 'username', 'email'
+				user = _.pick res.body.user, 'username', 'email'
 				sails.models.user
 					.findOrCreate user
 					.populateAll()
