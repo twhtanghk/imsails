@@ -4,87 +4,27 @@
     <h1 class='title'>
     	<span>{{model.fullname()}}</span>
     </h1>
-    <a class="button button-clear" ng-click="save()">{{'Save' | translate}}</a>  
 </ion-header-bar>
 <ion-content>
-	<div class="row">
-		<div class="col col-33">
-			<icon class="photo edit" 
-				ng-src="model.photoUrl"
-				ngf-select ngf-multiple='false' 
-				ngf-change="select($files)" 
-				ngf-accept="'image/*'"
-				aria-label="{{model.fullname()}}"
-				otherwise="icon ion-android-person">
-			</icon>
-		</div>
-		<div class="col">
-			<label class="item item-input">
-				<input type="text" ng-model="model.name.given" placeholder="Given">
-			</label>
-			<label class="item item-input">
-				<input type="text" ng-model="model.name.middle" placeholder="Middle">
-			</label>
-			<label class="item item-input">
-				<input type="text" ng-model="model.name.family" placeholder="Family">
-			</label>
-			<label class="item item-input">
-				<input type="text" ng-model="model.organization.name" placeholder="Organization">
-			</label>
-			<label class="item item-input">
-				<input type="text" ng-model="model.title" placeholder="Title">
-			</label>
-		</div>
-	</div>
-	
-	<!-- phone, otherEmail, address -->
-	<div ng-repeat="attr in ['phone', 'otherEmail', 'address']">
-		<ion-item class="item-divider">
-			{{resource.User.type.placeholder[attr] | translate}}
-		</ion-item>
-		
-		<!-- model existing value -->
-		<div class="row" ng-repeat="item in model[attr]">
-			<div class="col col-33">
-				<fancy-select
-					template-url='templates/user/status.html'
-					ng-selected="item.type"
-					ng-model="resource.User.type.values[attr]"
-					title="Select">
-				</fancy-select>
-			</div>
-			<div class="col">
-				<div class="item item-input-inset">
-					<label class="item-input-wrapper">
-						<input type="text" ng-model="item.value" placeholder="{{resource.User.type.placeholder[attr]}}">
-					</label>
-					<a class="button button-icon button-small icon ion-minus" style="vertical-align: middle"
-							ng-click="model[attr].splice($index, 1)">
-					</a>
-				</div>
-			</div>
-		</div>
-		
-		<!-- new entry for model attribute phone, otherEmail, or address -->
-		<div class="row" ng-init="item = {type: resource.User.type.values[attr][0], value: ''}">
-			<div class="col col-33">
-				<fancy-select
-					template-url='templates/user/status.html'
-					ng-selected="item.type"
-					ng-model="resource.User.type.values[attr]"
-					title="Select">
-				</fancy-select>
-			</div>
-			<div class="col">
-				<div class="item item-input-inset">
-					<label class="item-input-wrapper">
-						<input type="text" ng-model="item.value" placeholder="{{resource.User.type.placeholder[attr]}}">
-					</label>
-					<a class="button button-icon button-small icon ion-plus" style="vertical-align: middle"
-						ng-click="model[attr].push({type: item.type, value: item.value}); item.value = ''">
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+      <icon class="photo edit" 
+        ng-src="model.photoUrl"
+        ngf-select ngf-multiple='false' 
+        ngf-change="select($files)" 
+        ngf-accept="'image/*'"
+        aria-label="{{model.fullname()}}"
+        otherwise="icon ion-android-person">
+      </icon>
+    </div>
+
+  <ng-include src="'templates/user/name.html'">
+  </ng-include>
+
+  <ng-include src="'templates/user/title.html'">
+  </ng-include>
+
+  <!-- phone, otherEmail, address -->
+  <ion-list ng-repeat="attr in ['phone', 'otherEmail', 'address']"
+    ng-include="'templates/user/attrs.html'">
+  </ion-list>
 </ion-content>

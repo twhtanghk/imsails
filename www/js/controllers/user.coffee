@@ -125,10 +125,38 @@ angular
           lib.readFile(files)
             .then (inImg) ->
               $scope.$emit 'cropImg', inImg 
+      # for create, update, delete user.phone, email, address
+      newEntry: (attr) ->
+        model[attr].push
+          type: 'Office'
+          value: ''
+        model.$save()
+      rmEntry: (attr, index) ->
+        model[attr].splice index, 1
+        model.$save()
+      saveEntry: (attr, index) ->
+        model.$save()
         
     $scope.$on 'cropImg.completed', (event, outImg) ->
       $scope.model.photoUrl = outImg
   
+  # for user attributes phone, email, address
+  .controller 'AttrTypeCtrl', ($scope, $ionicModal, resource) ->
+    $ionicModal
+      .fromTemplateUrl 'templates/user/attrType.html',
+        scope: $scope
+      .then (modal) ->
+        $scope.typeModal = modal
+    _.extend $scope,
+      collection: resource.User.type.values[$scope.attr]
+      model: $scope.item
+      select: (type) ->
+        $scope.model.type = type
+        $scope.$parent.model.$save()
+        $scope.typeModal.hide()
+    $scope.$on '$destory', ->
+      $scope.typeModal.remove()
+
   .filter 'UserSelectFilter', ->
     (collection) ->
       _.map collection, (item) ->

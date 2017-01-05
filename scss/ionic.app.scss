@@ -31,6 +31,16 @@ $msg-arrow: 20px;
 
 $input-height: 54px;
 
+.editable-click, a.editable-click {
+  color: #428bca !important;
+  border-bottom: none 1px #428bca !important;
+  cursor: pointer;
+}
+
+.toggle {
+  @extend .toggle-positive;
+}
+
 .platform-android ion-popover-view.fit {
   margin-top: 10px;
 }
@@ -241,6 +251,9 @@ ion-nav-view[name=userContent] {
 			}
 		}
 	}
+  .item-note {
+    cursor: pointer;
+  }
 }
 
 ion-nav-view[name=chatContent] {

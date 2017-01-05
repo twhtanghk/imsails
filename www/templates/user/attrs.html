@@ -1,0 +1,12 @@
+<ion-item class="item-divider">
+  {{attr | translate}}
+  <span class="item-note" ng-click="newEntry(attr)">
+    {{'Create' | translate}}
+  </span>
+</ion-item>
+<ion-item
+  ng-repeat="item in model[attr]"
+  ng-include="'templates/user/attr.html'"
+  ng-controller="AttrTypeCtrl"
+  ng-click="showForm">
+</ion-item>

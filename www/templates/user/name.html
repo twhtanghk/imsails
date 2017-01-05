@@ -1,0 +1,29 @@
+<ion-list>
+  <ion-item class="item-divider">
+    {{'Name' | translate}}
+  </ion-item>
+  <ion-item>
+    <span class='editable editable-click' href='#' ng-click="name.$show(); $event.stopPropagation(); $event.preventDefault()" ng-hide="name.$visible">
+      {{model.fullname() || ('Blank' | translate)}}
+    </span>
+    <form ng-show="name.$visible" editable-form name="name" onaftersave="model.$save()" blur="cancel">
+      <span editable-text="model.name.given" e-placeholder="Given">
+        {{model.name.given}}
+      </span>
+      <span editable-text="model.name.middle" e-placeholder="Middle">
+        {{model.name.middle}}
+      </span>
+      <span editable-text="model.name.family" e-placeholder="Family">
+        {{model.name.family}}
+      </span>
+      <span class="editable-button">
+        <button type="submit" class="btn btn-primary" ng-disabled="name.$waiting">
+          <span class="glyphicon glyphicon-ok"></span>
+        </button>
+        <button type="button" class="btn btn-default" ng-disabled="name.$waiting" ng-click="name.$cancel()">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </span>
+    </form>
+  </ion-item>
+</ion-list>

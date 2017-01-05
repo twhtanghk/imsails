@@ -14,11 +14,16 @@
 	"Personal Info":	"Personal Info",
 	"Group Create":		"New Group",
 	"Phone":			"Phone",
+        "phone": "Phone",
 	"Email":			"Email",
+        "otherEmail": "Email",
 	"Address":			"Address",
+        "address": "Address",
 	"Mobile":			"Mobile",
 	"Office":			"Office",
 	"Personal":			"Personal",
+        "Home": "Home",
+        "Other": "Other",
 	"Menu":				"Menu",
 	"Create":			"Create",
 	"Save":				"Save",
@@ -36,5 +41,6 @@
 	"Members":			"Members",
 	"Status": "Status",
 	"Current status": "Current status",
-	"Select new status": "Select new status"
+	"Select new status": "Select new status",
+	"Blank": "Blank"
 }

@@ -9,7 +9,7 @@ module.exports =
 		
 	post: (user) ->
 		if user.organization?.name or user.title
-			"#{user.organization?.name || ''}/#{user.title || ''}"
+			"#{user.title || ''}/#{user.organization?.name || ''}"
 		else
 			""
 		

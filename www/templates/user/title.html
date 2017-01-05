@@ -1,0 +1,26 @@
+<ion-list>
+  <ion-item class="item-divider">
+    {{'Title' | translate}}
+  </ion-item>
+  <ion-item>
+    <span class='editable editable-click' href='#' ng-click="title.$show(); $event.stopPropagation(); $event.preventDefault()" ng-hide="title.$visible">
+      {{model.post() || ('Blank' | translate)}}
+    </span>
+    <form ng-show="title.$visible" editable-form name="title" onaftersave="model.$save()" blur="cancel">
+      <span editable-text="model.title" e-placeholder="Title">
+        {{model.title}}
+      </span>
+      <span editable-text="model.organization.name" e-placeholder="Organization">
+        {{model.organization.name}}
+      </span>
+      <span class="editable-button">
+        <button type="submit" class="btn btn-primary" ng-disabled="title.$waiting">
+          <span class="glyphicon glyphicon-ok"></span>
+        </button>
+        <button type="button" class="btn btn-default" ng-disabled="title.$waiting" ng-click="title.$cancel()">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </span>
+    </form>
+  </ion-item>
+</ion-list>

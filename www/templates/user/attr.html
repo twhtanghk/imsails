@@ -1,0 +1,11 @@
+<div class="item-content">
+  <span editable-text="item.value" onaftersave="saveEntry(attr, $index)">
+    {{item.value || ("Blank" | translate)}}
+  </span>
+  <span class="item-note" ng-click="typeModal.show(); $event.preventDefault(); $event.stopPropagation();">
+    {{item.type | translate}}
+  </span>
+</div>
+<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="rmEntry(attr, $index)">
+  Delete
+</ion-option-button>
