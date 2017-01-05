@@ -37,6 +37,13 @@ $input-height: 54px;
   cursor: pointer;
 }
 
+.editable-wrap {
+  display: block;
+  margin: .4em 0;
+  input[type="text"] {
+    border: 1px solid grey;
+  }
+}
 .toggle {
   @extend .toggle-positive;
 }
