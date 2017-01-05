@@ -93,7 +93,7 @@ gulp.task 'pre-ios', ->
   sh.exec "ionic resources ios"
 
 gulp.task 'ios', ['pre-ios', 'plugin', 'css', 'coffee'], ->
-  sh.exec "cordova build ios"
+  sh.exec "cordova build ios --device"
 
 gulp.task 'pre-android', ->
   config CLIENT_ID: process.env.NATIVE_CLIENT_ID
