@@ -22,6 +22,8 @@
 	"Mobile":			"手機",
 	"Office":			"辦公室",
 	"Personal":			"私人",
+  "Home": "住家",
+  "Other": "其它",
 	"Menu":				"菜單",
 	"Create":			"新增",
 	"Save":				"儲存",
@@ -39,5 +41,6 @@
 	"Members":			"成员",
   "Status": "狀態",
 	"Current status": "目前狀態",
-	"Select new status": "選擇新狀態"
+	"Select new status": "選擇新狀態",
+  "Blank": "空白"
 }
