@@ -111,7 +111,7 @@ angular
     $scope.$watchCollection 'collection', ->
       $scope.model = convert($scope.collection.models, $scope.selected)
       
-  .controller 'UserUpdateCtrl', ($scope, $state, resource, model) ->
+  .controller 'UserUpdateCtrl', ($scope, $state, $log, resource, model) ->
     _.extend $scope,
       resource: resource
       model: model
@@ -138,7 +138,9 @@ angular
         model.$save()
         
     $scope.$on 'cropImg.completed', (event, outImg) ->
-      $scope.model.photoUrl = outImg
+      $scope.model
+        .$save photo: outImg
+        .catch $log.error
   
   # for user attributes phone, email, address
   .controller 'AttrTypeCtrl', ($scope, $ionicModal, resource) ->
