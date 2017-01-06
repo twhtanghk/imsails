@@ -4,6 +4,6 @@ module.exports =
   push:
     url: "#{process.env.MOBILEURL}/api/push"
     data:
-      url: '/chat/<%=roster.type%>/<%=roster.user ? roster.user.id : roster.group.id%>'
+      url: "#{process.env.ROOTURL}/#/chat/<%=roster.type%>/<%=roster.user ? roster.user.id : roster.group.id%>"
       title: '<%=roster.name()%>'
       message: '<%=roster.newmsg%> new message(s)'
