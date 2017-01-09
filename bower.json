@@ -24,7 +24,7 @@
     "jquery-deparam": "~0.3.0",
     "ng-file-upload": "~8.0.1",
     "ngCordova": "~0.1.14-alpha",
-    "ngImgCrop": "~0.3.2",
+    "ngImgCrop": "https://github.com/iblank/ngImgCrop.git#master",
     "sails-auth": "*",
     "sails.io.js": "https://github.com/twhtanghk/sails.io.js.git#master",
     "tagDirective": "*",
