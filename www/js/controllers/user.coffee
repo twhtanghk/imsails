@@ -1,5 +1,3 @@
-lib = require './lib.coffee'
-
 angular
 
   .module 'starter.controller'
@@ -122,9 +120,7 @@ angular
           $state.go 'app.user.list'
       select: (files) ->
         if files?.length != 0
-          lib.readFile(files)
-            .then (inImg) ->
-              $scope.$emit 'cropImg', inImg 
+          $scope.$emit 'cropImg', URL.createObjectURL(files[0])
       # for create, update, delete user.phone, email, address
       newEntry: (attr) ->
         model[attr].push

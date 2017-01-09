@@ -9,14 +9,16 @@
 <ion-content>
 	<div class="row">
 		<div class="col col-33">
-			<icon class="photo edit" 
-				ng-src="model.photoUrl"
-				ngf-select ngf-multiple='false' 
-				ngf-change="select($files)" 
-				ngf-accept="'image/*'"
-				aria-label="{{model.name}}"
-				otherwise="icon ion-android-people">
-			</icon>
+			<div class="fileButton">
+				<icon class="photo edit" 
+					ng-src="model.photoUrl"
+					aria-label="{{model.name}}"
+					otherwise="icon ion-android-people">
+				</icon>
+				<input type="file"
+					accept="image/*"
+					onchange="angular.element(this).scope().select(event.target.files)">
+			</div>
 		</div>
 		<div class="col">
 			<label class="item item-input">

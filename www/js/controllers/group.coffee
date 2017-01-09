@@ -1,5 +1,3 @@
-lib = require './lib.coffee'
-
 angular
 
   .module 'starter.controller'
@@ -141,16 +139,14 @@ angular
 			if $location.url().indexOf('/group/list') != -1
 				$scope.collection.$refetch()
 
-	.controller 'GroupCreateCtrl', ($scope, $state, resource, model, ErrorService) ->
+	.controller 'GroupCreateCtrl', ($scope, $state, $log, resource, model, ErrorService) ->
 		_.extend $scope,
 			resource: resource
 			model: model
 			users:		resource.Users.instance()
 			select: (files) ->
 				if files?.length != 0
-					lib.readFile(files)
-						.then (inImg) ->
-							$scope.$emit 'cropImg', inImg
+					$scope.$emit 'cropImg', URL.createObjectURL(files[0])
 			save: ->
 				$scope.model.$save()
 					.then ->
@@ -162,6 +158,7 @@ angular
 						ErrorService.formErr $scope.groupCreate, err
 
 		$scope.$on 'cropImg.completed', (event, outImg) ->
+			$scope.model.photo = outImg
 			$scope.model.photoUrl = outImg
 
 	.controller 'GroupReadCtrl', ($scope, resource, model) ->
@@ -169,16 +166,14 @@ angular
 			resource:	resource
 			model:		model
 
-	.controller 'GroupUpdateCtrl', ($scope, $state, resource, model) ->
+	.controller 'GroupUpdateCtrl', ($scope, $state, $log, resource, model) ->
 		_.extend $scope,
 			resource:	resource
 			model: 		model
 			users:		resource.Users.instance()
 			select: (files) ->
 				if files?.length != 0
-					lib.readFile(files)
-						.then (inImg) ->
-							$scope.$emit 'cropImg', inImg
+					$scope.$emit 'cropImg', URL.createObjectURL(files[0])
 			save: ->
 				if model.photoUrl?.match(/^data:(.+);base64,(.*)$/)
 					model.photo = model.photoUrl
@@ -190,7 +185,9 @@ angular
 						$state.go next
 
 		$scope.$on 'cropImg.completed', (event, outImg) ->
-			$scope.model.photoUrl = outImg
+			$scope.model
+				.$save photo: outImg
+				.catch $log.error
 
 .filter 'groupFilter', ->
 		(collection, search) ->
