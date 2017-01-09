@@ -13,6 +13,7 @@ module.exports =
 					"data:"
 					"http://#{host}"
 					"https://#{host}"
+					"blob:"
 				]
 				ret = csp
 					directives:
