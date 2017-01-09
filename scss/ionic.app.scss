@@ -160,21 +160,38 @@ i.avatar {
 }
 
 i.photo {
-	font-size: 200px;
-	@media only screen and (max-width: 600px) {
-		font-size: 33vw;
-	}
+  font-size: 200px;
+  @media only screen and (max-width: 600px) {
+    font-size: 33vw;
+  }
 }
 
 .photo {
-	display: block;
-	margin: auto;
-	max-width: 200px;
-	max-height: 200px;
-	@media only screen and (max-width: 600px) {
-		width: 33vw;
-		max-width: 100%;
-	}
+  display: block;
+  margin: auto;
+  max-width: 200px;
+  max-height: 200px;
+  @media only screen and (max-width: 600px) {
+    width: 33vw;
+    max-width: 100%;
+  }
+}
+
+div.fileButton {
+  position: relative;
+  margin: auto;
+
+  input[type='file'] {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+  }
 }
 
 .photo.edit {
