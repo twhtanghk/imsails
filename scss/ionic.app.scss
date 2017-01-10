@@ -169,6 +169,7 @@ i.photo {
 .photo {
   display: block;
   margin: auto;
+  width: 200px;
   max-width: 200px;
   max-height: 200px;
   @media only screen and (max-width: 600px) {
@@ -249,9 +250,6 @@ ion-nav-view[name=groupContent] {
 				width: 100%;
 			}
 		}
-	}
-	[name=typeSelect] a {
-		@extend .disabled;
 	}
 	ion-item.item-avatar.user {
 		cursor: pointer;
