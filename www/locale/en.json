@@ -37,10 +37,11 @@
 	"Search":			"Search",
 	"Type":				"Type",
 	"Owner":			"Owner",
-	"Moderators":		"Moderators",
+	"Moderators":		"Administrators",
 	"Members":			"Members",
 	"Status": "Status",
 	"Current status": "Current status",
 	"Select new status": "Select new status",
-	"Blank": "Blank"
+	"Blank": "Blank",
+	"Name": "Name"
 }
