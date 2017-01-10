@@ -82,7 +82,7 @@ gulp.task 'coffee', ['template', 'modernizr'],  ->
     .pipe gulp.dest './www/js/'
 
 gulp.task 'template', ->
-  gulp.src('./www/templates/**/*.html')
+  gulp.src ['./lib/tagDirective/*.html', './www/templates/**/*.html']
     .pipe(templateCache(root: 'templates', standalone: true))
     .pipe(gulp.dest('./www/js/'))
 
