@@ -44,6 +44,11 @@ $input-height: 54px;
     border: 1px solid grey;
   }
 }
+
+.modal-wrapper .pane {
+  height: 60%;
+}
+
 .toggle {
   @extend .toggle-positive;
 }
@@ -250,6 +255,9 @@ ion-nav-view[name=groupContent] {
 				width: 100%;
 			}
 		}
+	}
+	[name=typeSelect] a {
+		@extend .disabled;
 	}
 	ion-item.item-avatar.user {
 		cursor: pointer;
