@@ -40,11 +40,7 @@ module.exports =
 			.create(req)
 			.then (newInstance) ->
 				res.created(newInstance)
-			.catch (err) ->
-				res.serverError
-					code:	err.originalError.code
-					fields:
-						name: "Duplicate name '#{data.name}'"
+			.catch res.serverError
 						
 	exit: (req, res) ->
 		pk = actionUtil.requirePk(req)
