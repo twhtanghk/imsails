@@ -170,6 +170,18 @@ angular
 				.$save photo: outImg
 				.catch $log.error
 
+		saveGroup = (newValue, oldValue) ->
+			filter = (list) ->
+				list = _.map list, (item) ->
+					_.pick item, 'email'
+				list = _.sortBy list, 'email'
+			newValue = filter newValue
+			oldValue = filter oldValue
+			if not _.isEqual newValue, oldValue
+				model.$save().catch $log.error
+		$scope.$watch 'model.moderators', saveGroup, true
+		$scope.$watch 'model.members', saveGroup, true
+
 .filter 'groupFilter', ->
 		(collection, search) ->
 			if search
