@@ -15,8 +15,8 @@ angular
 			url: "/create"
 			views:
 				groupContent:
-					templateUrl: 'templates/group/create.html'
-					controller: 'GroupCreateCtrl'
+					templateUrl: 'templates/group/update.html'
+					controller: 'GroupUpdateCtrl'
 			resolve:
 				resource: 'resource'
 				model: (resource) ->
@@ -139,28 +139,6 @@ angular
 			if $location.url().indexOf('/group/list') != -1
 				$scope.collection.$refetch()
 
-	.controller 'GroupCreateCtrl', ($scope, $state, $log, resource, model, ErrorService) ->
-		_.extend $scope,
-			resource: resource
-			model: model
-			users:		resource.Users.instance()
-			select: (files) ->
-				if files?.length != 0
-					$scope.$emit 'cropImg', URL.createObjectURL(files[0])
-			save: ->
-				$scope.model.$save()
-					.then ->
-						next = 'app.group.list.public'
-						if $scope.model.type == 'Members-Only'
-							next = 'app.group.list.private'
-						$state.go next
-					.catch (err) ->
-						ErrorService.formErr $scope.groupCreate, err
-
-		$scope.$on 'cropImg.completed', (event, outImg) ->
-			$scope.model.photo = outImg
-			$scope.model.photoUrl = outImg
-
 	.controller 'GroupReadCtrl', ($scope, resource, model) ->
 		_.extend $scope,
 			resource:	resource
@@ -174,18 +152,21 @@ angular
 			select: (files) ->
 				if files?.length != 0
 					$scope.$emit 'cropImg', URL.createObjectURL(files[0])
-			save: ->
-				if model.photoUrl?.match(/^data:(.+);base64,(.*)$/)
-					model.photo = model.photoUrl
-				model.$save()
-					.then ->
-						next = 'app.group.list.public'
-						if model.type == 'Members-Only'
-							next = 'app.group.list.private'
-						$state.go next
+			valid: (form) ->
+				ret = (not model.name?) or model?.name == ''
+				if ret
+					form.$show()
+					form.$setError 'model.name', 'This is a required field'
+				return ret
+			save: (form) ->
+				if not $scope.valid form
+					model
+						.$save()
+						.catch (err) ->
+							_.first(_.first(_.values(err.data.invalidAttributes))).message
 
 		$scope.$on 'cropImg.completed', (event, outImg) ->
-			$scope.model
+			model
 				.$save photo: outImg
 				.catch $log.error
 
