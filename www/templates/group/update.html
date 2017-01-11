@@ -2,41 +2,59 @@
 	<button class="button button-icon button-clear ion-navicon" menu-toggle="left">
     </button>
 	<h1 class='title'>
-		<span>{{model.name}}</span>
+		<span>{{'Group' | translate}}</span>
 	</h1>
-	<a class="button button-clear" ng-click="save()">{{'Save' | translate}}</a>
 </ion-header-bar>
 <ion-content>
 	<div class="row">
-		<div class="col col-33">
-			<div class="fileButton">
-				<icon class="photo edit" 
-					ng-src="model.photoUrl"
-					aria-label="{{model.name}}"
-					otherwise="icon ion-android-people">
-				</icon>
-				<input type="file"
-					accept="image/*"
-					onchange="angular.element(this).scope().select(event.target.files)">
-			</div>
-		</div>
-		<div class="col">
-			<label class="item item-input">
-				<input type="text" ng-model="model.name" placeholder="Name" required>
-			</label>
-			<fancy-select
-				name="typeSelect"
-				template-url='templates/user/select.html'
-				ng-selected="model.type"
-				ng-model="resource.Group.type.values"
-				title="Select group type">
-			</fancy-select>
+		<div class="fileButton">
+			<icon class="photo edit" 
+				ng-src="model.photoUrl"
+				aria-label="{{model.name}}"
+				otherwise="icon ion-android-people">
+			</icon>
+			<input type="file"
+				accept="image/*"
+				onchange="angular.element(this).scope().select(event.target.files)">
 		</div>
 	</div>
+	<ion-list>
+		<ion-item class="item-divider">
+			{{'Name' | translate}}
+		</ion-item>
+		<ion-item>
+		  <span 
+		    editable-text="model.name"
+		    e-placeholder="Name"
+		    e-form="nameForm"
+		    e-clickable="true"
+		    onhide="valid(nameForm)"
+		    onaftersave="save(nameForm)">
+                    {{model.name || ('Blank' | translate)}}
+                  </span>
+		  <span 
+                    ng-init="valid(nameForm)">
+		  </span>
+		</ion-item>
+		<ion-item class="item-divider">
+			{{'Type' | translate}}
+		</ion-item>
+		<ion-item class="row">
+			<div class="col">
+				<fancy-select
+					name="typeSelect"
+					template-url='templates/user/select.html'
+					ng-selected="model.type"
+					ng-model="resource.Group.type.values"
+					title="Select group type">
+				</fancy-select>
+			</div>
+		</ion-item>
+	</ion-list>
 	<div ng-repeat="type in ['moderators', 'members']">
 		<ion-list>
 			<ion-item class="item-divider">
-				{{resource.Group.type.placeholder[type]}}
+				{{resource.Group.type.placeholder[type] | translate}}
 			</ion-item>
 			
 			<div class="row">
