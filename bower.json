@@ -25,7 +25,7 @@
     "ng-file-upload": "~8.0.1",
     "ngCordova": "~0.1.14-alpha",
     "ngImgCrop": "https://github.com/iblank/ngImgCrop.git#master",
-    "sails-auth": "*",
+    "sails-auth": "0.0.5",
     "sails.io.js": "https://github.com/twhtanghk/sails.io.js.git#master",
     "tagDirective": "*",
     "ionic-press-again-to-exit": "*",
