@@ -7,24 +7,30 @@
 </ion-header-bar>
 <ion-content>
 	<div class="row">
-		<div class="col col-33">
+		<div style="margin: auto">
 			<icon class="photo" 
 				ng-src="model.photoUrl"
 				aria-label="{{model.fullname()}}"
 				otherwise="icon ion-android-person">
 			</icon>
 		</div>
-		<div class="col col-center">
-			<div style="font-weight: bold; font-size: large; margin: 1em">
-				{{model.fullname()}}
-			</div>
-			<div style="font-weight: bold; font-size: large; margin: 1em" ng-if="model.post() != ''">
-				{{model.post()}}
-			</div>
-		</div>
 	</div>
 	<ion-list>
 		<ion-item class="item-divider">
+		  {{'Name' | translate}}
+		</ion-item>
+		<ion-item>
+			{{model.fullname()}}
+		</ion-item>
+		<ion-item class="item-divider">
+		  {{'Title' | translate}}
+		</ion-item>
+		<ion-item>
+		  {{model.post() || ("Blank" | translate)}}
+		</ion-item>
+	</ion-list>
+	<ion-list>
+		<ion-item class="item-divider" ng-if="model.phone.length != 0">
 			Phone
 		</ion-item>
 		<a class="item item-icon-right" href="tel:{{item.value}}" ng-repeat="item in model.phone">
@@ -34,11 +40,11 @@
 		</a>
 		
 		<ion-item class="item-divider">
-			Email
+		  {{'Email' | translate}}
 		</ion-item>
 		<a class="item item-icon-right" href="mailto:{{model.email}}">
 			<h2>{{model.email}}</h2>
-			<p>Email</p> 
+			<p>Account Registered</p> 
 			<i class="icon ion-ios-email-outline"></i>
 		</a>
 		<a class="item item-icon-right" href="mailto:{{item.value}}" ng-repeat="item in model.otherEmail">
@@ -47,7 +53,7 @@
 			<i class="icon ion-ios-email-outline"></i>
 		</a>
 		
-		<ion-item class="item-divider">
+		<ion-item class="item-divider" ng-if="model.address.length != 0">
 			Address
 		</ion-item>
 		<ion-item ng-repeat="item in model.address">
