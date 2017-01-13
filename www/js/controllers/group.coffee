@@ -15,8 +15,8 @@ angular
 			url: "/create"
 			views:
 				groupContent:
-					templateUrl: 'templates/group/update.html'
-					controller: 'GroupUpdateCtrl'
+					templateUrl: 'templates/group/create.html'
+					controller: 'GroupCreateCtrl'
 			resolve:
 				resource: 'resource'
 				model: (resource) ->
@@ -144,7 +144,7 @@ angular
 			resource:	resource
 			model:		model
 
-	.controller 'GroupUpdateCtrl', ($scope, $state, $log, resource, model) ->
+	.controller 'GroupCreateCtrl', ($scope, $state, $log, resource, model) ->
 		_.extend $scope,
 			resource:	resource
 			model: 		model
@@ -157,9 +157,35 @@ angular
 				if ret
 					form.$show()
 					form.$setError 'model.name', 'This is a required field'
-				return ret
+				return not ret
+			save:  ->
+				model
+					.$save()
+					.then ->
+						$state.go 'app.roster.list'
+					.catch (err) ->
+						$log.error _.first(_.first(_.values(err.data.invalidAttributes))).message
+
+		$scope.$on 'cropImg.completed', (event, outImg) ->
+			model.photo = outImg
+			model.photoUrl = outImg
+		
+	.controller 'GroupUpdateCtrl', ($scope, $log, resource, model) ->
+		_.extend $scope,
+			resource:	resource
+			model: 		model
+			users:		resource.Users.instance()
+			select: (files) ->
+				if files?.length != 0
+					$scope.$emit 'cropImg', URL.createObjectURL(files[0])
+			valid: (form) ->
+				ret = (not model.name?) or model?.name == ''
+				if ret
+					form.$show()
+					form.$setError 'model.name', 'This is a required field'
+				return not ret
 			save: (form) ->
-				if not $scope.valid form
+				if $scope.valid form
 					model
 						.$save()
 						.catch (err) ->
