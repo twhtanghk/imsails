@@ -132,3 +132,9 @@ angular
 	.run ($rootScope) ->
 		document.addEventListener "deviceready", ->
 			$rootScope.device = device
+
+	.run ($rootScope, $state, $stateParams) ->
+		_.extend $rootScope,
+			'$state': $state
+			'$stateParams': $stateParams
+
