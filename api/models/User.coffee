@@ -43,7 +43,6 @@ module.exports =
 			unique:		true
 		url:
 			type: 		'string'
-			required: 	true
 		username:
 			type: 		'string'
 			required: 	true
