@@ -1,0 +1,90 @@
+<ion-header-bar class="item-input-inset">
+	<button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+    </button>
+	<h1 class='title'>
+		<span>{{'Group' | translate}}</span>
+	</h1>
+	<a class="button button-clear" ng-click="save()">{{'Save' | translate}}</a>
+</ion-header-bar>
+<ion-content>
+	<div class="row">
+		<div class="fileButton">
+			<icon class="photo edit" 
+				ng-src="model.photoUrl"
+				aria-label="{{model.name}}"
+				otherwise="icon ion-android-people">
+			</icon>
+			<input type="file"
+				accept="image/*"
+				onchange="angular.element(this).scope().select(event.target.files)">
+		</div>
+	</div>
+	<ion-list>
+		<ion-item class="item-divider">
+			{{'Name' | translate}}
+		</ion-item>
+		<ion-item>
+		  <span 
+		    editable-text="model.name"
+		    e-placeholder="Name"
+		    e-form="nameForm"
+		    e-clickable="true"
+		    onhide="valid(nameForm)">
+                    {{model.name || ('Blank' | translate)}}
+                  </span>
+		  <span 
+                    ng-init="valid(nameForm)">
+		  </span>
+		</ion-item>
+		<ion-item class="item-divider">
+			{{'Type' | translate}}
+		</ion-item>
+		<ion-item class="row">
+			<div class="col">
+				<fancy-select
+					template-url='templates/group/type.html'
+					ng-selected="model.type"
+					ng-model="resource.Group.type.values"
+					title="Select group type">
+				</fancy-select>
+			</div>
+		</ion-item>
+	</ion-list>
+	<div ng-repeat="type in ['moderators', 'members']">
+		<ion-list>
+			<ion-item class="item-divider">
+				{{resource.Group.type.placeholder[type] | translate}}
+			</ion-item>
+			
+			<div class="row">
+				<div class="col">
+					<fancy-select-model 
+						template-url='templates/user/select.html'
+						label="fullname"
+						multiple
+						ng-selected="$parent.model[type]"
+						ng-model="users"
+						title="Select {{type}}">
+					</fancy-select-model>
+				</div>
+			</div>
+		
+			<ion-item class="item-avatar"
+				ng-repeat="user in model[type] | UserOrderByFullname"
+				ng-controller="UserCtrl">
+				<icon class="avatar" 
+					ng-src="user.photoUrl"
+					aria-label="{{user.fullname()}"
+					otherwise="icon ion-android-person">
+				</icon>
+				<h2>
+					<span>{{user.fullname()}}</span>
+				</h2>
+				<p>
+					{{user.post()}}
+				</p>
+				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="model[type].splice($index, 1)">Delete</ion-option-button>
+			</ion-item>
+		</ion-list>
+	</div>
+</ion-content>
