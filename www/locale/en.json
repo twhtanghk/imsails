@@ -43,5 +43,6 @@
 	"Current status": "Current status",
 	"Select new status": "Select new status",
 	"Blank": "Blank",
-	"Name": "Name"
+	"Name": "Name",
+  "Title": "Title"
 }
