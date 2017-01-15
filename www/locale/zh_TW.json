@@ -42,5 +42,7 @@
   "Status": "狀態",
 	"Current status": "目前狀態",
 	"Select new status": "選擇新狀態",
-  "Blank": "空白"
+  "Blank": "空白",
+  "Name": "名稱",
+  "Title": "職位"
 }
