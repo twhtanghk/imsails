@@ -158,6 +158,9 @@ angular
 					form.$show()
 					form.$setError 'model.name', 'This is a required field'
 				return not ret
+			remove: (model, type, user) ->
+				model[type] = _.filter model[type], (item) ->
+					item.id != user.id
 			save:  ->
 				model
 					.$save()
@@ -184,6 +187,9 @@ angular
 					form.$show()
 					form.$setError 'model.name', 'This is a required field'
 				return not ret
+			remove: (model, type, user) ->
+				model[type] = _.filter model[type], (item) ->
+					item.id != user.id
 			save: (form) ->
 				if $scope.valid form
 					model

@@ -84,7 +84,7 @@
 				<p>
 					{{user.post()}}
 				</p>
-				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="model[type].splice($index, 1)">Delete</ion-option-button>
+				<ion-option-button class="button button-assertive icon-left ion-trash-a" on-tap="remove(model, type, user)">Delete</ion-option-button>
 			</ion-item>
 		</ion-list>
 	</div>
