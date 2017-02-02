@@ -123,11 +123,11 @@ module.exports =
 	afterPublishCreate: (values, req) ->
 		# send push notification to all subscribers excluding sender
 		sails.models.roster
-			.findOne jid: values.to
+			.find jid: values.to
 			.populateAll()
 			.then (items) ->
 				Promise.map items, (item) ->
-					if item.createdBy.jid != values.from
+					if item.createdBy? and item.createdBy?.jid != values.from
 						sails.services.gcm
 							.push req.user.token, item, values
 			.catch sails.log.error

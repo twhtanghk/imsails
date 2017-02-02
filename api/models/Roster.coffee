@@ -50,7 +50,7 @@ module.exports =
 				when msg.to
 					@lastmsgAt = msg.createdAt
 					# also update msg counter for groupchat members other than roster owner
-					if sails.services.jid.isMuc(msg.to) and @createdBy.id != msg.createdBy 
+					if sails.services.jid.isMuc(msg.to) and @createdBy? and @createdBy?.id != msg.createdBy 
 						@newmsg = @newmsg + 1
 					@save()
 				else
