@@ -3,7 +3,7 @@
  # @description :: TODO: You might write a short summary of how this model works and what it represents here.
  # @docs        :: http://sailsjs.org/#!documentation/models
 _ = require 'lodash'
-Promise = require 'promise'
+Promise = require 'bluebird'
 gfs = require('skipper-gridfs')(sails.config.file.opts)
 path = require 'path'
 
@@ -106,9 +106,8 @@ module.exports =
 								.populateAll()
 			.then (items) ->
 				# update all subscribers' roster item
-				Promise
-					.all _.map items, (roster) ->
-						roster.sent values
+				Promise.map items, (roster) ->
+					roster.sent values
 			.then ->
 				cb()
 			.catch cb
@@ -122,11 +121,16 @@ module.exports =
 		cb()
 
 	afterPublishCreate: (values, req) ->
-		# send push notification to all subscribers excluding sender
+		# create roster items for recipients if not yet defined
 		sails.services.roster
 			.recipient values.from, values.to
+			.catch sails.log.error
+		# send push notification to all subscribers excluding sender
+		sails.models.roster
+			.findOne jid: values.to
+			.populateAll()
 			.then (items) ->
-				_.each items, (item) ->
+				Promise.map items, (item) ->
 					if item.createdBy.jid != values.from
 						sails.services.gcm
 							.push req.user.token, item, values
