@@ -121,10 +121,22 @@ module.exports =
 		cb()
 
 	afterPublishCreate: (values, req) ->
+		items = ->
+			if sails.services.jid.isMuc values.to
+				sails.models.roster
+					.find jid: values.to
+					.populateAll()
+			else
+				sails.models.user
+					.findOne jid: values.to
+					.then (user) ->
+						sails.models.roster
+							.find
+								jid: values.from
+								createdBy: user.id
+							.populateAll()
 		# send push notification to all subscribers excluding sender
-		sails.models.roster
-			.find jid: values.to
-			.populateAll()
+		items()
 			.then (items) ->
 				Promise.map items, (item) ->
 					if item.createdBy? and item.createdBy?.jid != values.from
