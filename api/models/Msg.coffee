@@ -121,10 +121,6 @@ module.exports =
 		cb()
 
 	afterPublishCreate: (values, req) ->
-		# create roster items for recipients if not yet defined
-		sails.services.roster
-			.recipient values.from, values.to
-			.catch sails.log.error
 		# send push notification to all subscribers excluding sender
 		sails.models.roster
 			.findOne jid: values.to
