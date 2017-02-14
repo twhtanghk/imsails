@@ -29,6 +29,7 @@
     "morgan": "^1.5.3",
     "needle": "^1.0.0",
     "node-uuid": "^1.4.3",
+    "oauth2_client": "0.0.1",
     "passport": "^0.3.2",
     "passport-http-bearer": "^1.0.1",
     "promise": "^7.1.1",

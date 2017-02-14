@@ -1,46 +1,21 @@
 _ = require 'lodash'
 passport = require 'passport'
 bearer = require 'passport-http-bearer'
-Promise = require 'bluebird'
-needle = Promise.promisifyAll require 'needle'
+oauth2 = require 'oauth2_client'
 
-# check if oauth2 bearer is available
-verifyToken = (token) ->
-	oauth2 = sails.config.oauth2
-	
-	return new Promise (fulfill, reject) ->
-		opts = headers:
-			Authorization: "Bearer #{token}"
-		needle.getAsync oauth2.verifyURL, opts
-			.then (res) -> 
-				# check required scope authorized or not
-				scope = res.body.scope.split(' ')
-				result = _.intersection scope, oauth2.scope
-				if result.length != oauth2.scope.length
-					return reject('Unauthorized access to #{oauth2.scope}')
-					
-				# create user
-				# otherwise check if user registered before (defined in model.User or not)
-				user = _.pick res.body.user, 'username', 'email'
-				sails.models.user
-					.findOrCreate user
-					.populateAll()
-					.then fulfill, reject
-			.catch reject
-			
-passport.use 'bearer', new bearer.Strategy {}, (token, done) ->
-	fulfill = (user) ->
-		user.token = token
-		done(null, user)
-	reject = (err) ->
-		done(null, false, message: err)
-	verifyToken(token).then fulfill, reject
-	
+passport.use 'bearer', new bearer.Strategy {} , (token, done) ->
+  oauth2
+    .verify sails.config.oauth2.verifyUrl, sails.config.oauth2.scope, token
+    .then (info) ->
+      sails.models.user
+        .findOrCreate _.pick(info.user, 'email')
+        .populateAll()
+    .then (user) ->
+      done null, user
+    .catch (err) ->
+      done null, false, message: err
+
 module.exports = (req, res, next) ->
-	if req.isSocket
-		req = _.extend req, _.pick(require('http').IncomingMessage.prototype, 'login', 'logIn', 'logout', 'logOut', 'isAuthenticated', 'isUnauthenticated')
-	middleware = passport.authenticate('bearer', { session: false })
-	middleware req, res, ->
-		if req.isSocket
-			req.socket.user = req.user
-		next()
+  middleware = passport.authenticate('bearer', { session: false } )
+  middleware req, res, ->
+    next()
