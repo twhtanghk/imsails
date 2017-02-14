@@ -1,5 +1,5 @@
 ['DOMAIN', 'TOKENURL', 'CLIENT_ID', 'CLIENT_SECRET'].map (name) ->
-  if not (name of processs.env)
+  if not (name of process.env)
     throw new Error "process.env.#{name} not yet defined"
 
 domain = process.env.DOMAIN
