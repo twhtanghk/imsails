@@ -8,7 +8,7 @@ passport.use 'bearer', new bearer.Strategy {} , (token, done) ->
     .verify sails.config.oauth2.verifyUrl, sails.config.oauth2.scope, token
     .then (info) ->
       sails.models.user
-        .findOrCreate _.pick(info.user, 'email')
+        .findOrCreate _.pick(info.user, 'username', 'email')
         .populateAll()
     .then (user) ->
       done null, user
@@ -16,6 +16,9 @@ passport.use 'bearer', new bearer.Strategy {} , (token, done) ->
       done null, false, message: err
 
 module.exports = (req, res, next) ->
+  if req.isSocket
+    req = _.extend req, _.pick(require('http').IncomingMessage.prototype, 'login', 'logIn', 'logout', 'logOut', 'isAuthenticated', 'isUnauthenticated')
+
   middleware = passport.authenticate('bearer', { session: false } )
   middleware req, res, ->
     next()
