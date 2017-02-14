@@ -183,7 +183,7 @@ i.photo {
   }
 }
 
-div.fileButton {
+.fileButton {
   position: relative;
   margin: auto;
 
@@ -338,31 +338,9 @@ ion-nav-view[name=chatContent] {
 		}
 	}
 
-	.bar-footer {
-		label {
-			margin-right: .4em;
-			textarea {
-				width: 100%;
-				background-color: inherit;
-				resize: none;
-				overflow-y: hidden;
-				overflow-x: hidden;
-			}
-		}
-		button, .button {
-			background: $positive !important;
-			border: none;
-			border-radius: 50%;
-			width: 35px;
-			i {
-				color: white;
-			}
-			margin-left: .4em;
-			transition: all .2s ease-in-out;
-		}
-
-		button:active {
-			transform: scale(1.5);
+	ion-tabs {
+		.tab-item {
+			color: #387ef5;
 		}
 	}
 }

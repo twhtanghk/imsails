@@ -30,21 +30,21 @@
 	<ion-infinite-scroll ng-if="collection.state.skip < collection.state.count" on-infinite="loadMore()">
 	</ion-infinite-scroll>
 </ion-content>
-<ion-footer-bar class="item-input-inset">
-    <label class="item-input-wrapper">
-		<textarea rows='1' ng-model="msg" ng-change="row(msg)"></textarea>
-	</label>
-	<div class="buttons">
-	    <button class="button" ng-click="send()" ng-if="msg != ''">
-	    	<i class="icon ion-android-send"></i>
-	    </button>
-	    <label class="button" ng-if="msg == ''">
-	    	<i class="icon ion-paperclip"></i>
-		<input type="file" onchange="angular.element(this).scope().putfile(event.target.files)">
-	    </label>
-            <util-audio-recorder ng-if="device.platform == 'browser'"></util-audio-recorder>
-            <button class="button" ng-click="start()" ng-controller="AudioCtrl" ng-if="device.platform == 'iOS' || device.platform == 'Android'">
-              <i class="icon ion-mic-a"></i>
-            </button>
-    </div>
-</ion-footer-bar>
+<ion-tabs class="tabs-icon-left tabs-color-positive">
+  <span class="fileButton tab-item" style="margin: inherit; cursor: pointer;">
+    <i class="icon ion-android-attach"></i> {{'Attachment' | translate}}
+    <input type="file" onchange="angular.element(this).scope().addFile(event.target.files)">
+  </span>
+  <ion-tab title="{{'Photo' | translate}}"
+    icon="ion-android-camera" 
+    ng-click="addImg('img')" href="#">
+  </ion-tab>
+  <ion-tab title="{{'Voice' | translate}}"
+    icon="ion-android-microphone"
+    ng-click="addAudio('audio')" href="#">
+  </ion-tab>
+  <ion-tab title="{{'Text' | translate}}"
+    icon="ion-android-textsms"
+    ng-click="addText('text')" href="#">
+  </ion-tab>
+</ion-tabs>
