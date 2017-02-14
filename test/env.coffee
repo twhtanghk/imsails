@@ -1,10 +1,14 @@
-domain = process.env.DOMAIN || 'mob.myvnc.com'
+['DOMAIN', 'TOKENURL', 'CLIENT_ID', 'CLIENT_SECRET'].map (name) ->
+  if not (name of processs.env)
+    throw new Error "process.env.#{name} not yet defined"
+
+domain = process.env.DOMAIN
 
 module.exports =
 	timeout: 4000000
 	client: 
-		id:		'client id'
-		secret: 'client secret'
+		id: process.env.CLIENT_ID
+		secret: process.env.CLIENT_SECRET
 	users: [
 		{ id: 'user1', secret: 'password', jid: "user1@#{domain}" }
 		{ id: 'user2', secret: 'password', jid: "user2@#{domain}" }
