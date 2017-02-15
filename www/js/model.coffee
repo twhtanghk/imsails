@@ -251,17 +251,30 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 				Msg.msgType @
 
 			templateUrl: ->
-				switch @msgType()
-					when 'img'
-						"templates/chat/thumb.html"
-					when 'audio'
-						"templates/chat/audio.html"
-					when 'video'
-						"templates/chat/thumb.html"
-					when 'file'
-						"templates/chat/file.html"
-					else
-						"templates/chat/msg.html"
+				if @$isNew()
+					switch @msgType()
+						when 'img'
+							"templates/chat/newThumb.html"
+						when 'audio'
+							"templates/chat/newAudio.html"
+						when 'video'
+							"templates/chat/newThumb.html"
+						when 'file'
+							"templates/chat/newFile.html"
+						else
+							"templates/chat/newMsg.html"
+				else
+					switch @msgType()
+						when 'img'
+							"templates/chat/thumb.html"
+						when 'audio'
+							"templates/chat/audio.html"
+						when 'video'
+							"templates/chat/thumb.html"
+						when 'file'
+							"templates/chat/file.html"
+						else
+							"templates/chat/msg.html"
 
 			$parse: (data, opts) ->
 				ret = super(data, opts)
@@ -274,6 +287,21 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 			$fetch: (opts = {}) ->
 				opts.params = _.defaults populate: ['file_inode', 'createdBy'], opts.params
 				super opts
+
+			$save: (values, opts) ->
+				if @msgType() == 'msg'
+					super values, opts
+				else
+					file = new Attachment _.pick(@, 'type', 'to', 'body', 'local')
+					if file.local instanceof MediaFile
+						opts =
+							fileName: file.name
+							mimeType: 'audio/wav'
+							params: _.pick file, 'to', 'type', 'body'
+							headers: $http.defaults.headers.common
+						$cordovaFileTransfer.upload file.$urlRoot(), file.url, opts
+					else
+						file.$save()
 
 		class Attachment extends pageableAR.Model
 			$urlRoot: ->

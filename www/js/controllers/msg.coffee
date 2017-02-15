@@ -1,4 +1,5 @@
 env = require '../env.coffee'
+path = require 'path'
 sails =
 	services:
 		file:	require '../../../api/services/file.coffee'
@@ -59,17 +60,18 @@ angular
 					.then ->
 						$scope.$broadcast('scroll.infiniteScrollComplete')
 				return @
-			# to control no of rows required for the input textarea
-			row: (msg) ->
-				rows = if msg == '' then 1 else Math.min(3, msg.split('\n').length)
-				$('textarea').attr('rows', rows).css('overflow-y', if rows == 1 then 'hidden' else 'scroll')
-				return false
-			send: ->
-				if $scope.msg != ''
-					msg = new resource.Msg type: type, to: chat.jid, body: $scope.msg
-					msg.$save()
-					$scope.msg = ''
-					$scope.row('')
+			addFile: (files) ->
+				if files?.length != 0
+					msg = $scope.addMsg()
+					msg.local = files[0]
+					msg.file = _.extend url: URL.createObjectURL(files[0]), _.pick(files[0], 'name', 'type'), base: files[0].name, ext: path.extname(files[0].name)
+					$scope.$apply 'collection.models'
+			addImg: (files) ->
+			addAudio: (files) ->
+			addMsg: ->
+				msg = new resource.Msg type: type, to: chat.jid, body: ''
+				collection.add msg
+				msg
 			putfile: ($files) ->
 				if $files and $files.length != 0
 					attachment = new resource.Attachment type: type, to: chat.jid, local: $files[0]
@@ -136,6 +138,11 @@ angular
 						.catch $log.error
 
 		_.extend $scope,
+			send: (msg) ->
+				msg.$save()
+				$scope.cancel(msg)
+			cancel: (msg) ->
+				$scope.collection.models.pop()	
 			getfile: ->
 				file = new resource.Attachment _.pick msg, 'id', 'file'
 				switch device.platform

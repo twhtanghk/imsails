@@ -300,6 +300,16 @@ ion-nav-view[name=chatContent] {
 			margin: .6em;
 			padding: .6em;
 
+			textarea {
+			  width: 100%;
+			  resize: none;
+			}
+
+			div.buttons {
+			  margin: 1em auto 0 auto;
+			  text-align: center;
+			}
+
 			img {
 				border-radius: .4em;
 				max-width: 100%;
