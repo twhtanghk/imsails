@@ -33,7 +33,7 @@
 <ion-tabs class="tabs-icon-left tabs-color-positive">
   <span class="fileButton tab-item" style="margin: inherit; cursor: pointer;">
     <i class="icon ion-android-attach"></i> {{'Attachment' | translate}}
-    <input type="file" onchange="angular.element(this).scope().addFile(event.target.files)">
+    <input type="file" onchange="angular.element(this).scope().addFile(event.target.files); event.target.value = '';">
   </span>
   <ion-tab title="{{'Photo' | translate}}"
     icon="ion-android-camera" 
