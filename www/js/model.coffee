@@ -312,7 +312,7 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 
 			$save: (values = {}, opts = {}) ->
 				_.extend @, values
-				_.extend opts, data: _.pick(@, 'to', 'type')
+				_.extend opts, data: _.pick(@, 'to', 'type', 'body')
 				fileService.fs.then (fs) =>
 					fs.uploadFile @local, @$urlRoot(), opts
 
