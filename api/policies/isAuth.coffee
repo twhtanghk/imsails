@@ -21,4 +21,6 @@ module.exports = (req, res, next) ->
 
   middleware = passport.authenticate('bearer', { session: false } )
   middleware req, res, ->
+    if req.isSocket
+      req.socket.user = req.user
     next()
