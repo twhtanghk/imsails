@@ -72,20 +72,6 @@ angular
 				msg = new resource.Msg type: type, to: chat.jid, body: ''
 				collection.add msg
 				msg
-			putfile: ($files) ->
-				if $files and $files.length != 0
-					attachment = new resource.Attachment type: type, to: chat.jid, local: $files[0]
-					if $files[0] instanceof MediaFile
-						opts =
-							fileName: $files[0].name
-							mimeType: 'audio/wav'
-							params: 
-								to: attachment.to
-								type: attachment.type
-							headers: $http.defaults.headers.common
-						$cordovaFileTransfer.upload attachment.$urlRoot(), $files[0].localURL, opts,
-					else
-						attachment.$save()
 			copy: (msg) ->
 				if env.isNative()
 					$cordovaClipboard.copy(msg.body)
@@ -139,7 +125,9 @@ angular
 
 		_.extend $scope,
 			send: (msg) ->
-				msg.$save()
+				msg
+					.$save()
+					.catch $log.error
 				$scope.cancel(msg)
 			cancel: (msg) ->
 				$scope.collection.models.pop()	
