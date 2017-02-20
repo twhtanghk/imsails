@@ -18,7 +18,7 @@
     "imagemagick-stream": "https://github.com/twhtanghk/imagemagick-stream.git",
     "include-all": "~0.1.3",
     "lodash": "^3.10.1",
-    "log_toast": "0.0.5",
+    "log_toast": "0.0.6",
     "mime-types": "^2.1.7",
     "mississippi": "^1.2.0",
     "modernizr": "^3.3.1",
