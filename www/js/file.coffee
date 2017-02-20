@@ -108,10 +108,15 @@ angular
 						_fulfill = ->
 							transfer.end()
 							fulfill()
-						_reject = ->
+						_reject = (err) ->
 							transfer.end()
-							reject()
-						xhr.upload.addEventListener 'loadend', _fulfill
+							reject new Error err
+						xhr.addEventListener 'readystatechange', (e) ->
+							if xhr.readyState = 4
+								if xhr.status == 201
+									_fulfill()
+								else
+									_reject xhr.statusText
 						xhr.upload.addEventListener 'error', _reject
 						xhr.upload.addEventListener 'progress', onprogress || transfer.progress
 						xhr.send data
