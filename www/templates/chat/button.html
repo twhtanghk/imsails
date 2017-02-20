@@ -1,5 +1,5 @@
 <div class="buttons">
-  <button class="button button-positive button-outline" ng-click="send(model)" ng-if="model.body != ''">
+  <button class="button button-positive button-outline" ng-click="send(model)" ng-if="model.body != '' || msg.msgType() != 'msg'">
     <i class="icon icon ion-android-send"></i>
   </button>
   <button class="button button-assertive button-outline" ng-click="cancel(model)">
