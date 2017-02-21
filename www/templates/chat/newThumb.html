@@ -1,0 +1,4 @@
+<div class="file">
+  <img ng-class="{clip: model.msgType() == 'video'}" ng-src="{{model.file.url}}" alt="{{model.file.base}}" ng-if="model.file.url"/>
+</div>
+<ng-include src="'templates/chat/newMsg.html'"></ng-include>
