@@ -157,7 +157,7 @@ angular
 		$scope.start = ->
 			$cordovaCapture.captureAudio()
 				.then (files) ->
-					$scope.putfile files
+					$scope.addFile files
 				# ignore caputre error and show as debug only
 				.catch $log.debug 
 
