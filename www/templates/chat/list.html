@@ -43,21 +43,27 @@
       <input type="file" accept="image/*,video/*" onchange="angular.element(this).scope().addFile(event.target.files); event.target.value = '';">
     </span>
     <!-- audio attachment for browser with getusermedia support -->
-    <span class="fileButton tab-item" style="margin: inherit; cursor: pointer;"
-      on-hold="audioService.recorder.start()"
-      on-release="audioService.recorder.stop()"
-      ng-if="device.platform == 'browser' && Modernizr.getusermedia">
-      <i class="icon ion-android-microphone"></i> {{'Voice' | translate}}
+    <span class="tab-item"
+      ng-click="audioService.recorder.start()"
+      ng-if="device.platform == 'browser' && Modernizr.getusermedia && !recording">
+      <i class="icon ion-android-microphone"></i>{{'Voice' | translate}}
     </span>
-    <ion-tab title="{{'Voice' | translate}}"
-      icon="ion-android-microphone"
+    <span class="tab-item"
+      ng-click="audioService.recorder.stop()"
+      ng-if="device.platform == 'browser' && Modernizr.getusermedia && recording">
+      <i class="icon ion-stop"></i>{{'Voice' | translate}}
+    </span>
+    <!-- audio attachment for mobile devices -->
+    <span class="tab-item"
       ng-controller="AudioCtrl"
-      ng-click="start()" href="#"
+      ng-click="start()"
       ng-if="device.platform == 'iOS' || device.platform == 'Android'">
-    </ion-tab>
-    <ion-tab title="{{'Text' | translate}}"
-      icon="ion-android-textsms"
-      ng-click="addMsg()" href="#">
-    </ion-tab>
+      <i class="icon ion-android-microphone"></i>{{'Voice' | translate}}
+    </span>
+    <!-- text msg -->
+    <span class="tab-item"
+      ng-click="addMsg()">
+      <i class="icon ion-android-textsms"></i>{{'Text' | translate}}
+    </span>
   </ion-tabs>
 </ion-footer-bar>
