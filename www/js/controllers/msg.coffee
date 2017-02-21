@@ -72,6 +72,7 @@ angular
 			addMsg: ->
 				msg = new resource.Msg type: type, to: chat.jid, body: ''
 				collection.add msg
+				$ionicScrollDelegate.scrollTop true
 				msg
 			copy: (msg) ->
 				if env.isNative()
