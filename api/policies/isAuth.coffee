@@ -11,6 +11,7 @@ passport.use 'bearer', new bearer.Strategy {} , (token, done) ->
         .findOrCreate _.pick(info.user, 'username', 'email')
         .populateAll()
     .then (user) ->
+      user.token = token
       done null, user
     .catch (err) ->
       done null, false, message: err
