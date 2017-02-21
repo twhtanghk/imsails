@@ -60,14 +60,15 @@ angular
 					.then ->
 						$scope.$broadcast('scroll.infiniteScrollComplete')
 				return @
+			creating: ->
+				_.last(collection.models)?.$isNew()
 			addFile: (files) ->
 				if files?.length != 0
 					msg = $scope.addMsg()
 					msg.local = files[0]
 					msg.file = _.extend url: URL.createObjectURL(files[0]), _.pick(files[0], 'name', 'type'), base: files[0].name, ext: path.extname(files[0].name)
+					msg.file_inode = contentType: files[0].type
 					$scope.$apply 'collection.models'
-			addImg: (files) ->
-			addAudio: (files) ->
 			addMsg: ->
 				msg = new resource.Msg type: type, to: chat.jid, body: ''
 				collection.add msg
@@ -97,7 +98,7 @@ angular
 				$ionicScrollDelegate.scrollTop true
 
 		recorded = ->
-			$scope.putfile [audioService.recorder.file]
+			$scope.addFile [audioService.recorder.file]
 		audioService.recorder.on 'stop', recorded
 		$scope.$on '$destroy', ->
 			audioService.recorder.removeListener 'stop', recorded
@@ -107,7 +108,7 @@ angular
 
 		msg = $scope.model
 
-		if msg.file
+		if msg.file and not msg.$isNew()
 			dest = msg.file.org
 			switch true
 				when sails.services.file.isImg(msg.file_inode) or sails.services.file.isVideo(msg.file_inode)
