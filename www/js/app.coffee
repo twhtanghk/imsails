@@ -132,6 +132,7 @@ angular
 	.run ($rootScope) ->
 		document.addEventListener "deviceready", ->
 			$rootScope.device = device
+			$rootScope.Modernizr = Modernizr
 
 	.run ($rootScope, $state, $stateParams) ->
 		_.extend $rootScope,
