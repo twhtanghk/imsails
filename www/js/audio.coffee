@@ -33,6 +33,13 @@ angular
           @media.stop()
           @media.release()
 
-      if $cordovaDevice.getPlatform() != 'browser'
-        $delegate.player = Player.instance()
+      
+      document.addEventListener 'deviceready', ->
+        if $cordovaDevice.getPlatform() != 'browser'
+          $delegate.player = Player.instance()
+
       return $delegate
+
+  .run ($rootScope, audioService) ->
+    document.addEventListener 'deviceready', ->
+      $rootScope.audioService = audioService
