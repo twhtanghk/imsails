@@ -1,3 +1,4 @@
 <ion-spinner ng-if="! model.file.local"></ion-spinner>
 <util-audio-player ng-src="{{model.file.local}}" controls="conrtols" ng-if="model.file.local">
 </util-audio-player>
+<ng-include src="'templates/chat/msg.html'"></ng-include>
