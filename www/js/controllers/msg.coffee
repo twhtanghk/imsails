@@ -74,6 +74,7 @@ angular
 				collection.add msg
 				$ionicScrollDelegate.scrollTop true
 				msg
+			recording: false
 			copy: (msg) ->
 				if env.isNative()
 					$cordovaClipboard.copy(msg.body)
@@ -98,11 +99,13 @@ angular
 				$scope.$apply 'collection.models'
 				$ionicScrollDelegate.scrollTop true
 
-		recorded = ->
+		audioService.recorder.on 'start', ->
+			$scope.recording = true
+		audioService.recorder.on 'stop', ->
 			$scope.addFile [audioService.recorder.file]
-		audioService.recorder.on 'stop', recorded
+			$scope.recording = false
 		$scope.$on '$destroy', ->
-			audioService.recorder.removeListener 'stop', recorded
+			audioService.recorder.removeAllListeners()
 
 	.controller 'msgCtrl', ($scope, resource, $cordovaFileOpener2, $http, fileService, $log) ->
 		fs = fileService.fs
