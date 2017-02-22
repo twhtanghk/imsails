@@ -76,13 +76,14 @@ angular
 						$scope.$apply 'collection.models'
 			addMsg: ->
 				msg = new resource.Msg type: type, to: chat.jid, body: ''
-				connected = new Promise (resolve, reject) ->
-					if io.socket?.connected
-						resolve()
-					else
-						io.socket?.once 'connect', resolve
-						io.socket?.once 'error', reject
-				connected
+				Promise
+					.try ->
+						socket = io.socket?._raw
+						if socket?.connected
+							Promise.resolve()
+						else
+							socket?.once 'connect', Promise.resolve
+							socket?.once 'error', Promise.reject
 					.then ->
 						collection.add msg
 						$ionicScrollDelegate.scrollTop true
