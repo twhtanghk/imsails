@@ -64,16 +64,30 @@ angular
 				_.last(collection.models)?.$isNew()
 			addFile: (files) ->
 				if files?.length != 0
-					msg = $scope.addMsg()
-					msg.local = files[0]
-					msg.file = _.extend url: URL.createObjectURL(files[0]), _.pick(files[0], 'name', 'type'), base: files[0].name, ext: path.extname(files[0].name)
-					msg.file_inode = contentType: files[0].type
-					$scope.$apply 'collection.models'
+					$scope.addMsg().then (msg) ->
+						msg.local = files[0]
+						msg.file =
+							url: if files[0] instanceof MediaFile then files[0].localURL else URL.createObjectURL files[0]
+							name: files[0].name
+							type: files[0].type
+							base: files[0].name
+							ext: path.extname files[0].name
+						msg.file_inode = contentType: files[0].type
+						$scope.$apply 'collection.models'
 			addMsg: ->
 				msg = new resource.Msg type: type, to: chat.jid, body: ''
-				collection.add msg
-				$ionicScrollDelegate.scrollTop true
-				msg
+				connected = new Promise (resolve, reject) ->
+					if io.socket?.connected
+						resolve()
+					else
+						io.socket?.once 'connect', resolve
+						io.socket?.once 'error', reject
+				connected
+					.then ->
+						collection.add msg
+						$ionicScrollDelegate.scrollTop true
+						msg
+					.catch $log.error
 			recording: false
 			copy: (msg) ->
 				if env.isNative()
