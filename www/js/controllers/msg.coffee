@@ -91,7 +91,7 @@ angular
 								socket?.once 'error', reject
 					.then ->
 						# send attachment if it is audio file
-						if /^blob/.test(msg.file?.url) and /^audio/.test(msg.file?.type)
+						if /^blob/.test(msg.file?.url) and /^audio/.test(msg.file?.type) and env.isMobile()
 							return msg.$save().catch $log.error
 						collection.add msg
 						$scope.$apply 'collection.models'
