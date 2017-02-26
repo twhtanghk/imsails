@@ -13,9 +13,9 @@ urlRoot = (model, url, root = env.server.app.urlRoot) ->
 	ret.pathname = lpath.join ret.pathname, url
 	if model.transport() == 'io' then "/#{url}" else lurl.format ret
 
-angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
+angular.module('starter.model', ['ionic', 'PageableAR', 'util.file', 'ngCordova.plugins.fileTransfer'])
 
-	.factory 'resource',  ($rootScope, pageableAR, $http, $log, fileService) ->
+	.factory 'resource',  ($rootScope, pageableAR, $http, $log, fileService, $cordovaFileTransfer) ->
 
 		pageableAR.setTransport(pageableAR.Model.iosync)
 
@@ -295,11 +295,11 @@ angular.module('starter.model', ['ionic', 'PageableAR', 'util.file'])
 					file = new Attachment _.pick(@, 'type', 'to', 'body', 'local')
 					if file.local instanceof MediaFile
 						opts =
-							fileName: file.name
-							mimeType: 'audio/wav'
+							fileName: file.local.name
+							mimeType: file.local.type
 							params: _.pick file, 'to', 'type', 'body'
 							headers: $http.defaults.headers.common
-						$cordovaFileTransfer.upload file.$urlRoot(), file.url, opts
+						$cordovaFileTransfer.upload file.$urlRoot(), file.local.localURL, opts
 					else
 						file.$save()
 
