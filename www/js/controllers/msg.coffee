@@ -61,33 +61,41 @@ angular
 						$scope.$broadcast('scroll.infiniteScrollComplete')
 				return @
 			creating: ->
-				_.last(collection.models)?.$isNew()
+				_.find collection.models, (msg) ->
+					msg.$isNew()
 			addFile: (files) ->
 				if files?.length != 0
-					$scope.addMsg().then (msg) ->
-						msg.local = files[0]
-						msg.file =
-							url: if files[0] instanceof MediaFile then files[0].localURL else URL.createObjectURL files[0]
+					$scope.addMsg
+						local: files[0]
+						file:
+							url: files[0].localURL || URL.createObjectURL files[0]
 							name: files[0].name
 							type: files[0].type
 							base: files[0].name
 							ext: path.extname files[0].name
-						msg.file_inode = contentType: files[0].type
-						$scope.$apply 'collection.models'
-			addMsg: ->
-				msg = new resource.Msg type: type, to: chat.jid, body: ''
+						file_inode: contentType: files[0].type
+			addMsg: (attrs = {}) ->
+				_.defaults attrs,
+					type: type
+					to: chat.jid
+					body: ''
+				msg = new resource.Msg attrs
 				Promise
 					.try ->
 						socket = io.socket?._raw
 						if socket?.connected
 							Promise.resolve()
 						else
-							socket?.once 'connect', Promise.resolve
-							socket?.once 'error', Promise.reject
+							new Promise (resolve, reject) ->
+								socket?.once 'connect', resolve
+								socket?.once 'error', reject
 					.then ->
+						# send attachment if it is audio file
+						if /^blob/.test(msg.file?.url) and /^audio/.test(msg.file?.type)
+							return msg.$save().catch $log.error
 						collection.add msg
+						$scope.$apply 'collection.models'
 						$ionicScrollDelegate.scrollTop true
-						msg
 					.catch $log.error
 			recording: false
 			copy: (msg) ->
@@ -150,7 +158,8 @@ angular
 					.catch $log.error
 				$scope.cancel(msg)
 			cancel: (msg) ->
-				$scope.collection.models.pop()	
+				_.remove $scope.collection.models, (msg) ->
+					msg.$isNew()
 			getfile: ->
 				file = new resource.Attachment _.pick msg, 'id', 'file'
 				switch device.platform
