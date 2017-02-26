@@ -37,11 +37,6 @@
       <i class="icon ion-android-attach"></i> {{'Attachment' | translate}}
       <input type="file" onchange="angular.element(this).scope().addFile(event.target.files); event.target.value = '';">
     </span>
-    <!-- image/video attachment -->
-    <span class="fileButton tab-item" style="margin: inherit; cursor: pointer;">
-      <i class="icon ion-android-camera"></i> {{'Photo' | translate}}
-      <input type="file" accept="image/*,video/*" onchange="angular.element(this).scope().addFile(event.target.files); event.target.value = '';">
-    </span>
     <!-- audio attachment for browser with getusermedia support -->
     <span class="tab-item"
       ng-click="audioService.recorder.start()"
