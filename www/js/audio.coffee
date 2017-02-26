@@ -16,7 +16,6 @@ angular
           _instance ?= new Player()
 
         connect: (url) ->
-          url = url.replace 'file://', ''
           @media = $cordovaMedia.newMedia url
           @media
             .getDuration()
@@ -25,7 +24,6 @@ angular
                 duration: duration
 
         start: (url) ->
-          url = url.replace 'file://', ''
           @media = $cordovaMedia.newMedia url
           @media.play()
 
