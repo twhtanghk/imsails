@@ -10,7 +10,7 @@ io.sails.useCORSRouteToGetCookie = false
 module.exports =
 	whitelist:
 		img:	/^\s*((https?|ftp|file|blob|filesystem):|data:image\/)/
-		url:	['self', "#{url}/**", 'filesystem:**', 'blob:**']
+		url:	['self', "#{url}/**", 'filesystem:**', 'blob:**', 'cdvfile:**']
 	server:
 		app:
 			url:		url					# server url
