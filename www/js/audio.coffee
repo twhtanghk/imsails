@@ -15,7 +15,16 @@ angular
         @instance = ->
           _instance ?= new Player()
 
+        @url = (url) ->
+          pattern = new RegExp '^file://(.*)'
+          if device.platform == 'iOS' and pattern.test url
+            res = url.match pattern
+            return res[1]
+          else
+            return url
+      
         connect: (url) ->
+          url = Player.url url
           @media = $cordovaMedia.newMedia url
           @media
             .getDuration()
@@ -24,6 +33,7 @@ angular
                 duration: duration
 
         start: (url) ->
+          url = Player.url url
           @media = $cordovaMedia.newMedia url
           @media.play()
 
