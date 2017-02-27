@@ -3,6 +3,7 @@ path = require 'path'
 sails =
 	services:
 		file:	require '../../../api/services/file.coffee'
+mime = require 'mime-types'
 
 angular
 
@@ -73,7 +74,7 @@ angular
 							type: files[0].type
 							base: files[0].name
 							ext: path.extname files[0].name
-						file_inode: contentType: files[0].type
+						file_inode: contentType: files[0].type || mime.lookup files[0].name
 			addMsg: (attrs = {}) ->
 				_.defaults attrs,
 					type: type
@@ -90,8 +91,8 @@ angular
 								socket?.once 'connect', resolve
 								socket?.once 'error', reject
 					.then ->
-						# send attachment if it is audio file
-						if /^blob/.test(msg.file?.url) and /^audio/.test(msg.file?.type) and env.isMobile()
+						# send attachment if it is audio or video file
+						if /^blob/.test(msg.file?.url) and msg.msgType() in ['audio', 'video'] and env.isMobile()
 							return msg.$save().catch $log.error
 						collection.add msg
 						$scope.$apply 'collection.models'
