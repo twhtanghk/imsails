@@ -5,7 +5,7 @@ assert = require 'assert'
   'DOMAIN'
   'AUTHURL'
 ].map (name) ->
-  assert process.env[name]?, "process.env.#{name}not yet defined"
+  assert process.env[name]?, "process.env.#{name} not yet defined"
 
 module.exports =
 	http:
