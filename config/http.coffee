@@ -1,10 +1,17 @@
 csp = require 'helmet-csp'
+assert = require 'assert'
+
+[
+  'DOMAIN'
+  'AUTHURL'
+].map (name) ->
+  assert process.env[name]?, "process.env.#{name}not yet defined"
 
 module.exports =
 	http:
 		middleware:
 			csp: (req, res, next)->
-				host = req.headers['x-forwarded-host'] || req.headers['host']
+				host = process.env.DOMAIN
 				src = [
 					"'self'"
 					"filesystem:"
@@ -12,6 +19,7 @@ module.exports =
 					"http://#{host}"
 					"https://#{host}"
 					"blob:"
+					require('url').parse(process.env.AUTHURL).host
 				]
 				ret = csp
 					directives:
