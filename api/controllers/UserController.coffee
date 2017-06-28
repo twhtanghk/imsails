@@ -5,6 +5,18 @@
 actionUtil = require 'sails/lib/hooks/blueprints/actionUtil'
 
 module.exports =
+	profile: (req, res) ->
+		values = actionUtil.parseValues req
+		Model = actionUtil.parseModel req
+		Model
+			.findOneByEmail values.email
+			.then (user) ->
+				if user?
+					res.json user
+				else
+					res.notFound()
+			.catch res.serverError
+
 	getPhoto: (req, res) ->
 		pk = actionUtil.requirePk(req)
 		Model = actionUtil.parseModel(req)

@@ -61,6 +61,10 @@ module.exports =
 			sort:		
 				lastmsgAt:	'desc'
 				
+		'GET /api/user/profile/:email':
+			controller:		'UserController'
+			action:			'profile'
+
 		'GET /api/user':
 			controller:		'UserController'
 			action:			'find'

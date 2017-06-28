@@ -4,6 +4,7 @@ module.exports =
 			'*':		false
 			find:		['isAuth']
 			findOne:	['isAuth', 'user/me']
+			profile:	true
 			update:		['isAuth', 'user/me', 'isOwner', 'omitId', 'user/exclude']
 			getPhoto:	true
 		RosterController:
