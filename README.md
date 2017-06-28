@@ -13,13 +13,14 @@ Server API
 		
 * api
 
-	```
-	get /api/user - list users for the specified pagination/sorting parameters skip, limit, sort
+```
+    get /api/user - list users for the specified pagination/sorting parameters skip, limit, sort
     get /api/user/:id - read user attributes of the specified id
+    get /api/user/profile/:email - get user profile with the specified email
     get /user/photo/:id - get user photo 
     get /api/user/me - read user attributes of current login user
     put /api/user/me - update user attributes of current login user excluding attribute id, jid, photoUrl 
-	```
+```
 
 ## group
 
