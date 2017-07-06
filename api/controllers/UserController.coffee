@@ -11,7 +11,8 @@ module.exports =
 		Model
 			.find email: values.email
 			.sort 'email ASC'
-			.then res.json
+			.then (users) ->
+				res.json users
 			.catch res.serverError
 
 	getPhoto: (req, res) ->
