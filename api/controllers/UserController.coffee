@@ -9,12 +9,9 @@ module.exports =
 		values = actionUtil.parseValues req
 		Model = actionUtil.parseModel req
 		Model
-			.findOneByEmail values.email
-			.then (user) ->
-				if user?
-					res.json user
-				else
-					res.notFound()
+			.find email: values.email
+			.sort 'email ASC'
+			.then res.json
 			.catch res.serverError
 
 	getPhoto: (req, res) ->
