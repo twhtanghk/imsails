@@ -4,8 +4,6 @@ fs = require 'fs'
 path = require 'path'
 
 describe 'message', ->
-  @timeout env.timeout
-  
   msg = null
         
   before ->
