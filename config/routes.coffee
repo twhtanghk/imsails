@@ -61,6 +61,10 @@ module.exports =
 			sort:		
 				lastmsgAt:	'desc'
 				
+		'POST /api/user':
+			controller:		'UserController'
+			action:			'create'
+
 		'GET /api/user/profile':
 			controller:		'UserController'
 			action:			'profile'

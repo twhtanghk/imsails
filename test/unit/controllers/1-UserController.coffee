@@ -1,28 +1,15 @@
-env = require '../../env.coffee'
-req = require 'supertest-as-promised'    
-path = require 'path'
-util = require 'util'
 _ = require 'lodash'
-require 'shelljs/global'
-fs = require 'fs'
+req = require 'supertest-as-promised'    
 Promise = require 'promise'
 
 describe 'UserController', ->
-  @timeout env.timeout
   
-  tokens = null
-  
-  before ->
-    env.getTokens()
-      .then (res) ->
-        tokens = res
-    
   describe 'create', ->
-    _.each env.users, (user, index) ->
-      it "user #{user.id}", ->
+    it "users", ->
+      _.map users, (user) ->
         req sails.hooks.http.app
           .get '/api/user'
-          .set 'Authorization', "Bearer #{tokens[index]}"
+          .set 'Authorization', "Bearer #{user.token}"
           .expect 200
           .then ->
             sails.models.user.findOne username: user.id

@@ -1,34 +1,26 @@
-env = require '../../env.coffee'
-req = require 'supertest-as-promised'    
-path = require 'path'
-util = require 'util'
 _ = require 'lodash'
-require 'shelljs/global'
-fs = require 'fs'
+req = require 'supertest-as-promised'    
 Promise = require 'bluebird'
 
 describe 'GroupController', ->
-  @timeout env.timeout
-  
-  tokens = null
-  users = null
+
   group = null
-  
+
   before ->
-    env.getTokens()
-      .then (res) ->
-        tokens = res
-        env.getUsers()
-      .then (res) ->
-        users = res
+    Promise
+      .map users, (user) ->
+        sails.models.user
+          .findOne username: user.id
+          .then (imuser) ->
+            _.extend user, imuser
             
   describe 'create', ->
     it 'group', ->
       req sails.hooks.http.app
         .post '/api/group'
-        .set 'Authorization', "Bearer #{tokens[0]}"
+        .set 'Authorization', "Bearer #{users[0].token}"
         .send
-          name: env.group.name
+          name: 'group1'
           type: 'Members-Only'
           moderators: [users[0]]
           members: [users[1]]
@@ -54,39 +46,39 @@ describe 'GroupController', ->
           Promise.all [usersRoster(group.moderator), usersRoster(group.member)] 
       
     it 'add users into group.members', ->
-      Promise.all _.map users, (user) ->  
+      Promise.map users, (user) ->  
         req sails.hooks.http.app
           .post "/api/group/#{group.id}/members/#{user.id}"
-          .set 'Authorization', "Bearer #{tokens[0]}"
+          .set 'Authorization', "Bearer #{users[0].token}"
           .expect 200
             
     it "add user into group.moderators", ->
       req sails.hooks.http.app
         .post "/api/group/#{group.id}/moderators/#{users[1].id}"
-        .set 'Authorization', "Bearer #{tokens[0]}"
+        .set 'Authorization', "Bearer #{users[0].token}"
         .expect 200
         
   describe 'read', ->
     it 'group created by me', ->
       req sails.hooks.http.app
         .get '/api/group/me'
-        .set 'Authorization', "Bearer #{tokens[0]}"
+        .set 'Authorization', "Bearer #{users[0].token}"
         .expect 200
     
     it 'group by name', ->
       req sails.hooks.http.app
         .get "/api/group/name/#{group.name}"
-        .set 'Authorization', "Bearer #{tokens[0]}"
+        .set 'Authorization', "Bearer #{users[0].token}"
         .expect 200
         
   describe 'send message', ->
     it "to group", ->
       req sails.hooks.http.app
         .post '/api/msg'
-        .set 'Authorization', "Bearer #{tokens[0]}"
+        .set 'Authorization', "Bearer #{users[0].token}"
         .send
           to: group.jid
-          body: "msg from #{env.users[0].id} to #{group.jid}"
+          body: "msg from #{users[0].id} to #{group.jid}"
         .expect 201
         .then ->
           sails.models.group
@@ -106,13 +98,13 @@ describe 'GroupController', ->
     it 'user from group.members', ->
       req sails.hooks.http.app
         .del "/api/group/#{group.id}/members/#{users[0].id}"
-        .set 'Authorization', "Bearer #{tokens[0]}"
+        .set 'Authorization', "Bearer #{users[0].token}"
         .expect 200
 
     it "group", ->
       req sails.hooks.http.app
         .del "/api/group/#{group.id}"
-        .set 'Authorization', "Bearer #{tokens[0]}"
+        .set 'Authorization', "Bearer #{users[0].token}"
         .expect 200
         .then ->
           sails.models.msg

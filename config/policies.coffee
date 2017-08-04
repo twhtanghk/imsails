@@ -2,6 +2,7 @@ module.exports =
 	policies:
 		UserController:
 			'*':		false
+			create:		['isAdmin']
 			find:		['isAuth']
 			findOne:	['isAuth', 'user/me']
 			profile:	true
