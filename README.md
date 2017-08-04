@@ -1,6 +1,6 @@
 # imsails
 
-Instant messaging app to interface server with sailsjs rest or socket.io API
+Instant messaging app via rest or websocket API
 
 
 Server API
@@ -14,6 +14,7 @@ Server API
 * api
 
 ```
+    post /api/user - create user by authenticated admin only
     get /api/user - list users for the specified pagination/sorting parameters skip, limit, sort
     get /api/user/:id - read user attributes of the specified id
     get /api/user/profile - get user profiles for email list specified in req.body (e.g. email: ["a@abc.com", "b@abc.com", ...])
@@ -76,37 +77,6 @@ Server API
 Configuration
 =============
 
-*   git clone https://github.com/twhtanghk/imsails.git
-*   cd imsails
-*   npm install && bower install
-*   update environment variables in config/env/development.coffee for server
-```
-port: 3000
-connections:
-	mongo:
-		driver:		'mongodb'
-		host:		'localhost'
-		port:		27017
-		user:		'imrw'
-		password:	'password'
-		database:	'im'
-session:
-	host: 		'localhost'
-	port: 		27017
-	db:			'im'
-	username:	'imrw'
-	password:	'password'
-```
-
-*	update environment variables in www/js/env.cofffee for client
-```
-path: '/im'		
-server:
-	app:
-		type:		'io'						# for model to interface with server (io or rest)
-		url:		''							# for model urlRoot
-		urlRoot:	'http://localhost:3000'		# for socket.io to establish connection
-```
-
-*	node_modules/.bin/gulp
-*	sails lift --dev
+* download .env and docker-compose.yml
+* cusotomize values defined in .env
+* docker-compose -f docker-compose.yml up -d
