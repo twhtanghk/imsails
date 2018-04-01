@@ -65,6 +65,10 @@ module.exports =
 			controller:		'UserController'
 			action:			'create'
 
+		'PUT /api/user':
+			controller:		'UserController'
+			action:			'update'
+
 		'GET /api/user/profile':
 			controller:		'UserController'
 			action:			'profile'

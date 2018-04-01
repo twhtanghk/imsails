@@ -3,6 +3,7 @@ module.exports =
 		UserController:
 			'*':		false
 			create:		['isAuth', 'isAdmin']
+			update:		['isAuth', 'isAdmin']
 			find:		['isAuth']
 			findOne:	['isAuth', 'user/me']
 			profile:	true
