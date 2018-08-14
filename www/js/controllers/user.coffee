@@ -92,7 +92,7 @@ angular
       _.map collection, (item) ->
         label:    item.fullname()
         value:    item.id
-        selected:  not _.isUndefined _.findWhere selected, id: item.id
+        selected:  not _.isUndefined _.find selected, id: item.id
     
     _.extend $scope,
       searchText:    ''

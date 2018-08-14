@@ -57,7 +57,7 @@ angular
 			###
 			$delegate.showAction = (opts) ->
 				newopts = _.extend {}, _.pick(opts, 'titleText')
-				buttons = _.where(opts.action, type: 'button', show: true)
+				buttons = _.filter(opts.action, type: 'button', show: true)
 				newopts.buttons = _.map buttons, (button) ->
 					_.pick button, 'text'
 				newopts.buttonClicked = (index) ->

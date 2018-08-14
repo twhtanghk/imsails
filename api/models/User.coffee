@@ -84,9 +84,9 @@ module.exports =
 		# so that visitor group is not considered here
 		membersOnlyGrps: ->
 			membersOnly = _.union(
-				_.where(@ownerGrps, type: 'Members-Only'),
-				_.where(@moderatorGrps, type: 'Members-Only'),
-				_.where(@memberGrps, type: 'Members-Only')
+				_.filter(@ownerGrps, type: 'Members-Only'),
+				_.filter(@moderatorGrps, type: 'Members-Only'),
+				_.filter(@memberGrps, type: 'Members-Only')
 			)
 			membersOnly = _.sortBy membersOnly, 'name'
 			_.uniq membersOnly, 'id'

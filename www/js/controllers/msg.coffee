@@ -43,7 +43,7 @@ angular
 
 			onExit: (resource, chat) ->
 				# clear roster newmsg counter
-				item = _.findWhere resource.Roster.instance().models, jid: chat.jid
+				item = _.find resource.Roster.instance().models, jid: chat.jid
 				item?.$save(newmsg: 0)
 
 				# no more listen to those registered events
