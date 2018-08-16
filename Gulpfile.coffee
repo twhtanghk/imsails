@@ -90,7 +90,7 @@ gulp.task 'pre-ios', ->
   config CLIENT_ID: process.env.NATIVE_CLIENT_ID
   sh.exec "cordova platform rm ios"
   sh.exec "cordova platform add ios"
-  sh.exec "ionic resources ios"
+  sh.exec "ionic cordova resources ios"
 
 gulp.task 'ios', ['pre-ios', 'plugin', 'css', 'coffee'], ->
   sh.exec "cordova build ios --device"
@@ -99,7 +99,7 @@ gulp.task 'pre-android', ->
   config CLIENT_ID: process.env.NATIVE_CLIENT_ID
   sh.exec "cordova platform rm android"
   sh.exec "cordova platform add android"
-  sh.exec "ionic resources android"
+  sh.exec "ionic cordova resources android"
 
 gulp.task 'android', ['pre-android', 'plugin', 'css', 'coffee'], ->
   sh.exec "cordova build android"
@@ -116,6 +116,7 @@ gulp.task 'browser', ['pre-browser', 'plugin', 'css', 'coffee'], ->
 gulp.task 'plugin', ->
   for plugin in require('./package.json').cordovaPlugins
     sh.exec "cordova plugin add #{plugin}"
+  sh.exec "cordova plugin add cordova-android-support-gradle-release --variable ANDROID_SUPPORT_VERSION=27.+"
   sh.exec "cordova plugin add phonegap-plugin-push --variable SENDER_ID='#{process.env.SENDER_ID}'"
 
 gulp.task 'clean', ->
