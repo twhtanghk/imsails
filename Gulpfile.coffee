@@ -108,7 +108,7 @@ gulp.task 'pre-browser', ->
   config CLIENT_ID: process.env.WEB_CLIENT_ID
   sh.exec "cordova platform rm browser"
   sh.exec "cordova platform add browser"
-  sh.exec "ionic resources browser"
+  sh.exec "ionic cordova resources browser"
 
 gulp.task 'browser', ['pre-browser', 'plugin', 'css', 'coffee'], ->
   sh.exec "cordova build browser"
