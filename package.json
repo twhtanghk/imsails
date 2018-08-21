@@ -94,7 +94,7 @@
     "cordova-plugin-crosswalk-webview",
     "cordova-plugin-file",
     "cordova-plugin-file-transfer",
-    "phonegap-plugin-push",
+    "phonegap-plugin-push@1.9.0",
     "cordova-clipboard",
     "https://github.com/pwlin/cordova-plugin-file-opener2.git",
     "https://github.com/ToniKorin/cordova-plugin-autostart.git",
