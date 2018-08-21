@@ -116,7 +116,6 @@ gulp.task 'browser', ['pre-browser', 'plugin', 'css', 'coffee'], ->
 gulp.task 'plugin', ->
   for plugin in require('./package.json').cordovaPlugins
     sh.exec "cordova plugin add #{plugin}"
-  sh.exec "cordova plugin add cordova-android-support-gradle-release --variable ANDROID_SUPPORT_VERSION=27.+"
   sh.exec "cordova plugin add phonegap-plugin-push --variable SENDER_ID='#{process.env.SENDER_ID}'"
 
 gulp.task 'clean', ->

@@ -1,4 +1,4 @@
-FROM beevelop/cordova
+FROM beevelop/cordova:v6.4.0
 
 ENV APP=/usr/src/app
 
