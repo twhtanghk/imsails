@@ -80,3 +80,17 @@ Configuration
 * download .env and docker-compose.yml
 * cusotomize values defined in .env
 * docker-compose -f docker-compose.yml up -d
+
+Compile android package
+=======================
+```
+apt-get update
+apt-get install vim -y
+mkdir -p /home/twhtang/.android
+mv /tmp/release.keystore /home/twhtang/.android
+/opt/android/tools/bin/sdkmanager 'extras;android;m2repository'
+vi build.json
+node_modules/.bin/gulp android
+cp -a res platforms/android/
+cordova build android
+```
